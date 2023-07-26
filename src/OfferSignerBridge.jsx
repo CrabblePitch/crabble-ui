@@ -1,15 +1,19 @@
 import React from 'react';
 import { BridgeProtocol } from '@agoric/web-components';
 import { makeReactDappWalletBridge } from '@agoric/web-components/react';
+import { localBridgeHref } from "../config.js";
 
 // Create a wrapper for dapp-wallet-bridge that is specific to
 // the app's instance of React.
 const DappWalletBridge = makeReactDappWalletBridge(React);
 
-const WalletBridge = () => {
-  const address = 'agoric1cjua9sp5adzyee38nnj77gft3e3yprryeusu4w';
-  const bridgeHref = 'http://localhost:3001/wallet/bridge.html';
-  const chainId = 'agoriclocal';
+const WalletBridge = ({ address, chainId }) => {
+  if (!address || !chainId) return;
+
+  console.log('Connecting Agoric Wallet', {
+    address,
+    chainId,
+  });
 
   let addOffer, requestDappConnection, isDappApproved;
 
@@ -68,9 +72,9 @@ const WalletBridge = () => {
   };
 
   return (
-    <div className="hidden">
+    <div style={{ "display":"none" }} >
       <DappWalletBridge
-          bridgeHref={bridgeHref}
+          bridgeHref={localBridgeHref}
           onBridgeMessage={onBridgeMessage}
           onBridgeReady={onBridgeReady}
           onError={onError}

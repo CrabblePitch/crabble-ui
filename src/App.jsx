@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import agoricLogo from './assets/agoric-logo.png'
 import './App.css'
 import OfferSignerBridge from "./OfferSignerBridge.jsx";
+import { ConnectWallet } from "./ConnectWallet.jsx";
 
 /**
  * Purpose: This component must be able to;
@@ -30,36 +30,27 @@ import OfferSignerBridge from "./OfferSignerBridge.jsx";
  *
  *  Below props are necessary for OfferSignerBridge:
  *  - address: Get this from Keplr connection
- *  - chainId:
+ *  - chainId: Get this from networkConfig
  */
 function App() {
-  const [count, setCount] = useState(0)
+    const [address, setAddress] = useState('');
+    const [chainId, setChainId] = useState('');
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-        <OfferSignerBridge/>
-    </>
-  )
+    return (
+        <>
+            <div>
+                <a href="https://docs.agoric.com/guides/getting-started/" target="_blank">
+                    <img src={agoricLogo} className="logo" alt="Agoric logo"/>
+                </a>
+            </div>
+            <h1>Agoric + React</h1>
+            <ConnectWallet setAddress={setAddress} setChainId={setChainId}/>
+            <p className="read-the-docs">
+                Click on the Agoric logo to learn more
+            </p>
+            <OfferSignerBridge address={address} chainId={chainId}/>
+        </>
+    )
 }
 
 export default App
