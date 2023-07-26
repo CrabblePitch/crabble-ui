@@ -36,6 +36,14 @@ function App() {
     const [address, setAddress] = useState('');
     const [chainId, setChainId] = useState('');
 
+    /**
+     * - addOffer: Sends the offer to the Agoric wallet
+     * - isDappApproved: Agoric wallet will not display the offer coming from the dapp unless it is approved. Use this
+     * flag before sending offers.
+     */
+    const [addOffer, setAddOffer] = useState(undefined);
+    const [isDappApproved, setIsDappApproved] = useState(undefined);
+
     return (
         <>
             <div>
@@ -48,7 +56,7 @@ function App() {
             <p className="read-the-docs">
                 Click on the Agoric logo to learn more
             </p>
-            <OfferSignerBridge address={address} chainId={chainId}/>
+            <OfferSignerBridge address={address} chainId={chainId} setAddOffer={setAddOffer} setIsDappApproved={setIsDappApproved}/>
         </>
     )
 }

@@ -7,82 +7,86 @@ import { localBridgeHref } from "../config.js";
 // the app's instance of React.
 const DappWalletBridge = makeReactDappWalletBridge(React);
 
-const WalletBridge = ({ address, chainId }) => {
-  if (!address || !chainId) return;
+const WalletBridge = ({ address, chainId, setAddOffer, setIsDappApproved }) => {
+    if (!address || !chainId) return;
 
-  console.log('Connecting Agoric Wallet', {
-    address,
-    chainId,
-  });
-
-  let addOffer, requestDappConnection, isDappApproved;
-
-  const showWarningToast = () => {
-    console.log('Warning!');
-  };
-
-  const showConnectionSuccessfulToast = () => {
-    console.log('Successfully Connected!');
-  };
-
-  const onBridgeReady = (ev) => {
-    ({
-      detail: { isDappApproved, requestDappConnection, addOffer },
-    } = ev)
-
-    console.log('On Bridge Ready!', {
-      isDappApproved,
-      requestDappConnection,
-      addOffer,
-      ev
+    console.log('Connecting Agoric Wallet', {
+        address,
+        chainId,
     });
 
-    if (isDappApproved) {
-      showConnectionSuccessfulToast();
-      addOffer({
-        test: 'zaaaaa',
-      })
-    } else {
-      requestDappConnection('Crabble');
-      showWarningToast();
-    }
-  };
+    let addOffer, requestDappConnection, isDappApproved;
 
-  const onError = (ev) => {
-    console.log('Error!!!!', ev.detail.e.message);
-  };
+    const showWarningToast = () => {
+        console.log('Warning!');
+    };
 
-  const onBridgeMessage = (ev) => {
-    const { data } = ev.detail;
-    switch (data.type) {
-      case BridgeProtocol.dappApprovalChanged:
-        console.log({ isDappApproved: data.isDappApproved })
-        if (data.isDappApproved) {
-          addOffer({
-            test: 'zaaaaa',
-          })
-          showConnectionSuccessfulToast();
+    const showConnectionSuccessfulToast = () => {
+        console.log('Successfully Connected!');
+    };
+
+    const onBridgeReady = (ev) => {
+        ({
+            detail: { isDappApproved, requestDappConnection, addOffer },
+        } = ev)
+
+        console.log('On Bridge Ready!', {
+            isDappApproved,
+            requestDappConnection,
+            addOffer,
+            ev
+        });
+
+        setAddOffer(addOffer);
+        setIsDappApproved(isDappApproved);
+
+        if (isDappApproved) {
+            showConnectionSuccessfulToast();
+            addOffer({
+                test: 'zaaaaa',
+            })
         } else {
-          showWarningToast();
+            requestDappConnection('Crabble');
+            showWarningToast();
         }
-        break;
-      default:
-        console.warn('Unhandled bridge message', data);
-    }
-  };
+    };
 
-  return (
-    <div style={{ "display":"none" }} >
-      <DappWalletBridge
-          bridgeHref={localBridgeHref}
-          onBridgeMessage={onBridgeMessage}
-          onBridgeReady={onBridgeReady}
-          onError={onError}
-          address={address}
-          chainId={chainId}
-      />
-    </div>
-  );
+    const onError = (ev) => {
+        console.log('Error!!!!', ev.detail.e.message);
+    };
+
+    const onBridgeMessage = (ev) => {
+        const { data } = ev.detail;
+        switch (data.type) {
+            case BridgeProtocol.dappApprovalChanged:
+                console.log({ isDappApproved: data.isDappApproved })
+                setIsDappApproved(data.isDappApproved);
+                if (data.isDappApproved) {
+                    addOffer({
+                        test: 'zaaaaa',
+                    })
+                    showConnectionSuccessfulToast();
+                } else {
+                    showWarningToast();
+                }
+                break;
+            default:
+                console.warn('Unhandled bridge message', data);
+        }
+    };
+
+    return (
+        <div style={{ "display": "none" }}>
+            <DappWalletBridge
+                bridgeHref={localBridgeHref}
+                onBridgeMessage={onBridgeMessage}
+                onBridgeReady={onBridgeReady}
+                onError={onError}
+                address={address}
+                chainId={chainId}
+            />
+        </div>
+    );
 };
 
 export default WalletBridge;
