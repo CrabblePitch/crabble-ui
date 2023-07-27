@@ -1,8 +1,19 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import agoricLogo from './assets/agoric-logo.png'
 import './App.css'
 import OfferSignerBridge from "./OfferSignerBridge.jsx";
 import { ConnectWallet } from "./ConnectWallet.jsx";
+import { makeImportContext } from "@agoric/smart-wallet/src/marshal-contexts.js";
+import DataWatcher from "./DataWatcher.jsx";
+
+const getAgoricFrontendContext = () => ({
+    address: undefined,
+    rpcAddress: undefined,
+    chainId: undefined,
+    importContext: makeImportContext(),
+    chainStorageWatcher: undefined,
+    connection: undefined,
+});
 
 /**
  * Purpose: This component must be able to;
@@ -33,8 +44,16 @@ import { ConnectWallet } from "./ConnectWallet.jsx";
  *  - chainId: Get this from networkConfig
  */
 function App() {
-    const [address, setAddress] = useState('');
-    const [chainId, setChainId] = useState('');
+    const [agoricFrontendContext, setAgoricFrontendContext] = useState(getAgoricFrontendContext());
+
+    const updateContext = (updateValues) => {
+      const newContext = {
+          ...agoricFrontendContext,
+          ...updateValues,
+      };
+
+      setAgoricFrontendContext(newContext);
+    };
 
     /**
      * - addOffer: Sends the offer to the Agoric wallet
@@ -52,11 +71,21 @@ function App() {
                 </a>
             </div>
             <h1>Agoric + React</h1>
-            <ConnectWallet setAddress={setAddress} setChainId={setChainId}/>
+            <ConnectWallet agoricFrontendContext={agoricFrontendContext} updateContext={updateContext} isDappApproved={isDappApproved}/>
+            <p>
+                Click 'Connect Wallet' to start interacting with Agoric Blockchain. Nothing will happen if you already
+                approved this web app from your wallets. If you haven't you need to approve it from both Keplr and
+                Agoric wallet.
+            </p>
+            <p>
+                To see data coming from blockchain open the browser console and filter 'VSTORAGE'
+            </p>
             <p className="read-the-docs">
                 Click on the Agoric logo to learn more
             </p>
-            <OfferSignerBridge address={address} chainId={chainId} setAddOffer={setAddOffer} setIsDappApproved={setIsDappApproved}/>
+            <OfferSignerBridge agoricFrontendContext={agoricFrontendContext} setAddOffer={setAddOffer}
+                               setIsDappApproved={setIsDappApproved}/>
+            <DataWatcher agoricFrontendContext={agoricFrontendContext} />
         </>
     )
 }

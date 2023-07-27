@@ -7,8 +7,13 @@ import { localBridgeHref } from "../config.js";
 // the app's instance of React.
 const DappWalletBridge = makeReactDappWalletBridge(React);
 
-const WalletBridge = ({ address, chainId, setAddOffer, setIsDappApproved }) => {
-    if (!address || !chainId) return;
+const WalletBridge = ({ agoricFrontendContext, setAddOffer, setIsDappApproved }) => {
+    if (!agoricFrontendContext.address || !agoricFrontendContext.chainId) return;
+
+    const {
+        address,
+        chainId,
+    } = agoricFrontendContext;
 
     console.log('Connecting Agoric Wallet', {
         address,

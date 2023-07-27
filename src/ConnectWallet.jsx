@@ -1,22 +1,44 @@
 import { fetchChainInfo } from "../helpers.js";
 import { networkConfigs } from "../config.js";
-import { getKeplrAddress } from "@agoric/web-components/dist/src/getKeplrAddress.js";
+import { useEffect } from "react";
+import { makeAgoricWalletConnection } from "@agoric/web-components";
+import { makeAgoricChainStorageWatcher } from "@agoric/rpc";
 
-export const ConnectWallet = ({ setAddress, setChainId }) => {
+export const ConnectWallet = ({ agoricFrontendContext, updateContext, isDappApproved }) => {
 
     const start = async () => {
-        try {
-            const { chainName } = await fetchChainInfo(networkConfigs.localhost.url);
-            setChainId(chainName);
-            console.log({ chainName })
+        if (!agoricFrontendContext || !agoricFrontendContext.importContext) return;
 
-            const keplrAddress = await getKeplrAddress(chainName);
-            setAddress(keplrAddress);
-            console.log({ keplrAddress })
+        try {
+            const { chainName, rpc } = await fetchChainInfo(networkConfigs.localhost.url);
+            const chainStorageWatcher = makeAgoricChainStorageWatcher(
+                rpc,
+                chainName,
+                agoricFrontendContext.importContext.fromBoard.unserialize,
+                e => console.log('ERROR!!!', {
+                    e
+                }),
+            )
+            const connection = await makeAgoricWalletConnection(chainStorageWatcher);
+
+            updateContext({
+                address: connection.address,
+                rpcAddress: rpc,
+                chainId: chainName,
+                chainStorageWatcher,
+                connection,
+            });
         } catch (e) {
             console.log({ e });
         }
     };
+
+    useEffect(() => {
+        console.log('Wallet Connection', {isDappApproved})
+        if (!isDappApproved) return;
+        start();
+        return () => console.log('Wallet effect done');
+    }, [agoricFrontendContext.importContext]);
 
     return (
         <div className="card">
