@@ -1,6 +1,10 @@
 # Crabble UI
 Crabble is a NFT lending/borrowing platform for NFTs with any sort of utility. This repository
 contains the client side code for Crabble platform. 
+
+## Use Cases
+For a high level overview of the end-to-end flow please see [Use Cases document.](./useCases.md) 
+
 ## Setup && Run
 ### Install `agoric-sdk`
 Although client code does not depend on most of the core sdk features of `agoric-sdk` it's better to stay consistent
