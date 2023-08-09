@@ -104,3 +104,55 @@ cd crabble-ui
 yarn install
 yarn dev
 ```
+
+## Deploy Crabble Protocol
+### Start Ag-Solo
+`ag-solo` is an off-chain agent that can interact with Agoric blockchain. We need an `ag-solo`
+to deploy our smart contracts. Open a terminal and run below command:
+
+````shell
+cd agoric-sdk/packages/cosmic-swingset
+make SOLO_COINS='13000000ubld,12345000000uist,1122000000ibc/toyusdc' scenario2-run-clientd
+````
+
+In another terminal;
+```shell
+cd agoric-sdk/packages/cosmic-swingset
+agoric open --no-browser --repl
+```
+
+Copy&paste the link to you browser.
+
+### Install `crabbleProtocol`
+Open another terminal and execute below commands;
+
+```shell
+git clone -b ui-prep https://github.com/CrabblePitch/crabbleProtocol.git
+cd crabbleProtocol/source-code 
+agoric install
+```
+
+### Deploy Crabble Smart Contract
+In order to deploy our Crabble Protocol we need to execute a `core-eval` which is piece of
+software the Agoric community votes on whether or not it should execute. We have prepared 
+a Makefile to make things easier. In order for the Makefile to work properly you need to change
+a variable at the top of the file called `SDK_ROOT`. For example;
+
+````shell
+SDK_ROOT = $(shell cd ../../agoric-master >/dev/null && pwd) ## Your sdk path here
+````
+
+You need to replace `../../agoric-master` with you own agoric-sdk path. Remember you'll 
+execute make commands from `crabbleProtocol/source_code`, so if you plan to use a relative path
+to your agoric-sdk, remember to use a path relative to `crabbleProtocol/source_code`.
+
+Open one more terminal;
+
+```shell
+# Do not forget to update your 'SDK_ROOT'
+cd crabbleProtocol/source_code
+make deploy-from-scratch
+```
+
+Once `make deploy-from-scratch` exits, in 1 minute you should see a `crabble` property in your 
+`ag-solo`'s `home` object.  
