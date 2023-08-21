@@ -5,7 +5,6 @@ import { ConnectWallet } from "./ConnectWallet.jsx";
 import { makeImportContext } from "@agoric/smart-wallet/src/marshal-contexts.js";
 import DataWatcher from "./DataWatcher.jsx";
 import CreateRentalKeplr from "./CreateRentalKeplr.jsx";
-import { makeBrandRegistry } from "./brandRegistry.js";
 
 const getAgoricFrontendContext = () => ({
     address: undefined,
