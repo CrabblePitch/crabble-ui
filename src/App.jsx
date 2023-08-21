@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import agoricLogo from './assets/agoric-logo.png'
 import './App.css'
-import OfferSignerBridge from "./OfferSignerBridge.jsx";
 import { ConnectWallet } from "./ConnectWallet.jsx";
 import { makeImportContext } from "@agoric/smart-wallet/src/marshal-contexts.js";
 import DataWatcher from "./DataWatcher.jsx";
+import CreateRentalKeplr from "./CreateRentalKeplr.jsx";
+import { makeBrandRegistry } from "./brandRegistry.js";
 
 const getAgoricFrontendContext = () => ({
     address: undefined,
@@ -55,14 +56,6 @@ function App() {
       setAgoricFrontendContext(newContext);
     };
 
-    /**
-     * - addOffer: Sends the offer to the Agoric wallet
-     * - isDappApproved: Agoric wallet will not display the offer coming from the dapp unless it is approved. Use this
-     * flag before sending offers.
-     */
-    const [addOffer, setAddOffer] = useState(undefined);
-    const [isDappApproved, setIsDappApproved] = useState(undefined);
-
     return (
         <>
             <div>
@@ -71,7 +64,7 @@ function App() {
                 </a>
             </div>
             <h1>Agoric + React</h1>
-            <ConnectWallet agoricFrontendContext={agoricFrontendContext} updateContext={updateContext} isDappApproved={isDappApproved}/>
+            <ConnectWallet agoricFrontendContext={agoricFrontendContext} updateContext={updateContext} />
             <p>
                 Click 'Connect Wallet' to start interacting with Agoric Blockchain. Nothing will happen if you already
                 approved this web app from your wallets. If you haven't you need to approve it from both Keplr and
@@ -83,9 +76,8 @@ function App() {
             <p className="read-the-docs">
                 Click on the Agoric logo to learn more
             </p>
-            <OfferSignerBridge agoricFrontendContext={agoricFrontendContext} setAddOffer={setAddOffer}
-                               setIsDappApproved={setIsDappApproved}/>
             <DataWatcher agoricFrontendContext={agoricFrontendContext} />
+            <CreateRentalKeplr walletConnection={agoricFrontendContext.connection} chainStorageWatcher={agoricFrontendContext.chainStorageWatcher} />
         </>
     )
 }
