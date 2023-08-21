@@ -10,9 +10,9 @@ For a high level overview of the end-to-end flow please see [Use Cases document.
 Although client code does not depend on most of the core sdk features of `agoric-sdk` it's better to stay consistent
 with backend code(meaning smart-contracts) which is built on the `mainnet-1b` version of the sdk.
 ```shell
-git clone https://github.com/Agoric/agoric-sdk.git
+git clone https://github.com/anilhelvaci/agoric-sdk.git
 cd agoric-sdk
-git checkout release-mainnet1B
+git checkout crabble-test
 yarn install
 yarn build
 yarn link-cli ~/bin/agoric
@@ -41,7 +41,7 @@ Save the mnemonics to somewhere persistent.
 ### Start Agoric Blockchain
 For our development environment we need to start a local Agoric blockchain. Run below script for that.
 ````shell
-cd agoric-sdk/packages/inter-protocol
+cd agoric-sdk/packages/agoric-cli/test
 ./scripts/start-local-chain.sh
 ````
 
