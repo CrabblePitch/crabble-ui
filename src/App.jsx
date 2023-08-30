@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
-import agoricLogo from './assets/agoric-logo.png'
-import './App.css'
-import OfferSignerBridge from "./OfferSignerBridge.jsx";
-import { ConnectWallet } from "./ConnectWallet.jsx";
-import { makeImportContext } from "@agoric/smart-wallet/src/marshal-contexts.js";
-import DataWatcher from "./DataWatcher.jsx";
+import { useEffect, useState } from 'react';
+import agoricLogo from './assets/agoric-logo.png';
+import './App.css';
+import OfferSignerBridge from './OfferSignerBridge.jsx';
+import { ConnectWallet } from './ConnectWallet.jsx';
+import { makeImportContext } from '@agoric/smart-wallet/src/marshal-contexts.js';
+import DataWatcher from './DataWatcher.jsx';
+import { Home } from './pages/Home/Home.jsx';
 
 const getAgoricFrontendContext = () => ({
     address: undefined,
@@ -47,12 +48,12 @@ function App() {
     const [agoricFrontendContext, setAgoricFrontendContext] = useState(getAgoricFrontendContext());
 
     const updateContext = (updateValues) => {
-      const newContext = {
-          ...agoricFrontendContext,
-          ...updateValues,
-      };
+        const newContext = {
+            ...agoricFrontendContext,
+            ...updateValues,
+        };
 
-      setAgoricFrontendContext(newContext);
+        setAgoricFrontendContext(newContext);
     };
 
     /**
@@ -64,30 +65,31 @@ function App() {
     const [isDappApproved, setIsDappApproved] = useState(undefined);
 
     return (
-        <>
-            <div>
-                <a href="https://docs.agoric.com/guides/getting-started/" target="_blank">
-                    <img src={agoricLogo} className="logo" alt="Agoric logo"/>
-                </a>
-            </div>
-            <h1>Agoric + React</h1>
-            <ConnectWallet agoricFrontendContext={agoricFrontendContext} updateContext={updateContext} isDappApproved={isDappApproved}/>
-            <p>
-                Click 'Connect Wallet' to start interacting with Agoric Blockchain. Nothing will happen if you already
-                approved this web app from your wallets. If you haven't you need to approve it from both Keplr and
-                Agoric wallet.
-            </p>
-            <p>
-                To see data coming from blockchain open the browser console and filter 'VSTORAGE'
-            </p>
-            <p className="read-the-docs">
-                Click on the Agoric logo to learn more
-            </p>
-            <OfferSignerBridge agoricFrontendContext={agoricFrontendContext} setAddOffer={setAddOffer}
-                               setIsDappApproved={setIsDappApproved}/>
-            <DataWatcher agoricFrontendContext={agoricFrontendContext} />
-        </>
-    )
+        <Home />
+        // <>
+        //     <div>
+        //         <a href="https://docs.agoric.com/guides/getting-started/" target="_blank">
+        //             <img src={agoricLogo} className="logo" alt="Agoric logo"/>
+        //         </a>
+        //     </div>
+        //     <h1>Agoric + React</h1>
+        //     <ConnectWallet agoricFrontendContext={agoricFrontendContext} updateContext={updateContext} isDappApproved={isDappApproved}/>
+        //     <p>
+        //         Click 'Connect Wallet' to start interacting with Agoric Blockchain. Nothing will happen if you already
+        //         approved this web app from your wallets. If you haven't you need to approve it from both Keplr and
+        //         Agoric wallet.
+        //     </p>
+        //     <p>
+        //         To see data coming from blockchain open the browser console and filter 'VSTORAGE'
+        //     </p>
+        //     <p className="read-the-docs">
+        //         Click on the Agoric logo to learn more
+        //     </p>
+        //     <OfferSignerBridge agoricFrontendContext={agoricFrontendContext} setAddOffer={setAddOffer}
+        //                        setIsDappApproved={setIsDappApproved}/>
+        //     <DataWatcher agoricFrontendContext={agoricFrontendContext} />
+        // </>
+    );
 }
 
-export default App
+export default App;
