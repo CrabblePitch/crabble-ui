@@ -1,53 +1,20 @@
 import { AmountMath } from "@agoric/ertp";
-import { useEffect, useState } from "react";
+import useStore from "./store/store.js";
+import { getBrand, getPurseFromSmartWallet } from "./components/AddProtocolModal/helpers.js";
 
-const CreateRentalKeplr = ({ walletConnection, chainStorageWatcher }) => {
-    const [utilityBrand, setUtilityBrand] = useState(undefined);
-    const [collateralBrand, setCollateralBrand] = useState(undefined);
-    const [rentalFeeBrand, setRentalFeeBrand] = useState(undefined);
-    const [instance, setInstance] = useState(undefined);
-
-    useEffect(() => {
-        if (!chainStorageWatcher) return;
-
-        const watch = chainStorageWatcher => {
-            return chainStorageWatcher.watchLatest(
-                ['data', 'published.agoricNames.brand'],
-                value => {
-                    console.log('VSTORAGE - Brand Update', { value });
-                    [...value].forEach(element => {
-                        if (element[0] === 'Collateral') setCollateralBrand(element[1]);
-                        else if (element[0] === 'RentalFee') setRentalFeeBrand(element[1]);
-                        else if (element[0] === 'Utility') setUtilityBrand(element[1]);
-                    });
-
-                    console.log({
-                        collateralBrand,
-                        utilityBrand,
-                        rentalFeeBrand,
-                    })
-                },
-                log => {
-                    console.error('VSTORAGE - Issuer Error', log);
-                }
-            );
-        };
-
-        const stopWatching = watch(chainStorageWatcher);
-
-        return () => stopWatching();
-    });
+const CreateRentalKeplr = () => {
+    const walletConnection = useStore(state => state.wallet);
+    const crabbleInstance = useStore(state => state.crabbleInstance);
+    const utilityBrand = getBrand('Utility');
+    const collateralBrand = getBrand('Collateral');
+    const rentalFeeBrand = getBrand('RentalFee');
 
     const buildAmount = () => {
         if (!utilityBrand || !rentalFeeBrand || !collateralBrand) return;
 
-        const utilityAmount = AmountMath.make(utilityBrand, harden([
-            {
-                organization: 'Airbnb rental',
-                address: 'Sesame Street n12345',
-                accessKeyHash: 'bf34q7hiufb3',
-            }
-        ]))
+        const utilityPurse = getPurseFromSmartWallet(utilityBrand);
+        console.log({utilityPurse})
+        const utilityAmount = AmountMath.make(utilityBrand, harden([utilityPurse.value[0]]));
         const collateralAmount = AmountMath.make(collateralBrand, 100n);
         const rentalFeePerUnitAmount = AmountMath.make(rentalFeeBrand, 10n);
 
@@ -60,14 +27,10 @@ const CreateRentalKeplr = ({ walletConnection, chainStorageWatcher }) => {
 
     const createRentalKeplr = () => {
         const amounts = buildAmount();
-        if (!amounts || !instance) {
-            console.log('Not Initialized', {
-                amounts,
-                instance
-            });
-            return;
-        }
-
+        console.log({
+            amounts,
+            crabbleInstance,
+        })
         const {
             utilityAmount,
             collateralAmount,
@@ -77,7 +40,7 @@ const CreateRentalKeplr = ({ walletConnection, chainStorageWatcher }) => {
         void walletConnection.makeOffer(
             {
                 source: 'contract',
-                instance,
+                instance: crabbleInstance,
                 publicInvitationMaker: 'makeRentalInvitation'
             },
             {
@@ -114,33 +77,8 @@ const CreateRentalKeplr = ({ walletConnection, chainStorageWatcher }) => {
         );
     };
 
-    const registerInstance = () => {
-        if (!chainStorageWatcher || !chainStorageWatcher.marshaller) {
-            console.log('No marshaller', {
-                chainStorageWatcher,
-            });
-            return;
-        }
-
-        let localInstance = chainStorageWatcher.marshaller.unserialize(harden({
-            body: JSON.stringify({
-                '@qclass': 'slot',
-                'iface': 'Alleged: Instance',
-                index: 0,
-            }),
-            slots: ['board00776']
-        }));
-        setInstance(localInstance);
-        console.log('Instance', {
-            instance
-        })
-    };
-
     return (
         <div className="card">
-            <button className="button" onClick={registerInstance}>
-                Register Instance
-            </button>
             <button className="button" onClick={createRentalKeplr}>
                 Create Rental With Keplr
             </button>

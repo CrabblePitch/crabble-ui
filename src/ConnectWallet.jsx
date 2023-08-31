@@ -1,47 +1,20 @@
-import { fetchChainInfo } from "../helpers.js";
-import { networkConfigs } from "../config.js";
-import { useEffect } from "react";
-import { makeAgoricWalletConnection } from "@agoric/web-components";
-import { makeAgoricChainStorageWatcher } from "@agoric/rpc";
+import { makeAgoricWalletConnection, suggestChain } from "@agoric/web-components";
+import useStore from "./store/store.js";
 
-export const ConnectWallet = ({ agoricFrontendContext, updateContext, isDappApproved }) => {
+const connectWallet = async () => {
+    await suggestChain('https://local.agoric.net/network-config');
+    const wallet = await makeAgoricWalletConnection(useStore.getState().watcher);
+    useStore.setState({ wallet });
+    console.log('Wallet fetched', {
+        wallet
+    })
+};
 
-    const start = async () => {
-        if (!agoricFrontendContext || !agoricFrontendContext.importContext) return;
-
-        try {
-            const { chainName, rpc } = await fetchChainInfo(networkConfigs.localhost.url);
-            const chainStorageWatcher = makeAgoricChainStorageWatcher(
-                rpc,
-                chainName,
-                e => console.log('ERROR!!!', {
-                    e
-                }),
-            );
-            const connection = await makeAgoricWalletConnection(chainStorageWatcher);
-
-            updateContext({
-                address: connection.address,
-                rpcAddress: rpc,
-                chainId: chainName,
-                chainStorageWatcher,
-                connection,
-            });
-        } catch (e) {
-            console.log({ e });
-        }
-    };
-
-    useEffect(() => {
-        console.log('Wallet Connection', {isDappApproved})
-        if (!isDappApproved) return;
-        start();
-        return () => console.log('Wallet effect done');
-    }, [agoricFrontendContext.importContext]);
+export const ConnectWallet = () => {
 
     return (
         <div className="card">
-            <button onClick={start}>
+            <button onClick={connectWallet}>
                 Connect Wallet
             </button>
             <p>
