@@ -14,11 +14,10 @@ export const ConnectWallet = ({ agoricFrontendContext, updateContext, isDappAppr
             const chainStorageWatcher = makeAgoricChainStorageWatcher(
                 rpc,
                 chainName,
-                agoricFrontendContext.importContext.fromBoard.unserialize,
                 e => console.log('ERROR!!!', {
                     e
                 }),
-            )
+            );
             const connection = await makeAgoricWalletConnection(chainStorageWatcher);
 
             updateContext({

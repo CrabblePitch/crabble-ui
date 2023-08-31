@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import agoricLogo from './assets/agoric-logo.png';
 import './App.css';
-import OfferSignerBridge from './OfferSignerBridge.jsx';
 import { ConnectWallet } from './ConnectWallet.jsx';
 import { makeImportContext } from '@agoric/smart-wallet/src/marshal-contexts.js';
 import DataWatcher from './DataWatcher.jsx';
@@ -56,14 +55,6 @@ function App() {
         setAgoricFrontendContext(newContext);
     };
 
-    /**
-     * - addOffer: Sends the offer to the Agoric wallet
-     * - isDappApproved: Agoric wallet will not display the offer coming from the dapp unless it is approved. Use this
-     * flag before sending offers.
-     */
-    const [addOffer, setAddOffer] = useState(undefined);
-    const [isDappApproved, setIsDappApproved] = useState(undefined);
-
     return (
         <Home />
         // <>
@@ -85,10 +76,9 @@ function App() {
         //     <p className="read-the-docs">
         //         Click on the Agoric logo to learn more
         //     </p>
-        //     <OfferSignerBridge agoricFrontendContext={agoricFrontendContext} setAddOffer={setAddOffer}
-        //                        setIsDappApproved={setIsDappApproved}/>
         //     <DataWatcher agoricFrontendContext={agoricFrontendContext} />
-        // </>
+        //             <CreateRentalKeplr walletConnection={agoricFrontendContext.connection} chainStorageWatcher={agoricFrontendContext.chainStorageWatcher} />
+        //          // </>
     );
 }
 

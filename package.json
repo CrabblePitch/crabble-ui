@@ -12,6 +12,10 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "@endo/eventual-send": "^0.17.2",
+    "@agoric/smart-wallet": "^0.5.4-dev-f581a7e.0",
+    "@agoric/rpc": "^0.4.1-dev-7cf64bb.0",
+    "@agoric/web-components": "0.10.1-dev-7cf64bb.0",
     "zustand": "^4.4.1"
   },
   "devDependencies": {
