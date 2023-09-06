@@ -1,0 +1,29 @@
+.ticket {
+  flex-basis: calc(25% - 10px);
+  flex-wrap: wrap;
+  margin: 10px 5px;
+
+  .ticket-image {
+    // TODO: image width/height should be clarified and make exact rather than sticking to it container's width
+    width: 70%;
+    height: 185px;
+    border: 2px solid #81004f;
+    border-radius: 10px;
+  }
+  .ticket-info {
+    padding-left: 5px;
+    text-align: left;
+    margin: auto;
+
+    .title {
+      font-weight: bold;
+      font-size: 20px;
+      margin-bottom: 0;
+    }
+
+    .description {
+      opacity: 0.7;
+      margin: 0;
+    }
+  }
+}

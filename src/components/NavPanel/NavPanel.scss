@@ -1,0 +1,48 @@
+.navigation {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  flex-flow: row;
+  align-items: center;
+  margin-bottom: 10px;
+
+  .nav-tabs {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    list-style: none;
+    display: flex;
+    flex-flow: row;
+    font-weight: bold;
+    padding: 0;
+
+
+    li {
+      margin: 0 10px;
+      border-bottom: 1px solid white;
+      opacity: 0.8;
+
+      a {
+        color: inherit;
+      }
+
+      a.active {
+        color: #81004f;
+      }
+    }
+
+    li:hover {
+      cursor: pointer;
+      border-bottom: 1px solid #646cff;
+      opacity: 1;
+    }
+  }
+  .nav-controls {
+    display: flex;
+    align-items: center;
+
+    button {
+      margin-right: 10px;
+    }
+  }
+}
