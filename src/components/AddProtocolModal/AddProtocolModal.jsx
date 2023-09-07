@@ -3,6 +3,8 @@ import './AddProtocolModal.scss';
 import { useState } from 'react';
 import { TextField, Radio, Select } from '@mui/material';
 import RentalCreator from '../RentalCreator';
+import { useSnackbar } from '../SnackbarProvider/SnackbarProvider.jsx';
+import { createRentalKeplr } from '../../apis/createRentalKeplr.js';
 
 export const AddProtocolModal = ({ open, onClose }) => {
     const defaultData = {
@@ -27,6 +29,7 @@ export const AddProtocolModal = ({ open, onClose }) => {
     const [data, setData] = useState(defaultData);
     const [errors, setErrors] = useState(defaultErrors);
     const [submittedData, setSubmittedData] = useState(null);
+    const showSnackbar = useSnackbar();
 
     const onModalClose = () => {
         setData(defaultData);
@@ -91,9 +94,17 @@ export const AddProtocolModal = ({ open, onClose }) => {
 
         console.log('Success: ', data);
         // TODO: 2. Clear state after the tx is successfully done
+        // const onModalClose = () => {
+        //     setData(defaultData);
+        //     setErrors(defaultErrors);
+        //     onClose();
+        // };
         onModalClose();
-        setSubmittedData(processedData);
-        RentalCreator(processedData);
+        createRentalKeplr(processedData);
+        showSnackbar('Form submitted successfully', 'warning');
+
+        // setSubmittedData(processedData);
+        // RentalCreator(processedData);
     };
 
     return (
@@ -153,7 +164,7 @@ export const AddProtocolModal = ({ open, onClose }) => {
                                     inputProps={{ min: 0 }}
                                     label="Collateral Amount"
                                     onChange={handleChange}
-                                    value={data.collateralAmount}
+                                    value={data.collateralAmount || ''}
                                     error={!!errors.collateralAmount}
                                     helperText={errors.collateralAmount}
                                 />
@@ -210,7 +221,7 @@ export const AddProtocolModal = ({ open, onClose }) => {
                                     inputProps={{ min: 0 }}
                                     label="Rental Fee Amount"
                                     onChange={handleChange}
-                                    value={data.rentalFeeAmount}
+                                    value={data.rentalFeeAmount || ''}
                                     error={!!errors.rentalFeeAmount}
                                     helperText={errors.rentalFeeAmount}
                                 />

@@ -3,7 +3,7 @@ import { makeAgoricChainStorageWatcher } from '@agoric/rpc';
 
 const useStore = create((set) => ({
     watcher: makeAgoricChainStorageWatcher('http://localhost:26657', 'agoriclocal'),
-    brands: [['Utility', 'utilityValue']],
+    brands: [],
     smartWalletPurses: [],
     wallet: null,
     crabbleInstance: null,
