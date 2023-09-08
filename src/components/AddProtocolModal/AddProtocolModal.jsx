@@ -31,6 +31,30 @@ export const AddProtocolModal = ({ open, onClose }) => {
     const [submittedData, setSubmittedData] = useState(null);
     const showSnackbar = useSnackbar();
 
+    // Test data for Utility Dropdown
+    const mockUtilPurseValues = harden([
+        {
+            organization: 'Airbnb rental',
+            address: 'Sesame Street n12345',
+            accessKeyHash: 'bf34q7hiufb3',
+        },
+        {
+            organization: 'Airbnb rental',
+            address: 'Sesame Street n123456',
+            accessKeyHash: 'bf34q7hiufb3',
+        },
+        {
+            organization: 'Airbnb rental',
+            address: 'Sesame Street n1234567',
+            accessKeyHash: 'bf34q7hiufb3',
+        },
+        {
+            organization: 'Airbnb rental',
+            address: 'Sesame Street n12345678',
+            accessKeyHash: 'bf34q7hiufb3',
+        },
+    ])
+
     const onModalClose = () => {
         setData(defaultData);
         onClose();
