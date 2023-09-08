@@ -1,18 +1,17 @@
 import agoricLogo from '../../assets/agoric-logo.png';
-// import { makeAgoricWalletConnection, suggestChain } from '@agoric/web-components';
+import { makeAgoricWalletConnection, suggestChain } from '@agoric/web-components';
 import useStore from '../../store/store.js';
 
 export const ConnectWallet = () => {
-    // const watcher = useStore((state) => state.watcher);
+    const watcher = useStore((state) => state.watcher);
 
     const connectWallet = async () => {
-        // await suggestChain('https://local.agoric.net/network-config');
-        // const wallet = await makeAgoricWalletConnection(watcher);
-        // TODO: Change back until 'suggestChain' issue is resolved
-        useStore.setState({ wallet: 'Something' });
-        // console.log('Wallet fetched', {
-        //     wallet,
-        // });
+        await suggestChain('https://local.agoric.net/network-config');
+        const wallet = await makeAgoricWalletConnection(watcher);
+        useStore.setState({ wallet });
+        console.log('Wallet fetched', {
+            wallet,
+        });
     };
 
     return (
