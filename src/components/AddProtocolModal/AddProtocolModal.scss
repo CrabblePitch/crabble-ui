@@ -1,68 +1,36 @@
+@import '../../styles/mixins';
+
 .add-protocol-modal {
-  top: 45%;
-  left: 50%;
-  min-width: 700px;
-  padding: 10px 20px;
-  border: 1px solid black;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-  z-index: 10;
-
-  header {
-    display: flex;
+  .modal-body {
+    @include flex-content(flex-start, 50px);
     justify-content: space-between;
-    align-items: center;
-
-    h4 {
-      margin: 0;
-    }
-  }
-
-  footer {
-    display: flex;
-    justify-content: flex-end;
-    margin: 20px 0;
-
-    button {
-      margin-left: 10px;
-    }
-  }
-
-  section {
-    display: flex;
-    flex-flow: row;
-    justify-content: space-between;
-    align-items: center;
     padding: 10px 0;
-    gap: 20px;
     text-align: left;
 
-    .label {
-      font-weight: bold;
+    .renting-tier {
+      .radio-group {
+        @include flex-content(flex-start, 10px);
+      }
     }
 
     .modal-column {
-      display: flex;
+      @include flex-content(flex-start, 30px);
       flex-flow: column;
       flex: 1;
+    }
 
-      .renting-duration {
-        display: flex;
-        align-items: center;
+    .renting-duration {
+      @include flex-content(center, 15px);
+      margin-top: 30px;
 
-        label {
-          display: flex;
-          align-items: center;
-          gap: 5px;
-        }
-
-        & > span {
-          margin: 0 20px;
-        }
+      .duration-input {
+        @include flex-content(center, 5px);
       }
+    }
+
+    .title {
+      font-weight: bold;
+      margin-bottom: 10px;
     }
   }
 }

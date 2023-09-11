@@ -2,7 +2,7 @@ import { AmountMath } from '@agoric/ertp';
 import useStore from '../store/store.js';
 import { getBrand, getPurseFromSmartWallet } from '../utils/helpers.js';
 
-export function createRentalKeplr(params) {
+export function createRentalKeplr(params, notificationCallback) {
     const { walletConnection } = useStore.getState();
     const { crabbleInstance } = useStore.getState();
 
@@ -41,16 +41,20 @@ export function createRentalKeplr(params) {
         },
         ({ status, data }) => {
             if (status === 'error') {
+                notificationCallback('Error', 'error');
                 console.error('Offer error', data);
             }
             if (status === 'seated') {
+                notificationCallback('Transaction submitted', 'info');
                 console.log('Transaction submitted:', data.txn);
                 console.log('Offer id:', data.offerId);
             }
             if (status === 'refunded') {
+                notificationCallback('Offer refunded', 'info');
                 console.log('Offer refunded');
             }
             if (status === 'accepted') {
+                notificationCallback('Offer accepted', 'success');
                 console.log('Offer accepted');
             }
         },

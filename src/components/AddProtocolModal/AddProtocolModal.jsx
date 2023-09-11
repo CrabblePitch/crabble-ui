@@ -2,20 +2,21 @@ import './AddProtocolModal.scss';
 
 import { useState } from 'react';
 import { TextField, Radio, Select } from '@mui/material';
-import RentalCreator from '../RentalCreator';
-import { useSnackbar } from '../SnackbarProvider/SnackbarProvider.jsx';
+import { Close as CloseIcon } from '@mui/icons-material';
+import { ModalWrapper } from '../shared/ModalWrapper/ModalWrapper.jsx';
+import { useNotification } from '../NotificationProvider/NotificationProvider.jsx';
 import { createRentalKeplr } from '../../apis/createRentalKeplr.js';
 
 export const AddProtocolModal = ({ open, onClose }) => {
     const defaultData = {
-        utilityAmount: '',
-        rentalFeeAmount: null,
-        collateralAmount: null,
+        utilityAmount: 'ERTP',
+        rentalFeeAmount: 0,
+        collateralAmount: 0,
         rentingTier: 'Ad-Hoc',
         rentingDurationUnit: 'day',
         minRentingDurationUnits: 1,
         maxRentingDurationUnits: 2,
-        gracePeriodDuration: '',
+        gracePeriodDuration: 0,
     };
 
     const defaultErrors = {
@@ -28,8 +29,7 @@ export const AddProtocolModal = ({ open, onClose }) => {
 
     const [data, setData] = useState(defaultData);
     const [errors, setErrors] = useState(defaultErrors);
-    const [submittedData, setSubmittedData] = useState(null);
-    const showSnackbar = useSnackbar();
+    const notify = useNotification();
 
     // Test data for Utility Dropdown
     const mockUtilPurseValues = harden([
@@ -57,6 +57,7 @@ export const AddProtocolModal = ({ open, onClose }) => {
 
     const onModalClose = () => {
         setData(defaultData);
+        setErrors(defaultErrors);
         onClose();
     };
 
@@ -116,88 +117,78 @@ export const AddProtocolModal = ({ open, onClose }) => {
             maxRentingDurationUnits: BigInt(+data.rentalFeeAmount),
         };
 
-        console.log('Success: ', data);
         // TODO: 2. Clear state after the tx is successfully done
-        // const onModalClose = () => {
-        //     setData(defaultData);
-        //     setErrors(defaultErrors);
-        //     onClose();
-        // };
         onModalClose();
-        createRentalKeplr(processedData);
-        showSnackbar('Form submitted successfully', 'warning');
-
-        // setSubmittedData(processedData);
-        // RentalCreator(processedData);
+        createRentalKeplr(processedData, notify);
+        notify('Transaction pending...', 'info');
     };
 
     return (
         open && (
-            <div className="add-protocol-modal">
-                {submittedData && <RentalCreator data={submittedData} onSubmit={() => setSubmittedData(null)} />}
-                <header>
-                    <h4>Add Crubble Protocol</h4>
-                    <button onClick={onModalClose}>x</button>
+            <ModalWrapper className="add-protocol-modal">
+                <header className="modal-header">
+                    <h2 className="modal-title">Put your NFT on Crabble!</h2>
+                    <span className="modal-close-btn" onClick={onModalClose}>
+                        <CloseIcon />
+                    </span>
                 </header>
-                <section>
+                <main className="modal-body">
                     <div className="modal-column">
-                        <div>
-                            <p className="label">Choose the NFT you want to rent</p>
+                        <section>
+                            <h4 className="title">Choose the NFT you want to rent</h4>
                             <Select
                                 name="utilityAmount"
                                 onChange={handleChange}
                                 value={data.utilityAmount}
                                 native={true}
                             >
-                                <option value="" disabled>
-                                    Utility Amount
-                                </option>
                                 <option value="ERTP">ERTP</option>
                                 <option value="AssetKind.SET">AssetKind.SET</option>
                             </Select>
-                        </div>
-                        <div className="renting-tier">
-                            <p className="label">What renting tier are you planning to use?</p>
-                            <label>
-                                Ad-Hoc
-                                <Radio
-                                    type="radio"
-                                    checked={data.rentingTier === 'Ad-Hoc'}
-                                    name="rentingTier"
-                                    onChange={handleChange}
-                                    value="Ad-Hoc"
-                                />
-                            </label>
-                            <label>
-                                Auction
-                                <Radio
-                                    type="radio"
-                                    checked={data.rentingTier === 'Auction'}
-                                    name="rentingTier"
-                                    onChange={handleChange}
-                                    value="Auction"
-                                />
-                            </label>
-                        </div>
+                        </section>
+                        <section className="renting-tier">
+                            <h4 className="title">What renting tier are you planning to use?</h4>
+                            <div className="radio-group">
+                                <div className="radio-item">
+                                    <label htmlFor="ad-hoc">Ad-Hoc</label>
+                                    <Radio
+                                        id="ad-hoc"
+                                        type="radio"
+                                        checked={data.rentingTier === 'Ad-Hoc'}
+                                        name="rentingTier"
+                                        onChange={handleChange}
+                                        value="Ad-Hoc"
+                                    />
+                                </div>
+                                <div className="radio-item">
+                                    <label htmlFor="auction">Auction</label>
+                                    <Radio
+                                        type="radio"
+                                        checked={data.rentingTier === 'Auction'}
+                                        name="rentingTier"
+                                        onChange={handleChange}
+                                        value="Auction"
+                                    />
+                                </div>
+                            </div>
+                        </section>
                         {data.rentingTier === 'Ad-Hoc' && (
-                            <div>
-                                <p className="label">Secure yourself with a fair amount of collateral</p>
+                            <section>
+                                <h4 className="title">Secure yourself with a fair amount of collateral</h4>
                                 <TextField
                                     type="number"
                                     name="collateralAmount"
-                                    inputProps={{ min: 0 }}
-                                    label="Collateral Amount"
                                     onChange={handleChange}
-                                    value={data.collateralAmount || ''}
+                                    value={data.collateralAmount}
                                     error={!!errors.collateralAmount}
                                     helperText={errors.collateralAmount}
                                 />
-                            </div>
+                            </section>
                         )}
-                        <div>
-                            <p className="label">Renting Duration</p>
+                        <section>
+                            <h4 className="title">Renting Duration</h4>
                             <div className="renting-duration">
-                                <label>
+                                <section className="duration-input">
                                     <TextField
                                         type="number"
                                         name="minRentingDurationUnits"
@@ -206,9 +197,9 @@ export const AddProtocolModal = ({ open, onClose }) => {
                                         value={data.minRentingDurationUnits}
                                     />
                                     <small>{data.rentingDurationUnit}(s)</small>
-                                </label>
+                                </section>
                                 <span>to</span>
-                                <label>
+                                <section className="duration-input">
                                     <TextField
                                         type="number"
                                         name="maxRentingDurationUnits"
@@ -217,13 +208,13 @@ export const AddProtocolModal = ({ open, onClose }) => {
                                         value={data.maxRentingDurationUnits}
                                     />
                                     <small>{data.rentingDurationUnit}(s)</small>
-                                </label>
+                                </section>
                             </div>
-                        </div>
+                        </section>
                     </div>
                     <div className="modal-column">
-                        <div>
-                            <p className="label">What is your unit of renting duration?</p>
+                        <section>
+                            <h4 className="title">What is your unit of renting duration?</h4>
                             <Select
                                 name="rentingDurationUnit"
                                 onChange={handleChange}
@@ -235,40 +226,42 @@ export const AddProtocolModal = ({ open, onClose }) => {
                                 <option value="day">Day</option>
                                 <option value="week">Week</option>
                             </Select>
-                        </div>
+                        </section>
                         {data.rentingTier === 'Ad-Hoc' && (
-                            <div>
-                                <p className="label">How much are you going to charge per renting duration ?</p>
+                            <section>
+                                <h4 className="title">How much are you going to charge per renting duration ?</h4>
                                 <TextField
                                     name="rentalFeeAmount"
                                     type="number"
-                                    inputProps={{ min: 0 }}
-                                    label="Rental Fee Amount"
                                     onChange={handleChange}
-                                    value={data.rentalFeeAmount || ''}
+                                    value={data.rentalFeeAmount}
                                     error={!!errors.rentalFeeAmount}
                                     helperText={errors.rentalFeeAmount}
                                 />
-                            </div>
+                            </section>
                         )}
-                        <div>
-                            <p className="label">Enter your grace period</p>
+                        <section>
+                            <h4 className="title">Enter your grace period</h4>
                             <TextField
                                 name="gracePeriodDuration"
-                                label="Grace Period Duration"
+                                type="number"
                                 onChange={handleChange}
                                 value={data.gracePeriodDuration}
                                 error={!!errors.gracePeriodDuration}
                                 helperText={errors.gracePeriodDuration}
                             />
-                        </div>
+                        </section>
                     </div>
-                </section>
-                <footer>
-                    <button onClick={onModalClose}>Cancel</button>
-                    <button onClick={handleSubmit}>List My NFT</button>
+                </main>
+                <footer className="modal-footer">
+                    <button className="modal-footer-btn" onClick={onModalClose}>
+                        Cancel
+                    </button>
+                    <button className="modal-footer-btn" onClick={handleSubmit}>
+                        List My NFT
+                    </button>
                 </footer>
-            </div>
+            </ModalWrapper>
         )
     );
 };

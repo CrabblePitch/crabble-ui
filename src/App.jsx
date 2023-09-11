@@ -1,11 +1,11 @@
-import './App.css';
+import './App.scss';
 
 import { useEffect } from 'react';
 import useStore from './store/store.js';
 import { Home } from './pages/Home/Home.jsx';
 import { ConnectWallet } from './components/ConnectWallet/ConnectWallet.jsx';
 import { makeStorageWatcher } from './utils/storageWatcher.js';
-import { SnackbarProvider } from './components/SnackbarProvider/SnackbarProvider.jsx';
+import { NotificationProvider } from './components/NotificationProvider/NotificationProvider.jsx';
 
 export const App = () => {
     console.log('App!!!');
@@ -17,11 +17,9 @@ export const App = () => {
     }, [wallet]);
 
     return (
-        <>
-            <SnackbarProvider>
-                {!wallet && <ConnectWallet />}
-                {wallet && <Home />}
-            </SnackbarProvider>
-        </>
+        <NotificationProvider>
+            {!wallet && <ConnectWallet />}
+            {wallet && <Home />}
+        </NotificationProvider>
     );
 };

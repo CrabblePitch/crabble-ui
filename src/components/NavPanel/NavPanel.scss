@@ -4,13 +4,12 @@
   justify-content: space-between;
   flex-flow: row;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 
   .nav-tabs {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    list-style: none;
     display: flex;
     flex-flow: row;
     font-weight: bold;

@@ -6,6 +6,7 @@ export const mockData = [
         collateralAmount: '100',
         rentalFeeAmount: '10',
         rentingDurationUnit: 'day',
+        gracePeriodDuration: '15'
     },
     {
         name: 'NFT 2',
@@ -14,6 +15,7 @@ export const mockData = [
         collateralAmount: '100',
         rentalFeeAmount: '10',
         rentingDurationUnit: 'day',
+        gracePeriodDuration: '15'
     },
     {
         name: 'NFT 3',
@@ -22,6 +24,7 @@ export const mockData = [
         collateralAmount: '100',
         rentalFeeAmount: '10',
         rentingDurationUnit: 'day',
+        gracePeriodDuration: '15'
     },
     {
         name: 'NFT 4',
@@ -30,6 +33,7 @@ export const mockData = [
         collateralAmount: '100',
         rentalFeeAmount: '10',
         rentingDurationUnit: 'day',
+        gracePeriodDuration: '15'
     },
     {
         name: 'NFT 5',
@@ -38,6 +42,7 @@ export const mockData = [
         collateralAmount: '100',
         rentalFeeAmount: '10',
         rentingDurationUnit: 'day',
+        gracePeriodDuration: '15'
     },
     {
         name: 'NFT 6',
@@ -46,6 +51,7 @@ export const mockData = [
         collateralAmount: '100',
         rentalFeeAmount: '10',
         rentingDurationUnit: 'day',
+        gracePeriodDuration: '15'
     },
     {
         name: 'NFT 7',
@@ -54,5 +60,6 @@ export const mockData = [
         collateralAmount: '100',
         rentalFeeAmount: '10',
         rentingDurationUnit: 'day',
+        gracePeriodDuration: '15'
     },
 ];

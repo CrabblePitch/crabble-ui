@@ -18,7 +18,12 @@
     .title {
       font-weight: bold;
       font-size: 20px;
-      margin-bottom: 0;
+      margin: 10px 0 5px 0;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.6;
+      }
     }
 
     .description {

@@ -4,7 +4,7 @@ import { Alert } from '@mui/material';
 
 const SnackbarContext = React.createContext();
 
-export const SnackbarProvider = ({ children }) => {
+export const NotificationProvider = ({ children }) => {
     const [message, setMessage] = useState('');
     const [severity, setSeverity] = useState('success');
 
@@ -34,7 +34,7 @@ export const SnackbarProvider = ({ children }) => {
     );
 };
 
-export const useSnackbar = () => {
+export const useNotification = () => {
     const context = React.useContext(SnackbarContext);
     if (context === undefined) {
         throw new Error('useSnackbar must be used within a SnackbarProvider');
