@@ -49,6 +49,16 @@ const makeStorageWatcher = () => {
         );
     };
 
+    const watchCatalog = () => {
+        watcher.watchLatest(
+            [AgoricChainStoragePathKind.Data, 'published.crabble.Catalog'],
+            catalog => {
+                console.log('Catalog Update', catalog);
+                useStore.setState({ catalog });
+            }
+        );
+    };
+
     const startWatching = () => {
         if (!wallet || !watcher) {
             console.log({
@@ -62,6 +72,7 @@ const makeStorageWatcher = () => {
         watchVBankPurses().catch(err => console.log('ERROR', err));
         watchBrands();
         watchInstances();
+        watchCatalog();
     };
 
     return { startWatching };
