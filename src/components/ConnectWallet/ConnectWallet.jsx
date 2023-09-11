@@ -6,9 +6,9 @@ export const ConnectWallet = () => {
     const watcher = useStore((state) => state.watcher);
 
     const connectWallet = async () => {
+        // TODO: Comment for going next page
         // await suggestChain('https://local.agoric.net/network-config');
         // const wallet = await makeAgoricWalletConnection(watcher);
-        // TODO: Change back until 'suggestChain' issue is resolved
         useStore.setState({ wallet: 'Something' });
         // console.log('Wallet fetched', {
         //     wallet,
