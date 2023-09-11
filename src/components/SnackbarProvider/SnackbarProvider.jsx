@@ -18,19 +18,20 @@ export const SnackbarProvider = ({ children }) => {
     };
 
     return (
-        <SnackbarContext.Provider value={openSnackbar}>
-            {children}
-            <Snackbar
-                open={!!message}
-                autoHideDuration={3000}
-                onClose={closeSnackbar}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            >
-                <Alert onClose={closeSnackbar} severity={severity} sx={{ width: '100%' }}>
-                    {message}
-                </Alert>
-            </Snackbar>
-        </SnackbarContext.Provider>
+        <div></div>
+        // <SnackbarContext.Provider value={openSnackbar}>
+        //     {children}
+        //     <Snackbar
+        //         open={!!message}
+        //         autoHideDuration={3000}
+        //         onClose={closeSnackbar}
+        //         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        //     >
+        //         <Alert onClose={closeSnackbar} severity={severity} sx={{ width: '100%' }}>
+        //             {message}
+        //         </Alert>
+        //     </Snackbar>
+        // </SnackbarContext.Provider>
     );
 };
 

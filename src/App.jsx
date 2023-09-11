@@ -18,10 +18,11 @@ export const App = () => {
 
     return (
         <>
-            <SnackbarProvider>
-                {!wallet && <ConnectWallet />}
-                {wallet && <Home />}
-            </SnackbarProvider>
+            {!wallet && <ConnectWallet />}
+            {wallet && <Home />}
+            {/*<SnackbarProvider>*/}
+            {/*    */}
+            {/*</SnackbarProvider>*/}
         </>
     );
 };

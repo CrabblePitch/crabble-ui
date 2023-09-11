@@ -3,8 +3,7 @@ import useStore from '../store/store.js';
 import { getBrand, getPurseFromSmartWallet } from '../utils/helpers.js';
 
 export function createRentalKeplr(params) {
-    const { walletConnection } = useStore.getState();
-    const { crabbleInstance } = useStore.getState();
+    const { crabbleInstance, wallet } = useStore.getState();
 
     const utilityBrand = getBrand('Utility');
     const collateralBrand = getBrand('Collateral');
@@ -13,12 +12,14 @@ export function createRentalKeplr(params) {
     if (!utilityBrand || !rentalFeeBrand || !collateralBrand) return;
 
     const utilityPurse = getPurseFromSmartWallet(utilityBrand);
-    console.log({ utilityPurse });
-    const utilityAmount = AmountMath.make(utilityBrand, harden([utilityPurse.value[0]]));
+
+    const utilityAmount = AmountMath.make(utilityBrand, harden([utilityPurse.value[params.utilityAmount]]));
     const collateralAmount = AmountMath.make(collateralBrand, params.collateralAmount);
     const rentalFeePerUnitAmount = AmountMath.make(rentalFeeBrand, params.rentalFeeAmount);
 
-    void walletConnection.makeOffer(
+    console.log({ utilityPurse, params, collateralAmount, utilityAmount, rentalFeePerUnitAmount });
+
+    wallet.makeOffer(
         {
             source: 'contract',
             instance: crabbleInstance,
@@ -39,21 +40,7 @@ export function createRentalKeplr(params) {
                 gracePeriodDuration: params.gracePeriodDuration,
             },
         },
-        ({ status, data }) => {
-            if (status === 'error') {
-                console.error('Offer error', data);
-            }
-            if (status === 'seated') {
-                console.log('Transaction submitted:', data.txn);
-                console.log('Offer id:', data.offerId);
-            }
-            if (status === 'refunded') {
-                console.log('Offer refunded');
-            }
-            if (status === 'accepted') {
-                console.log('Offer accepted');
-            }
-        },
-        'createRentalKeplr',
+        params.onStatusChange,
+        `createRentalKeplr-${wallet.address}-${Date.now()}`,
     );
 }

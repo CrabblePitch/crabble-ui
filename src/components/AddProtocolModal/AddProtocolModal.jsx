@@ -1,7 +1,7 @@
 import './AddProtocolModal.scss';
 
 import { useState } from 'react';
-import { TextField, Radio, Select } from '@mui/material';
+import { TextField, Radio, Select, MenuItem, Box, FormControl, InputLabel, Grid } from '@mui/material';
 import RentalCreator from '../RentalCreator';
 import { useSnackbar } from '../SnackbarProvider/SnackbarProvider.jsx';
 import { createRentalKeplr } from '../../apis/createRentalKeplr.js';
@@ -29,7 +29,7 @@ export const AddProtocolModal = ({ open, onClose }) => {
     const [data, setData] = useState(defaultData);
     const [errors, setErrors] = useState(defaultErrors);
     const [submittedData, setSubmittedData] = useState(null);
-    const showSnackbar = useSnackbar();
+    // const showSnackbar = useSnackbar();
 
     // Test data for Utility Dropdown
     const mockUtilPurseValues = harden([
@@ -89,9 +89,25 @@ export const AddProtocolModal = ({ open, onClose }) => {
 
         setData({
             ...data,
-            [name]: value.trim(),
+            [name]: typeof value === 'string' ? value.trim() : value,
         });
     };
+
+    const onStatusChange = ({ status, data }) => {
+        if (status === 'error') {
+            console.error('Offer error', data);
+        }
+        if (status === 'seated') {
+            console.log('Transaction submitted:', data.txn);
+            console.log('Offer id:', data.offerId);
+        }
+        if (status === 'refunded') {
+            console.log('Offer refunded');
+        }
+        if (status === 'accepted') {
+            console.log('Offer accepted');
+        }
+    }
 
     const handleSubmit = () => {
         const { utilityAmount, rentalFeeAmount, collateralAmount, gracePeriodDuration } = data;
@@ -102,6 +118,8 @@ export const AddProtocolModal = ({ open, onClose }) => {
             collateralAmount: collateralAmount ? '' : 'Required',
             gracePeriodDuration: gracePeriodDuration ? '' : 'Required',
         };
+
+        console.log({ possibleErrors, utilityAmount })
 
         if (Object.values(possibleErrors).join('')) {
             setErrors({ ...errors, ...possibleErrors });
@@ -114,7 +132,10 @@ export const AddProtocolModal = ({ open, onClose }) => {
             collateralAmount: BigInt(+data.rentalFeeAmount),
             minRentingDurationUnits: BigInt(+data.rentalFeeAmount),
             maxRentingDurationUnits: BigInt(+data.rentalFeeAmount),
+            onStatusChange,
         };
+
+        console.log({ processedData })
 
         console.log('Success: ', data);
         // TODO: 2. Clear state after the tx is successfully done
@@ -125,7 +146,7 @@ export const AddProtocolModal = ({ open, onClose }) => {
         // };
         onModalClose();
         createRentalKeplr(processedData);
-        showSnackbar('Form submitted successfully', 'warning');
+        // showSnackbar('Form submitted successfully', 'warning');
 
         // setSubmittedData(processedData);
         // RentalCreator(processedData);
@@ -147,13 +168,15 @@ export const AddProtocolModal = ({ open, onClose }) => {
                                 name="utilityAmount"
                                 onChange={handleChange}
                                 value={data.utilityAmount}
-                                native={true}
+                                label="Utility Amount"
                             >
-                                <option value="" disabled>
-                                    Utility Amount
-                                </option>
-                                <option value="ERTP">ERTP</option>
-                                <option value="AssetKind.SET">AssetKind.SET</option>
+                                {mockUtilPurseValues.map((value, index) => {
+                                    return (
+                                        <MenuItem key={index} value={index}>
+                                            {value.address}
+                                        </MenuItem>
+                                    )
+                                })}
                             </Select>
                         </div>
                         <div className="renting-tier">
