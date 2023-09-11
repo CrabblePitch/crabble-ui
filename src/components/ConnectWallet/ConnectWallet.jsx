@@ -7,12 +7,12 @@ export const ConnectWallet = () => {
 
     const connectWallet = async () => {
         // TODO: Comment for going next page
-        // await suggestChain('https://local.agoric.net/network-config');
-        // const wallet = await makeAgoricWalletConnection(watcher);
-        useStore.setState({ wallet: 'Something' });
-        // console.log('Wallet fetched', {
-        //     wallet,
-        // });
+        await suggestChain('https://local.agoric.net/network-config');
+        const wallet = await makeAgoricWalletConnection(watcher);
+        useStore.setState({ wallet });
+        console.log('Wallet fetched', {
+            wallet,
+        });
     };
 
     return (

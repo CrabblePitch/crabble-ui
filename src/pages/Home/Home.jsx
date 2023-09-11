@@ -5,6 +5,7 @@ import { Contact } from '../Contact/Contact.jsx';
 import { AddProtocolModal } from '../../components/AddProtocolModal/AddProtocolModal.jsx';
 import { useState } from 'react';
 import { Explore } from '../Explore/Explore.jsx';
+import { Alternative } from "../../components/AddProtocolModal/Alternative.jsx";
 
 export const Home = () => {
     const [open, setOpen] = useState(false);
@@ -23,7 +24,8 @@ export const Home = () => {
                     <Route path="/about" element={<About />} />
                     <Route path="/contact" element={<Contact />} />
                 </Routes>
-                <AddProtocolModal open={open} onClose={toggleModal} />
+                {/*<AddProtocolModal open={open} onClose={toggleModal} />*/}
+                <Alternative open={open} onClose={toggleModal} />
             </BrowserRouter>
         </div>
     );

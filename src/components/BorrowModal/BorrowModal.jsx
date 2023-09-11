@@ -52,7 +52,7 @@ export const BorrowModal = ({ ticketData, closeTicket }) => {
     return (
         <ModalWrapper className="borrow-modal">
             <header className="modal-header">
-                <h2 className="modal-title">Borrow {ticketData.name}</h2>
+                <h2 className="modal-title">Borrow {ticketData.utilityTitle}</h2>
                 <span className="modal-close-btn" onClick={onModalClose}>
                     <CloseIcon />
                 </span>
@@ -76,11 +76,11 @@ export const BorrowModal = ({ ticketData, closeTicket }) => {
                         <div className="details">
                             <div>
                                 <p className="sub-title">Collateral</p>
-                                <div className="value">{ticketData.collateralAmount}</div>
+                                <div className="value">{Number(ticketData.collateralAmount.value)}</div>
                             </div>
                             <div>
                                 <p className="sub-title">Renting Fee</p>
-                                <div className="value">{ticketData.rentalFeeAmount}</div>
+                                <div className="value">{Number(ticketData.rentalFeePerUnitAmount.value)}</div>
                             </div>
                         </div>
                     </div>
