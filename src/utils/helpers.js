@@ -70,7 +70,6 @@ const checkPositiveNumber = entry => {
 };
 harden(checkPositiveNumber)
 
-export { getBrand, getPurseFromSmartWallet, buildCreateRentalOfferSpec, checkNegativeNumber, checkPositiveNumber };
 const buildBorrowAdHocOfferSpec = rawData => {
     const { crabbleInstance, wallet } = useStore.getState();
     const collateralBrand = getBrand('Collateral');
