@@ -104,7 +104,6 @@ export const Alternative = ({ open, onClose }) => {
         console.log({ data, wallet })
         if (!wallet || !validate()) throw new Error(`Not ready; wallet: ${wallet}, data: ${data}`);
 
-
         const offerSpec= buildCreateRentalOfferSpec(data);
         console.log({ offerSpec });
         void wallet.makeOffer(offerSpec.invitationSpec, offerSpec.proposal, offerSpec.offerArgs, onStatusChange, offerSpec.id);

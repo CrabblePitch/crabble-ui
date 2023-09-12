@@ -5,7 +5,6 @@ import { TextField, Radio, Select } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { ModalWrapper } from '../shared/ModalWrapper/ModalWrapper.jsx';
 import { useNotification } from '../NotificationProvider/NotificationProvider.jsx';
-import { createRentalKeplr } from '../../apis/createRentalKeplr.js';
 
 export const AddProtocolModal = ({ open, onClose }) => {
     const defaultData = {
