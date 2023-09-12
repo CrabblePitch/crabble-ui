@@ -1,4 +1,3 @@
-import { mockData } from './_mockData.js';
 import { useState } from 'react';
 import { Ticket } from '../../components/Ticket/Ticket.jsx';
 import { FilterBar } from '../../components/FilterBar/FilterBar.jsx';
@@ -14,6 +13,8 @@ export const Explore = () => {
 
     if(!catalog) return;
 
+    const displayData = [...catalog].filter(({ phase }) => phase === 'available');
+
     const closeActiveTicket = () => {
         setActiveTicket(null);
     };
@@ -23,7 +24,7 @@ export const Explore = () => {
             <h1 className="title">Rent whatever you want</h1>
             <FilterBar />
             <div className="tickets">
-                {catalog.map((data, index) => (
+                {displayData.map((data, index) => (
                     <Ticket key={index} data={data} onTicketClick={setActiveTicket} />
                 ))}
             </div>
