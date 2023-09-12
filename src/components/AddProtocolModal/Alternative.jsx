@@ -2,7 +2,13 @@ import './AddProtocolModal.scss';
 
 import { useState } from 'react';
 import { TextField, Radio, Select, MenuItem } from '@mui/material';
-import { buildCreateRentalOfferSpec, checkNumber, getBrand, getPurseFromSmartWallet } from '../../utils/helpers.js';
+import {
+    buildCreateRentalOfferSpec,
+    checkNegativeNumber,
+    checkPositiveNumber,
+    getBrand,
+    getPurseFromSmartWallet
+} from '../../utils/helpers.js';
 import useStore from '../../store/store.js';
 import { ModalWrapper } from '../shared/ModalWrapper/ModalWrapper.jsx';
 import { Close as CloseIcon } from '@mui/icons-material';
@@ -35,7 +41,6 @@ export const Alternative = ({ open, onClose }) => {
 
     const [data, setData] = useState(defaultData);
     const [errors, setErrors] = useState(defaultErrors);
-    const [submittedData, setSubmittedData] = useState(null);
     const utilityBrand = getBrand('Utility');
     const utilityPurse = getPurseFromSmartWallet(utilityBrand) || '';
 
@@ -46,6 +51,7 @@ export const Alternative = ({ open, onClose }) => {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
+        console.log('handleChange', { name, value })
 
         if (name === 'minRentingDurationUnits') {
             const convertedValue = Number(value);
@@ -100,10 +106,10 @@ export const Alternative = ({ open, onClose }) => {
 
     const validate = () => {
         const possibleErrors = {
-            utilityAmountIndex: checkNumber(data.utilityAmountIndex) ? '' : 'Required',
-            rentalFeePerUnitVal: checkNumber(data.rentalFeePerUnitVal) ? '' : 'Required',
-            collateralVal: checkNumber(data.collateralVal) ? '' : 'Required',
-            gracePeriodDuration: checkNumber(data.gracePeriodDuration) ? '' : 'Required',
+            utilityAmountIndex: !checkNegativeNumber(data.utilityAmountIndex) ? '' : 'Required',
+            rentalFeePerUnitVal: checkPositiveNumber(data.rentalFeePerUnitVal) ? '' : 'Required',
+            collateralVal: checkPositiveNumber(data.collateralVal) ? '' : 'Required',
+            gracePeriodDuration: checkPositiveNumber(data.gracePeriodDuration) ? '' : 'Required',
         };
 
         console.log({ possibleErrors, utilityAmountIndex: data.utilityAmountIndex });
@@ -152,7 +158,6 @@ export const Alternative = ({ open, onClose }) => {
                                 onChange={handleChange}
                                 value={data.utilityAmountIndex}
                                 label="Utility Amount"
-                                native={true}
                             >
                                 {[...(utilityPurse.value || [])].map((value, index) => {
                                     return (

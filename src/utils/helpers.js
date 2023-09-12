@@ -60,9 +60,14 @@ const buildCreateRentalOfferSpec = rawData => {
 };
 harden(buildCreateRentalOfferSpec);
 
-const checkNumber = entry => {
+const checkNegativeNumber = entry => {
     return Number(entry) > 0;
 };
-harden(checkNumber);
+harden(checkNegativeNumber);
 
-export { getBrand, getPurseFromSmartWallet, buildCreateRentalOfferSpec, checkNumber };
+const checkPositiveNumber = entry => {
+    return Number(entry) > 0;
+};
+harden(checkPositiveNumber)
+
+export { getBrand, getPurseFromSmartWallet, buildCreateRentalOfferSpec, checkNegativeNumber, checkPositiveNumber };

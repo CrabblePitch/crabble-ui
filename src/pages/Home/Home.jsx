@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { NavPanel } from '../../components/NavPanel/NavPanel.jsx';
 import { About } from '../About/About.jsx';
 import { Contact } from '../Contact/Contact.jsx';
-import { AddProtocolModal } from '../../components/AddProtocolModal/AddProtocolModal.jsx';
 import { useState } from 'react';
 import { Explore } from '../Explore/Explore.jsx';
 import { Alternative } from '../../components/AddProtocolModal/Alternative.jsx';
