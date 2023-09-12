@@ -13,7 +13,7 @@ import useStore from '../../store/store.js';
 import { ModalWrapper } from '../shared/ModalWrapper/ModalWrapper.jsx';
 import { Close as CloseIcon } from '@mui/icons-material';
 
-export const Alternative = ({ open, onClose }) => {
+export const AddProtocolModal = ({ open, onClose }) => {
     const wallet = useStore((state) => state.wallet);
 
     console.log('open alt: ', open);
