@@ -1,67 +1,57 @@
 import './AddProtocolModal.scss';
 
 import { useState } from 'react';
-import { TextField, Radio, Select } from '@mui/material';
-import { Close as CloseIcon } from '@mui/icons-material';
+import { TextField, Radio, Select, MenuItem } from '@mui/material';
+import {
+    buildCreateRentalOfferSpec,
+    checkNegativeNumber,
+    checkPositiveNumber,
+    getBrand,
+    getPurseFromSmartWallet
+} from '../../utils/helpers.js';
+import useStore from '../../store/store.js';
 import { ModalWrapper } from '../shared/ModalWrapper/ModalWrapper.jsx';
-import { useNotification } from '../NotificationProvider/NotificationProvider.jsx';
+import { Close as CloseIcon } from '@mui/icons-material';
 
 export const AddProtocolModal = ({ open, onClose }) => {
+    const wallet = useStore((state) => state.wallet);
+
+    console.log('open alt: ', open);
+
     const defaultData = {
-        utilityAmount: 'ERTP',
-        rentalFeeAmount: 0,
-        collateralAmount: 0,
+        utilityTitle: 'Test Title',
+        utilityDescription: 'Test Description',
+        utilityAmountIndex: 0,
+        rentalFeePerUnitVal: '',
+        collateralVal: '',
         rentingTier: 'Ad-Hoc',
-        rentingDurationUnit: 'day',
+        rentingDurationUnit: 'minute',
         minRentingDurationUnits: 1,
-        maxRentingDurationUnits: 2,
-        gracePeriodDuration: 0,
+        maxRentingDurationUnits: 10,
+        gracePeriodDuration: '',
     };
 
     const defaultErrors = {
-        utilityAmount: '',
-        rentalFeeAmount: '',
-        collateralAmount: '',
+        utilityAmountIndex: -1,
+        rentalFeePerUnitVal: '',
+        collateralVal: '',
         rentingTier: '',
         gracePeriodDuration: '',
     };
 
     const [data, setData] = useState(defaultData);
     const [errors, setErrors] = useState(defaultErrors);
-    const notify = useNotification();
-
-    // Test data for Utility Dropdown
-    const mockUtilPurseValues = harden([
-        {
-            organization: 'Airbnb rental',
-            address: 'Sesame Street n12345',
-            accessKeyHash: 'bf34q7hiufb3',
-        },
-        {
-            organization: 'Airbnb rental',
-            address: 'Sesame Street n123456',
-            accessKeyHash: 'bf34q7hiufb3',
-        },
-        {
-            organization: 'Airbnb rental',
-            address: 'Sesame Street n1234567',
-            accessKeyHash: 'bf34q7hiufb3',
-        },
-        {
-            organization: 'Airbnb rental',
-            address: 'Sesame Street n12345678',
-            accessKeyHash: 'bf34q7hiufb3',
-        },
-    ])
+    const utilityBrand = getBrand('Utility');
+    const utilityPurse = getPurseFromSmartWallet(utilityBrand) || '';
 
     const onModalClose = () => {
         setData(defaultData);
-        setErrors(defaultErrors);
         onClose();
     };
 
     const handleChange = (event) => {
         const { name, value } = event.target;
+        console.log('handleChange', { name, value })
 
         if (name === 'minRentingDurationUnits') {
             const convertedValue = Number(value);
@@ -89,44 +79,72 @@ export const AddProtocolModal = ({ open, onClose }) => {
 
         setData({
             ...data,
-            [name]: value.trim(),
+            [name]: typeof value === 'string' ? value.trim() : value,
         });
     };
 
-    const handleSubmit = () => {
-        const { utilityAmount, rentalFeeAmount, collateralAmount, gracePeriodDuration } = data;
+    const onStatusChange = (args) => {
+        console.log({ args });
+        const { status, data } = args;
 
+        if (status === 'error') {
+            console.error('Offer error', data);
+        }
+        if (status === 'seated') {
+            console.log('Transaction submitted:', data.txn);
+            console.log('Offer id:', data.offerId);
+        }
+        if (status === 'refunded') {
+            console.log('Offer refunded');
+        }
+        if (status === 'accepted') {
+            console.log('Offer accepted');
+        }
+
+        onModalClose();
+    };
+
+    const validate = () => {
         const possibleErrors = {
-            utilityAmount: utilityAmount ? '' : 'Required',
-            rentalFeeAmount: rentalFeeAmount ? '' : 'Required',
-            collateralAmount: collateralAmount ? '' : 'Required',
-            gracePeriodDuration: gracePeriodDuration ? '' : 'Required',
+            utilityAmountIndex: !checkNegativeNumber(data.utilityAmountIndex) ? '' : 'Required',
+            rentalFeePerUnitVal: checkPositiveNumber(data.rentalFeePerUnitVal) ? '' : 'Required',
+            collateralVal: checkPositiveNumber(data.collateralVal) ? '' : 'Required',
+            gracePeriodDuration: checkPositiveNumber(data.gracePeriodDuration) ? '' : 'Required',
         };
+
+        console.log({ possibleErrors, utilityAmountIndex: data.utilityAmountIndex });
 
         if (Object.values(possibleErrors).join('')) {
             setErrors({ ...errors, ...possibleErrors });
-            return;
+            return false;
         }
 
-        const processedData = {
-            ...data,
-            rentalFeeAmount: BigInt(+data.rentalFeeAmount),
-            collateralAmount: BigInt(+data.rentalFeeAmount),
-            minRentingDurationUnits: BigInt(+data.rentalFeeAmount),
-            maxRentingDurationUnits: BigInt(+data.rentalFeeAmount),
-        };
-
-        // TODO: 2. Clear state after the tx is successfully done
-        onModalClose();
-        createRentalKeplr(processedData, notify);
-        notify('Transaction pending...', 'info');
+        return true;
     };
+
+    const handleSubmit = () => {
+        console.log({ data, wallet });
+        if (!wallet || !validate()) throw new Error(`Not ready; wallet: ${wallet}, data: ${data}`);
+
+        const offerSpec = buildCreateRentalOfferSpec(data);
+        console.log({ offerSpec });
+        void wallet.makeOffer(
+            offerSpec.invitationSpec,
+            offerSpec.proposal,
+            offerSpec.offerArgs,
+            onStatusChange,
+            offerSpec.id,
+        );
+    };
+
+    console.log('utilityPurse: ', utilityPurse);
 
     return (
         open && (
             <ModalWrapper className="add-protocol-modal">
+                {/*{submittedData && <RentalCreator data={submittedData} onSubmit={() => setSubmittedData(null)} />}*/}
                 <header className="modal-header">
-                    <h2 className="modal-title">Put your NFT on Crabble!</h2>
+                    <h2 className="modal-title">Add Crabble Protocol</h2>
                     <span className="modal-close-btn" onClick={onModalClose}>
                         <CloseIcon />
                     </span>
@@ -136,13 +154,18 @@ export const AddProtocolModal = ({ open, onClose }) => {
                         <section>
                             <h4 className="title">Choose the NFT you want to rent</h4>
                             <Select
-                                name="utilityAmount"
+                                name="utilityAmountIndex"
                                 onChange={handleChange}
-                                value={data.utilityAmount}
-                                native={true}
+                                value={data.utilityAmountIndex}
+                                label="Utility Amount"
                             >
-                                <option value="ERTP">ERTP</option>
-                                <option value="AssetKind.SET">AssetKind.SET</option>
+                                {[...(utilityPurse.value || [])].map((value, index) => {
+                                    return (
+                                        <MenuItem key={index} value={index}>
+                                            {value.address}
+                                        </MenuItem>
+                                    );
+                                })}
                             </Select>
                         </section>
                         <section className="renting-tier">
@@ -176,16 +199,18 @@ export const AddProtocolModal = ({ open, onClose }) => {
                                 <h4 className="title">Secure yourself with a fair amount of collateral</h4>
                                 <TextField
                                     type="number"
-                                    name="collateralAmount"
+                                    name="collateralVal"
+                                    inputProps={{ min: 0 }}
+                                    label="Collateral Amount"
                                     onChange={handleChange}
-                                    value={data.collateralAmount}
-                                    error={!!errors.collateralAmount}
-                                    helperText={errors.collateralAmount}
+                                    value={data.collateralVal || ''}
+                                    error={!!errors.collateralVal}
+                                    helperText={errors.collateralVal}
                                 />
                             </section>
                         )}
                         <section>
-                            <h4 className="title">Renting Duration</h4>
+                            <p className="title">Renting Duration</p>
                             <div className="renting-duration">
                                 <section className="duration-input">
                                     <TextField
@@ -230,12 +255,14 @@ export const AddProtocolModal = ({ open, onClose }) => {
                             <section>
                                 <h4 className="title">How much are you going to charge per renting duration ?</h4>
                                 <TextField
-                                    name="rentalFeeAmount"
+                                    name="rentalFeePerUnitVal"
                                     type="number"
+                                    inputProps={{ min: 0 }}
+                                    label="Rental Fee Amount"
                                     onChange={handleChange}
-                                    value={data.rentalFeeAmount}
-                                    error={!!errors.rentalFeeAmount}
-                                    helperText={errors.rentalFeeAmount}
+                                    value={data.rentalFeePerUnitVal || ''}
+                                    error={!!errors.rentalFeePerUnitVal}
+                                    helperText={errors.rentalFeePerUnitVal}
                                 />
                             </section>
                         )}
@@ -243,8 +270,9 @@ export const AddProtocolModal = ({ open, onClose }) => {
                             <h4 className="title">Enter your grace period</h4>
                             <TextField
                                 name="gracePeriodDuration"
-                                type="number"
+                                label="Grace Period Duration"
                                 onChange={handleChange}
+                                type="number"
                                 value={data.gracePeriodDuration}
                                 error={!!errors.gracePeriodDuration}
                                 helperText={errors.gracePeriodDuration}

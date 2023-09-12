@@ -60,11 +60,17 @@ const buildCreateRentalOfferSpec = rawData => {
 };
 harden(buildCreateRentalOfferSpec);
 
-const checkNumber = entry => {
+const checkNegativeNumber = entry => {
     return Number(entry) > 0;
 };
-harden(checkNumber);
+harden(checkNegativeNumber);
 
+const checkPositiveNumber = entry => {
+    return Number(entry) > 0;
+};
+harden(checkPositiveNumber)
+
+export { getBrand, getPurseFromSmartWallet, buildCreateRentalOfferSpec, checkNegativeNumber, checkPositiveNumber };
 const buildBorrowAdHocOfferSpec = rawData => {
     const { crabbleInstance, wallet } = useStore.getState();
     const collateralBrand = getBrand('Collateral');
@@ -148,7 +154,8 @@ export {
     getBrand,
     getPurseFromSmartWallet,
     buildCreateRentalOfferSpec,
-    checkNumber,
+    checkNegativeNumber,
+    checkPositiveNumber,
     buildBorrowAdHocOfferSpec,
     getValueFromSet,
     makeGenericOnStatusUpdate,
