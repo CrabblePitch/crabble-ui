@@ -137,7 +137,7 @@ export const Alternative = ({ open, onClose }) => {
         open && (
             <ModalWrapper className="add-protocol-modal">
                 {/*{submittedData && <RentalCreator data={submittedData} onSubmit={() => setSubmittedData(null)} />}*/}
-                <header>
+                <header className="modal-header">
                     <h2 className="modal-title">Add Crabble Protocol</h2>
                     <span className="modal-close-btn" onClick={onModalClose}>
                         <CloseIcon />
