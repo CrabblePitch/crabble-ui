@@ -2,7 +2,13 @@ import './AddProtocolModal.scss';
 
 import { useState } from 'react';
 import { TextField, Radio, Select, MenuItem } from '@mui/material';
-import { buildCreateRentalOfferSpec, checkNumber, getBrand, getPurseFromSmartWallet } from "../../utils/helpers.js";
+import {
+    buildCreateRentalOfferSpec,
+    checkNumber,
+    getBrand,
+    getPurseFromSmartWallet,
+    makeGenericOnStatusUpdate
+} from "../../utils/helpers.js";
 import useStore from "../../store/store.js";
 import { ModalWrapper } from "../shared/ModalWrapper/ModalWrapper.jsx";
 
@@ -74,27 +80,6 @@ export const Alternative = ({ open, onClose }) => {
         });
     };
 
-    const onStatusChange = args => {
-        console.log({ args });
-        const { status, data } = args;
-
-        if (status === 'error') {
-            console.error('Offer error', data);
-        }
-        if (status === 'seated') {
-            console.log('Transaction submitted:', data.txn);
-            console.log('Offer id:', data.offerId);
-        }
-        if (status === 'refunded') {
-            console.log('Offer refunded');
-        }
-        if (status === 'accepted') {
-            console.log('Offer accepted');
-        }
-
-        onModalClose();
-    }
-
     const validate = () => {
         const possibleErrors = {
             utilityAmountIndex: checkNumber(data.utilityAmountIndex) ? '' : 'Required',
@@ -112,6 +97,8 @@ export const Alternative = ({ open, onClose }) => {
 
         return true;
     };
+
+    const { onStatusChange } = makeGenericOnStatusUpdate(console.log, onModalClose);
 
     const handleSubmit = () => {
         console.log({ data, wallet })
