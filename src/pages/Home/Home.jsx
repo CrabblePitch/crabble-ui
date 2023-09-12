@@ -5,7 +5,7 @@ import { Contact } from '../Contact/Contact.jsx';
 import { AddProtocolModal } from '../../components/AddProtocolModal/AddProtocolModal.jsx';
 import { useState } from 'react';
 import { Explore } from '../Explore/Explore.jsx';
-import { Alternative } from "../../components/AddProtocolModal/Alternative.jsx";
+import { Alternative } from '../../components/AddProtocolModal/Alternative.jsx';
 
 export const Home = () => {
     const [open, setOpen] = useState(false);
@@ -13,6 +13,8 @@ export const Home = () => {
     const toggleModal = () => {
         setOpen(!open);
     };
+
+    console.log('open: ', open);
 
     return (
         <div className="home">

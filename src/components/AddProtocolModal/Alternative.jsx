@@ -2,12 +2,15 @@ import './AddProtocolModal.scss';
 
 import { useState } from 'react';
 import { TextField, Radio, Select, MenuItem } from '@mui/material';
-import { buildCreateRentalOfferSpec, checkNumber, getBrand, getPurseFromSmartWallet } from "../../utils/helpers.js";
-import useStore from "../../store/store.js";
-import { ModalWrapper } from "../shared/ModalWrapper/ModalWrapper.jsx";
+import { buildCreateRentalOfferSpec, checkNumber, getBrand, getPurseFromSmartWallet } from '../../utils/helpers.js';
+import useStore from '../../store/store.js';
+import { ModalWrapper } from '../shared/ModalWrapper/ModalWrapper.jsx';
+import { Close as CloseIcon } from '@mui/icons-material';
 
 export const Alternative = ({ open, onClose }) => {
-    const wallet = useStore(state => state.wallet);
+    const wallet = useStore((state) => state.wallet);
+
+    console.log('open alt: ', open);
 
     const defaultData = {
         utilityTitle: 'Test Title',
@@ -34,7 +37,7 @@ export const Alternative = ({ open, onClose }) => {
     const [errors, setErrors] = useState(defaultErrors);
     const [submittedData, setSubmittedData] = useState(null);
     const utilityBrand = getBrand('Utility');
-    const utilityPurse = getPurseFromSmartWallet(utilityBrand);
+    const utilityPurse = getPurseFromSmartWallet(utilityBrand) || '';
 
     const onModalClose = () => {
         setData(defaultData);
@@ -74,7 +77,7 @@ export const Alternative = ({ open, onClose }) => {
         });
     };
 
-    const onStatusChange = args => {
+    const onStatusChange = (args) => {
         console.log({ args });
         const { status, data } = args;
 
@@ -93,7 +96,7 @@ export const Alternative = ({ open, onClose }) => {
         }
 
         onModalClose();
-    }
+    };
 
     const validate = () => {
         const possibleErrors = {
@@ -114,68 +117,81 @@ export const Alternative = ({ open, onClose }) => {
     };
 
     const handleSubmit = () => {
-        console.log({ data, wallet })
+        console.log({ data, wallet });
         if (!wallet || !validate()) throw new Error(`Not ready; wallet: ${wallet}, data: ${data}`);
 
-
-        const offerSpec= buildCreateRentalOfferSpec(data);
+        const offerSpec = buildCreateRentalOfferSpec(data);
         console.log({ offerSpec });
-        void wallet.makeOffer(offerSpec.invitationSpec, offerSpec.proposal, offerSpec.offerArgs, onStatusChange, offerSpec.id);
+        void wallet.makeOffer(
+            offerSpec.invitationSpec,
+            offerSpec.proposal,
+            offerSpec.offerArgs,
+            onStatusChange,
+            offerSpec.id,
+        );
     };
+
+    console.log('utilityPurse: ', utilityPurse);
 
     return (
         open && (
             <ModalWrapper className="add-protocol-modal">
                 {/*{submittedData && <RentalCreator data={submittedData} onSubmit={() => setSubmittedData(null)} />}*/}
                 <header>
-                    <h4>Add Crubble Protocol</h4>
-                    <button onClick={onModalClose}>x</button>
+                    <h2 className="modal-title">Add Crabble Protocol</h2>
+                    <span className="modal-close-btn" onClick={onModalClose}>
+                        <CloseIcon />
+                    </span>
                 </header>
-                <section>
+                <main className="modal-body">
                     <div className="modal-column">
-                        <div>
-                            <p className="label">Choose the NFT you want to rent</p>
+                        <section>
+                            <h4 className="title">Choose the NFT you want to rent</h4>
                             <Select
                                 name="utilityAmountIndex"
                                 onChange={handleChange}
                                 value={data.utilityAmountIndex}
                                 label="Utility Amount"
+                                native={true}
                             >
-                                {[...utilityPurse.value].map((value, index) => {
+                                {[...(utilityPurse.value || [])].map((value, index) => {
                                     return (
                                         <MenuItem key={index} value={index}>
                                             {value.address}
                                         </MenuItem>
-                                    )
+                                    );
                                 })}
                             </Select>
-                        </div>
-                        <div className="renting-tier">
-                            <p className="label">What renting tier are you planning to use?</p>
-                            <label>
-                                Ad-Hoc
-                                <Radio
-                                    type="radio"
-                                    checked={data.rentingTier === 'Ad-Hoc'}
-                                    name="rentingTier"
-                                    onChange={handleChange}
-                                    value="Ad-Hoc"
-                                />
-                            </label>
-                            <label>
-                                Auction
-                                <Radio
-                                    type="radio"
-                                    checked={data.rentingTier === 'Auction'}
-                                    name="rentingTier"
-                                    onChange={handleChange}
-                                    value="Auction"
-                                />
-                            </label>
-                        </div>
+                        </section>
+                        <section className="renting-tier">
+                            <h4 className="title">What renting tier are you planning to use?</h4>
+                            <div className="radio-group">
+                                <div className="radio-item">
+                                    <label htmlFor="ad-hoc">Ad-Hoc</label>
+                                    <Radio
+                                        id="ad-hoc"
+                                        type="radio"
+                                        checked={data.rentingTier === 'Ad-Hoc'}
+                                        name="rentingTier"
+                                        onChange={handleChange}
+                                        value="Ad-Hoc"
+                                    />
+                                </div>
+                                <div className="radio-item">
+                                    <label htmlFor="auction">Auction</label>
+                                    <Radio
+                                        type="radio"
+                                        checked={data.rentingTier === 'Auction'}
+                                        name="rentingTier"
+                                        onChange={handleChange}
+                                        value="Auction"
+                                    />
+                                </div>
+                            </div>
+                        </section>
                         {data.rentingTier === 'Ad-Hoc' && (
-                            <div>
-                                <p className="label">Secure yourself with a fair amount of collateral</p>
+                            <section>
+                                <h4 className="title">Secure yourself with a fair amount of collateral</h4>
                                 <TextField
                                     type="number"
                                     name="collateralVal"
@@ -186,12 +202,12 @@ export const Alternative = ({ open, onClose }) => {
                                     error={!!errors.collateralVal}
                                     helperText={errors.collateralVal}
                                 />
-                            </div>
+                            </section>
                         )}
-                        <div>
-                            <p className="label">Renting Duration</p>
+                        <section>
+                            <p className="title">Renting Duration</p>
                             <div className="renting-duration">
-                                <label>
+                                <section className="duration-input">
                                     <TextField
                                         type="number"
                                         name="minRentingDurationUnits"
@@ -200,9 +216,9 @@ export const Alternative = ({ open, onClose }) => {
                                         value={data.minRentingDurationUnits}
                                     />
                                     <small>{data.rentingDurationUnit}(s)</small>
-                                </label>
+                                </section>
                                 <span>to</span>
-                                <label>
+                                <section className="duration-input">
                                     <TextField
                                         type="number"
                                         name="maxRentingDurationUnits"
@@ -211,13 +227,13 @@ export const Alternative = ({ open, onClose }) => {
                                         value={data.maxRentingDurationUnits}
                                     />
                                     <small>{data.rentingDurationUnit}(s)</small>
-                                </label>
+                                </section>
                             </div>
-                        </div>
+                        </section>
                     </div>
                     <div className="modal-column">
-                        <div>
-                            <p className="label">What is your unit of renting duration?</p>
+                        <section>
+                            <h4 className="title">What is your unit of renting duration?</h4>
                             <Select
                                 name="rentingDurationUnit"
                                 onChange={handleChange}
@@ -229,10 +245,10 @@ export const Alternative = ({ open, onClose }) => {
                                 <option value="day">Day</option>
                                 <option value="week">Week</option>
                             </Select>
-                        </div>
+                        </section>
                         {data.rentingTier === 'Ad-Hoc' && (
-                            <div>
-                                <p className="label">How much are you going to charge per renting duration ?</p>
+                            <section>
+                                <h4 className="title">How much are you going to charge per renting duration ?</h4>
                                 <TextField
                                     name="rentalFeePerUnitVal"
                                     type="number"
@@ -243,24 +259,29 @@ export const Alternative = ({ open, onClose }) => {
                                     error={!!errors.rentalFeePerUnitVal}
                                     helperText={errors.rentalFeePerUnitVal}
                                 />
-                            </div>
+                            </section>
                         )}
-                        <div>
-                            <p className="label">Enter your grace period</p>
+                        <section>
+                            <h4 className="title">Enter your grace period</h4>
                             <TextField
                                 name="gracePeriodDuration"
                                 label="Grace Period Duration"
                                 onChange={handleChange}
+                                type="number"
                                 value={data.gracePeriodDuration}
                                 error={!!errors.gracePeriodDuration}
                                 helperText={errors.gracePeriodDuration}
                             />
-                        </div>
+                        </section>
                     </div>
-                </section>
-                <footer>
-                    <button onClick={onModalClose}>Cancel</button>
-                    <button onClick={handleSubmit}>List My NFT</button>
+                </main>
+                <footer className="modal-footer">
+                    <button className="modal-footer-btn" onClick={onModalClose}>
+                        Cancel
+                    </button>
+                    <button className="modal-footer-btn" onClick={handleSubmit}>
+                        List My NFT
+                    </button>
                 </footer>
             </ModalWrapper>
         )
