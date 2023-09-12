@@ -10,12 +10,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@agoric/rpc": "0.6.0",
+    "@agoric/smart-wallet": "^0.5.4-dev-f581a7e.0",
+    "@agoric/ertp": "^0.16.3-u11.0",
+    "@agoric/web-components": "0.12.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@endo/eventual-send": "^0.17.2",
+    "@mui/icons-material": "^5.14.7",
+    "@mui/material": "^5.14.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@endo/eventual-send": "^0.17.2",
-    "@agoric/smart-wallet": "^0.5.4-dev-f581a7e.0",
-    "@agoric/rpc": "^0.4.1-dev-7cf64bb.0",
-    "@agoric/web-components": "0.10.1-dev-7cf64bb.0"
+    "react-router-dom": "^6.15.0",
+    "sass": "^1.66.1",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
@@ -25,6 +33,10 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "prettier": "^3.0.2",
     "vite": "^4.4.5"
+  },
+  "resolutions": {
+    "**/@agoric/xsnap": "0.14.3-dev-9f085d3.0"
   }
 }

@@ -1,0 +1,39 @@
+@import '../../styles/mixins';
+
+.borrow-modal {
+  .modal-body {
+    @include flex-content(flex-start, 35px);
+    text-align: left;
+    flex-flow: column;
+
+    .duration-input {
+      @include flex-content(center, 5px);
+    }
+
+    .payment-info  .details {
+      @include flex-content(flex-start, 60px);
+    }
+
+    .borrow-info {
+      @include flex-content(flex-start, 100px);
+    }
+
+    .borrow-terms {
+      li {
+        @include flex-content(center, 5px);
+        margin: 5px 0;
+      }
+    }
+
+    .title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .sub-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+  }
+}

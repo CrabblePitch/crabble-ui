@@ -1,0 +1,36 @@
+@import '../../styles/mixins';
+
+.add-protocol-modal {
+  .modal-body {
+    @include flex-content(flex-start, 50px);
+    justify-content: space-between;
+    padding: 10px 0;
+    text-align: left;
+
+    .renting-tier {
+      .radio-group {
+        @include flex-content(flex-start, 10px);
+      }
+    }
+
+    .modal-column {
+      @include flex-content(flex-start, 30px);
+      flex-flow: column;
+      flex: 1;
+    }
+
+    .renting-duration {
+      @include flex-content(center, 15px);
+      margin-top: 30px;
+
+      .duration-input {
+        @include flex-content(center, 5px);
+      }
+    }
+
+    .title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  }
+}
