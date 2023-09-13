@@ -59,6 +59,21 @@ const makeStorageWatcher = () => {
         );
     };
 
+    // For testing
+    const watchTest = () => {
+        watcher.watchLatest(
+            [AgoricChainStoragePathKind.Data, 'published.crabble.rental4'],
+            rental => {
+                console.log('Rental Update', rental);
+                useStore.setState({
+                    rental: {
+                        ...rental
+                    }
+                });
+            }
+        );
+    };
+
     const startWatching = () => {
         if (!wallet || !watcher) {
             console.log({
@@ -73,6 +88,7 @@ const makeStorageWatcher = () => {
         watchBrands();
         watchInstances();
         watchCatalog();
+        watchTest();
     };
 
     return { startWatching };

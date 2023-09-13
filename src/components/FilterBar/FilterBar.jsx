@@ -2,6 +2,7 @@ import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import SwapVertOutlinedIcon from '@mui/icons-material/SwapVertOutlined';
 
 import './FilterBar.scss';
+import TestComponent from "../Withdraw/TestComponent.jsx";
 
 export const FilterBar = () => {
     return (
@@ -19,6 +20,7 @@ export const FilterBar = () => {
                 <button>
                     <SwapVertOutlinedIcon />
                 </button>
+                <TestComponent/>
             </div>
         </div>
     );
