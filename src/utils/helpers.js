@@ -70,4 +70,92 @@ const checkPositiveNumber = entry => {
 };
 harden(checkPositiveNumber)
 
-export { getBrand, getPurseFromSmartWallet, buildCreateRentalOfferSpec, checkNegativeNumber, checkPositiveNumber };
+const buildBorrowAdHocOfferSpec = rawData => {
+    const { crabbleInstance, wallet } = useStore.getState();
+    const collateralBrand = getBrand('Collateral');
+    const rentalFeeBrand = getBrand('RentalFee');
+
+    console.log({ rawData })
+
+    if (!rentalFeeBrand || !collateralBrand || !crabbleInstance || !wallet)
+        throw new Error('No data');
+
+    const rentalFeeValue = BigInt(rawData.rentingDuration) * getValueFromNat(rawData.rentalFeePerUnitAmount);
+
+    return harden({
+        id: `borrow-adhoc-${wallet.address}-${Date.now()}`,
+        invitationSpec: {
+            source: 'agoricContract',
+            instancePath: ['Crabble'],
+            callPipe: [
+                ['getRentalByHandle', [rawData.rentalHandle]],
+                ['makeBuyOutInvitation']
+            ]
+        },
+        proposal: {
+            give: {
+                Collateral: rawData.collateralAmount,
+                RentalFee: AmountMath.make(rentalFeeBrand, rentalFeeValue),
+            },
+            want: {
+                Utility: rawData.utilityAmount,
+            }
+        },
+        offerArgs: {
+            rentingDuration: BigInt(rawData.rentingDuration),
+        }
+    })
+};
+harden(buildBorrowAdHocOfferSpec);
+
+const getValueFromSet = (setAmount, index = 0) => {
+    const { value } = setAmount;
+    return value[index];
+};
+harden(getValueFromSet);
+
+const getValueFromNat = natAmount => {
+    const { value } = natAmount;
+    assert(typeof  value === 'bigint', 'Amount must be NAT');
+    return value;
+};
+harden(getValueFromNat);
+
+const makeGenericOnStatusUpdate = (snackBarUpdater, modalUpdater) => {
+    const onStatusChange = args => {
+        console.log({ args });
+        const { status, data } = args;
+
+        if (status === 'error') {
+            snackBarUpdater('Offer error', data);
+        }
+        if (status === 'seated') {
+            snackBarUpdater('Transaction submitted:', data.txn);
+            snackBarUpdater('Offer id:', data.offerId);
+        }
+        if (status === 'refunded') {
+            snackBarUpdater('Offer refunded');
+        }
+        if (status === 'accepted') {
+            snackBarUpdater('Offer accepted');
+        }
+
+        modalUpdater();
+    };
+
+    return harden({
+        onStatusChange
+    });
+};
+harden(makeGenericOnStatusUpdate);
+
+export {
+    getBrand,
+    getPurseFromSmartWallet,
+    buildCreateRentalOfferSpec,
+    checkNegativeNumber,
+    checkPositiveNumber,
+    buildBorrowAdHocOfferSpec,
+    getValueFromSet,
+    makeGenericOnStatusUpdate,
+};

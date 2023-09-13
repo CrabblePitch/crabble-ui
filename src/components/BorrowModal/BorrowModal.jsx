@@ -4,32 +4,20 @@ import { TextField } from '@mui/material';
 import { useState } from 'react';
 import { ModalWrapper } from '../shared/ModalWrapper/ModalWrapper';
 import { Close as CloseIcon, InfoOutlined as InfoIcon } from '@mui/icons-material';
+import {
+    buildBorrowAdHocOfferSpec,
+    getValueFromSet,
+    makeGenericOnStatusUpdate
+} from "../../utils/helpers.js";
+import useStore from "../../store/store.js";
 
 export const BorrowModal = ({ ticketData, closeTicket }) => {
-    const [borrowDuration, setBorrowDuration] = useState(ticketData.minRentingDurationUnits);
-
-    const mockUtilPurseValues = harden([
-        {
-            organization: 'Airbnb rental',
-            address: 'Sesame Street n12345',
-            accessKeyHash: 'bf34q7hiufb3',
-        },
-        {
-            organization: 'Airbnb rental',
-            address: 'Sesame Street n123456',
-            accessKeyHash: 'bf34q7hiufb3',
-        },
-        {
-            organization: 'Airbnb rental',
-            address: 'Sesame Street n1234567',
-            accessKeyHash: 'bf34q7hiufb3',
-        },
-        {
-            organization: 'Airbnb rental',
-            address: 'Sesame Street n12345678',
-            accessKeyHash: 'bf34q7hiufb3',
-        },
-    ]);
+    if (!ticketData || !closeTicket) {
+        console.log('Missing BorrowModal props', { ticketData, closeTicket });
+        return;
+    }
+    const [rentingDuration, setRentingDuration] = useState(Number(ticketData.minRentingDurationUnits));
+    const wallet = useStore(state => state.wallet);
 
     const onModalClose = () => {
         closeTicket();
@@ -42,11 +30,19 @@ export const BorrowModal = ({ ticketData, closeTicket }) => {
             return;
         }
 
-        setBorrowDuration(value);
+        setRentingDuration(value);
     };
 
+    const { onStatusChange } = makeGenericOnStatusUpdate(console.log, onModalClose);
+
     const handleSubmit = () => {
-        console.log('Submitted: ', borrowDuration);
+        console.log('Submitted: ', rentingDuration);
+        const offerSpec = buildBorrowAdHocOfferSpec({ ...ticketData, rentingDuration });
+        console.log('Submitted', {
+            offerSpec
+        });
+        void wallet.makeOffer(offerSpec.invitationSpec, offerSpec.proposal,
+            offerSpec.offerArgs, onStatusChange, offerSpec.id);
     };
 
     return (
@@ -65,7 +61,7 @@ export const BorrowModal = ({ ticketData, closeTicket }) => {
                             type="number"
                             name="rentingDuration"
                             onChange={handleChange}
-                            value={borrowDuration}
+                            value={rentingDuration}
                         />
                         <small>{ticketData.rentingDurationUnit}(s)</small>
                     </div>
@@ -88,7 +84,7 @@ export const BorrowModal = ({ ticketData, closeTicket }) => {
                         <h4 className="title">You're getting:</h4>
                         <p className="sub-title">UtilityAmount:</p>
                         <ul className="details">
-                            {Object.entries(mockUtilPurseValues[0]).map(([key, value]) => (
+                            {Object.entries(getValueFromSet(ticketData.utilityAmount)).map(([key, value]) => (
                                 <li key={key}>
                                     {key}: {value}
                                 </li>
@@ -100,13 +96,13 @@ export const BorrowModal = ({ ticketData, closeTicket }) => {
                     <h4 className="title">Terms</h4>
                     <ul className="borrow-terms">
                         <li>
-                            <InfoIcon /> You have {ticketData.gracePeriodDuration} after {borrowDuration} expires
+                            <InfoIcon /> You have {Number(ticketData.gracePeriodDuration)} after {rentingDuration} expires
                         </li>
                         <li>
-                            <InfoIcon /> You must return NFT before {ticketData.maxRentingDurationUnits}
+                            <InfoIcon /> You must return NFT before {Number(ticketData.maxRentingDurationUnits)}
                         </li>
                         <li>
-                            <InfoIcon /> You can return after {borrowDuration}
+                            <InfoIcon /> You can return after {rentingDuration}
                         </li>
                     </ul>
                 </section>
