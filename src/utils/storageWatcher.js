@@ -3,13 +3,14 @@ import { AgoricChainStoragePathKind } from "@agoric/rpc";
 import { subscribeLatest } from "@agoric/notifier";
 
 const makeStorageWatcher = () => {
-    const { watcher, wallet } = useStore.getState();
+    const { watcher, wallet, registerRentals } = useStore.getState();
 
-    const watchSmartWalletPurses = () => {
+    const watchSmartWallet = () => {
         watcher.watchLatest(
             [AgoricChainStoragePathKind.Data, `published.wallet.${wallet.address}.current`],
             smartWalletData => {
-                console.log('SmartWallet Update', smartWalletData)
+                console.log('SmartWallet Update', smartWalletData);
+                registerRentals(smartWalletData.offerToPublicSubscriberPaths);
                 useStore.setState({
                     smartWalletPurses: smartWalletData.purses
                 });
@@ -59,21 +60,6 @@ const makeStorageWatcher = () => {
         );
     };
 
-    // For testing
-    const watchTest = () => {
-        watcher.watchLatest(
-            [AgoricChainStoragePathKind.Data, 'published.crabble.rental4'],
-            rental => {
-                console.log('Rental Update', rental);
-                useStore.setState({
-                    rental: {
-                        ...rental
-                    }
-                });
-            }
-        );
-    };
-
     const startWatching = () => {
         if (!wallet || !watcher) {
             console.log({
@@ -83,12 +69,11 @@ const makeStorageWatcher = () => {
             return;
         }
 
-        watchSmartWalletPurses();
+        watchSmartWallet();
         watchVBankPurses().catch(err => console.log('ERROR', err));
         watchBrands();
         watchInstances();
         watchCatalog();
-        watchTest();
     };
 
     return { startWatching };

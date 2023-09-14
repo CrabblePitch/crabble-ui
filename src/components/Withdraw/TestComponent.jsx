@@ -7,25 +7,22 @@ import ReturnUtilityButton from "../ReturnUtility/ReturnUtilityButton.jsx";
 import UpdateRentalConfigButton from "../UpdateRentalConfig/UpdateRentalConfigButton.jsx";
 
 const TestComponent = () => {
-    const rental = useStore(state => state.rental);
+    const getOwnedRentals = useStore(state => state.getOwnedRentals);
+    const getBorrowedRentals = useStore(state => state.getBorrowedRentals);
 
-    if (!rental) return;
+    const ownedRentals = getOwnedRentals();
+    const borrowedRentals = getBorrowedRentals();
 
-    const updatedRental = {
-        id: "createRentalKeplr-agoric1ag5a8lhn00h4u9h2shpfpjpaq6v4kku54zk69m-1694607766669",
-        ...rental
-    };
+    console.log('TestComponent', { ownedRentals, borrowedRentals });
+
+    const ownedRental = ownedRentals.at(0);
+    const borrowedRental = borrowedRentals.at(0);
 
     const overrides = {
         maxRentingDurationUnits: 15n,
         utilityTitle: 'Awesome Title',
         utilityDescription: 'Awesome Description',
         gracePeriodDuration: 131n,
-    };
-
-    const updatedRentalReturn = {
-      id: "borrow-adhoc-agoric1sz0dv3882757e49nsplcy89r23wwv3uqj9ttyf-1694607010477",
-      ...rental,
     };
 
     const controllers = {
@@ -35,11 +32,11 @@ const TestComponent = () => {
 
     return (
         <Stack direction="row" spacing={2}>
-            <WithdrawUtility rental={updatedRental} controllers={controllers}/>
-            <WithdrawRentalFee rental={updatedRental} controllers={controllers}/>
-            <WithdrawCollateral rental={updatedRental} controllers={controllers}/>
-            <ReturnUtilityButton rental={updatedRentalReturn} controllers={controllers}/>
-            <UpdateRentalConfigButton rental={updatedRental} overrides={overrides} controllers={controllers} />
+            {ownedRental && <WithdrawUtility rental={ownedRental} controllers={controllers}/>}
+            {ownedRental && <WithdrawRentalFee rental={ownedRental} controllers={controllers}/>}
+            {ownedRental && <WithdrawCollateral rental={ownedRental} controllers={controllers}/>}
+            {ownedRental && <UpdateRentalConfigButton rental={ownedRental} overrides={overrides} controllers={controllers} />}
+            {borrowedRental && <ReturnUtilityButton rental={borrowedRental} controllers={controllers}/>}
         </Stack>
     )
 };

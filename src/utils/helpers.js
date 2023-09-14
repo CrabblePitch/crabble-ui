@@ -1,5 +1,6 @@
 import useStore from '../store/store.js';
 import { AmountMath } from "@agoric/ertp";
+import { Rental_Keywords } from "./constants.js";
 
 const getBrand = (brandPetname) => {
     const { brands } = useStore.getState();
@@ -33,7 +34,7 @@ const buildCreateRentalOfferSpec = rawData => {
     const rentalFeePerUnitAmount = AmountMath.make(rentalFeeBrand, BigInt(+rawData.rentalFeePerUnitVal));
 
     return harden({
-        id: `createRentalKeplr-${wallet.address}-${Date.now()}`,
+        id: `create-rental-${wallet.address}-${Date.now()}`,
         invitationSpec: {
             source: 'contract',
             instance: crabbleInstance,
@@ -264,6 +265,22 @@ const buildUpdateRentalConfigOfferSpec = (rental, overrides) => {
 };
 harden(buildUpdateRentalConfigOfferSpec);
 
+const getFirstWordFromOfferId = offerId => {
+  try {
+      return  String(offerId).split('-').at(0);
+  } catch (e) {
+      return '';
+  }
+};
+
+const isCreateOffer = offerId => {
+  return getFirstWordFromOfferId(offerId) === Rental_Keywords.CREATE;
+};
+
+const isBorrowOffer = offerId => {
+    return getFirstWordFromOfferId(offerId) === Rental_Keywords.BORROW;
+};
+
 export {
     getBrand,
     getPurseFromSmartWallet,
@@ -278,4 +295,6 @@ export {
     buildWithdrawCollateralOfferSpec,
     buildReturnUtilityOfferSpec,
     buildUpdateRentalConfigOfferSpec,
+    isCreateOffer,
+    isBorrowOffer,
 };
