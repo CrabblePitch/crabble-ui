@@ -1,3 +1,5 @@
+@import '../../styles/mixins';
+
 .navigation {
   display: flex;
   position: relative;
@@ -42,6 +44,10 @@
 
     button {
       margin-right: 10px;
+    }
+
+    .account-btn {
+      @include flex-content(center, 3px);
     }
   }
 }

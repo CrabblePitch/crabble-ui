@@ -18,8 +18,8 @@ export const App = () => {
 
     return (
         <NotificationProvider>
-            {!wallet && <ConnectWallet />}
-            {wallet && <Home />}
+            {/*{<ConnectWallet />}*/}
+            {<Home />}
         </NotificationProvider>
     );
 };

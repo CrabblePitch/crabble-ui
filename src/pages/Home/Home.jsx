@@ -8,20 +8,23 @@ import { AddProtocolModal } from '../../components/AddProtocolModal/AddProtocolM
 
 export const Home = () => {
     const [open, setOpen] = useState(false);
+    const [bagOpen, setBagOpen] = useState(false);
 
     const toggleModal = () => {
         setOpen(!open);
     };
 
-    console.log('open: ', open);
+    const toggleBag = () => {
+        setBagOpen(!bagOpen);
+    };
 
     return (
         <div className="home">
             <BrowserRouter>
-                <NavPanel toggleModal={toggleModal} />
+                <NavPanel toggleModal={toggleModal} toggleBag={toggleBag} bagOpen={bagOpen} />
                 <Routes>
-                    <Route path="/" element={<Explore />} />
-                    <Route path="/explore" element={<Explore />} />
+                    <Route path="/" element={<Explore bagOpen={bagOpen} />} />
+                    <Route path="/explore" element={<Explore bagOpen={bagOpen} />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/contact" element={<Contact />} />
                 </Routes>

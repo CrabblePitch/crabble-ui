@@ -1,65 +1,65 @@
 export const mockData = [
     {
-        name: 'NFT 1',
+        utilityTitle: 'NFT 1',
         minRentingDurationUnits: 1,
         maxRentingDurationUnits: 10,
         collateralAmount: '100',
         rentalFeeAmount: '10',
         rentingDurationUnit: 'day',
-        gracePeriodDuration: '15'
+        gracePeriodDuration: '15',
     },
     {
-        name: 'NFT 2',
+        utilityTitle: 'NFT 2',
         minRentingDurationUnits: 1,
         maxRentingDurationUnits: 10,
         collateralAmount: '100',
         rentalFeeAmount: '10',
         rentingDurationUnit: 'day',
-        gracePeriodDuration: '15'
+        gracePeriodDuration: '15',
     },
     {
-        name: 'NFT 3',
+        utilityTitle: 'NFT 3',
         minRentingDurationUnits: 1,
         maxRentingDurationUnits: 10,
         collateralAmount: '100',
         rentalFeeAmount: '10',
         rentingDurationUnit: 'day',
-        gracePeriodDuration: '15'
+        gracePeriodDuration: '15',
     },
     {
-        name: 'NFT 4',
+        utilityTitle: 'NFT 4',
         minRentingDurationUnits: 1,
         maxRentingDurationUnits: 10,
         collateralAmount: '100',
         rentalFeeAmount: '10',
         rentingDurationUnit: 'day',
-        gracePeriodDuration: '15'
+        gracePeriodDuration: '15',
     },
     {
-        name: 'NFT 5',
+        utilityTitle: 'NFT 5',
         minRentingDurationUnits: 1,
         maxRentingDurationUnits: 10,
         collateralAmount: '100',
         rentalFeeAmount: '10',
         rentingDurationUnit: 'day',
-        gracePeriodDuration: '15'
+        gracePeriodDuration: '15',
     },
     {
-        name: 'NFT 6',
+        utilityTitle: 'NFT 6',
         minRentingDurationUnits: 1,
         maxRentingDurationUnits: 10,
         collateralAmount: '100',
         rentalFeeAmount: '10',
         rentingDurationUnit: 'day',
-        gracePeriodDuration: '15'
+        gracePeriodDuration: '15',
     },
     {
-        name: 'NFT 7',
+        utilityTitle: 'NFT 7',
         minRentingDurationUnits: 1,
         maxRentingDurationUnits: 10,
         collateralAmount: '100',
         rentalFeeAmount: '10',
         rentingDurationUnit: 'day',
-        gracePeriodDuration: '15'
+        gracePeriodDuration: '15',
     },
 ];

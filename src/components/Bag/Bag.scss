@@ -1,0 +1,58 @@
+@import '../../styles/mixins';
+
+.bag-wrapper {
+  border: 2px solid black;
+  max-width: 70%;
+  margin: auto;
+
+  .bag-header {
+    padding: 20px 30px;
+
+    .user-info {
+      @include flex-content(center, 3px);
+      margin-bottom: 10px;
+    }
+
+    .user-bag-info {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+
+      .rent-borrow, .rent-options {
+        @include flex-content(flex-start, 15px);
+      }
+    }
+  }
+
+  .bag-body {
+
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      border-bottom: 1px solid #d0d0d0;
+      margin-bottom: 5px;
+
+      button:focus {
+        outline: none;
+      }
+    }
+
+    .tab-sections {
+      height: 60vh;
+      padding: 20px 30px;
+      overflow: scroll;
+
+      .tab {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        .ticket {
+          flex-basis: calc(50% - 10px);
+          margin: 10px 5px;
+        }
+      }
+    }
+  }
+}

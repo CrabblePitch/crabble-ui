@@ -1,9 +1,9 @@
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { NavLink } from 'react-router-dom';
-
 import './NavPanel.scss';
 
-export const NavPanel = ({ toggleModal }) => {
+import { AccountCircle as AccountCircleIcon } from '@mui/icons-material';
+import { NavLink } from 'react-router-dom';
+
+export const NavPanel = ({ toggleModal, toggleBag, bagOpen }) => {
     return (
         <div className="navigation">
             <div className="nav-icon">
@@ -21,9 +21,17 @@ export const NavPanel = ({ toggleModal }) => {
                 </li>
             </ul>
             <div className="nav-controls">
-                <button onClick={toggleModal}>Rent Your NFT</button>
-                <button>My Wallet</button>
-                <AccountCircleIcon />
+                {bagOpen ? (
+                    <button onClick={toggleBag}>Back to Catalog</button>
+                ) : (
+                    <>
+                        <button onClick={toggleModal}>Rent Your NFT</button>
+                        <button className="account-btn" onClick={toggleBag}>
+                            <AccountCircleIcon />
+                            My Bag
+                        </button>
+                    </>
+                )}
             </div>
         </div>
     );
