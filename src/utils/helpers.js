@@ -1,5 +1,6 @@
 import useStore from '../store/store.js';
 import { AmountMath } from "@agoric/ertp";
+import { Rental_Keywords } from "./constants.js";
 
 const getBrand = (brandPetname) => {
     const { brands } = useStore.getState();
@@ -33,7 +34,7 @@ const buildCreateRentalOfferSpec = rawData => {
     const rentalFeePerUnitAmount = AmountMath.make(rentalFeeBrand, BigInt(+rawData.rentalFeePerUnitVal));
 
     return harden({
-        id: `createRentalKeplr-${wallet.address}-${Date.now()}`,
+        id: `create-rental-${wallet.address}-${Date.now()}`,
         invitationSpec: {
             source: 'contract',
             instance: crabbleInstance,
@@ -61,7 +62,7 @@ const buildCreateRentalOfferSpec = rawData => {
 harden(buildCreateRentalOfferSpec);
 
 const checkNegativeNumber = entry => {
-    return Number(entry) > 0;
+    return Number(entry) < 0;
 };
 harden(checkNegativeNumber);
 
@@ -149,6 +150,137 @@ const makeGenericOnStatusUpdate = (snackBarUpdater, modalUpdater) => {
 };
 harden(makeGenericOnStatusUpdate);
 
+const buildWithdrawUtilityOfferSpec = (rental) => {
+    const { wallet } = useStore.getState();
+
+    assert(wallet && wallet.address, `Wallet must be defined: ${wallet}`);
+    assert(rental, `Rental must be defined: ${rental}`);
+
+    return harden({
+        id: `withdraw-utility-${wallet.address}-${Date.now()}`,
+        invitationSpec: {
+            source: 'continuing',
+            previousOffer: rental.id,
+            invitationMakerName: 'withdrawUtility',
+        },
+        proposal: {
+            want: {
+                Utility: rental.configuration.utilityAmount,
+            },
+        },
+    });
+};
+harden(buildWithdrawUtilityOfferSpec);
+
+const buildWithdrawCollateralOfferSpec = rental => {
+    const { wallet } = useStore.getState();
+
+    assert(wallet && wallet.address, `Wallet must be defined: ${wallet}`);
+    assert(rental, `Rental must be defined: ${rental}`);
+
+    return harden({
+        id: `withdraw-collateral-${wallet.address}-${Date.now()}`,
+        invitationSpec: {
+            source: 'continuing',
+            previousOffer: rental.id,
+            invitationMakerName: 'withdrawCollateral',
+        },
+        proposal: {
+            want: {
+                Collateral: rental.configuration.collateralAmount,
+            },
+        }
+    });
+};
+harden(buildWithdrawUtilityOfferSpec);
+
+const buildWithdrawRentalFeeOfferSpec = rental => {
+    const { wallet } = useStore.getState();
+
+    assert(wallet && wallet.address, `Wallet must be defined: ${wallet}`);
+    assert(rental, `Rental must be defined: ${rental}`);
+
+    return harden({
+        id: `withdraw-rental-fee-${wallet.address}-${Date.now()}`,
+        invitationSpec: {
+            source: 'continuing',
+            previousOffer: rental.id,
+            invitationMakerName: 'withdrawRentalFee',
+        },
+        proposal: {
+            want: {
+                RentalFee: rental.configuration.rentalFeePerUnitAmount,
+            },
+        }
+    });
+};
+harden(buildWithdrawUtilityOfferSpec);
+
+const buildReturnUtilityOfferSpec = rental => {
+    const { wallet } = useStore.getState();
+
+    assert(wallet && wallet.address, `Wallet must be defined: ${wallet}`);
+    assert(rental, `Rental must be defined: ${rental}`);
+
+    return harden({
+        id: `return-utility-${wallet.address}-${Date.now()}`,
+        invitationSpec: {
+            source: 'continuing',
+            previousOffer: rental.id,
+            invitationMakerName: 'returnUtility',
+        },
+        proposal: {
+            give: {
+                Utility: rental.configuration.utilityAmount,
+            },
+            want: {
+                Collateral: rental.configuration.collateralAmount,
+            },
+        }
+    });
+};
+harden(buildReturnUtilityOfferSpec);
+
+const buildUpdateRentalConfigOfferSpec = (rental, overrides) => {
+    const { wallet } = useStore.getState();
+
+    assert(wallet && wallet.address, `Wallet must be defined: ${wallet}`);
+    assert(rental, `Rental must be defined: ${rental}`);
+
+    return harden({
+        id: `update-rental-config-${wallet.address}-${Date.now()}`,
+        invitationSpec: {
+            source: 'continuing',
+            previousOffer: rental.id,
+            invitationMakerName: 'updateRentalConfig',
+        },
+        proposal: {},
+        offerArgs: {
+            updatedRentalConfig: {
+                ...rental.configuration,
+                ...overrides,
+            }
+        }
+    });
+};
+harden(buildUpdateRentalConfigOfferSpec);
+
+const getFirstWordFromOfferId = offerId => {
+  try {
+      return  String(offerId).split('-').at(0);
+  } catch (e) {
+      return '';
+  }
+};
+
+const isCreateOffer = offerId => {
+  return getFirstWordFromOfferId(offerId) === Rental_Keywords.CREATE;
+};
+
+const isBorrowOffer = offerId => {
+    return getFirstWordFromOfferId(offerId) === Rental_Keywords.BORROW;
+};
+
 export {
     getBrand,
     getPurseFromSmartWallet,
@@ -158,4 +290,11 @@ export {
     buildBorrowAdHocOfferSpec,
     getValueFromSet,
     makeGenericOnStatusUpdate,
+    buildWithdrawUtilityOfferSpec,
+    buildWithdrawRentalFeeOfferSpec,
+    buildWithdrawCollateralOfferSpec,
+    buildReturnUtilityOfferSpec,
+    buildUpdateRentalConfigOfferSpec,
+    isCreateOffer,
+    isBorrowOffer,
 };
