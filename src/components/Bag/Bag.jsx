@@ -67,14 +67,24 @@ export const Bag = () => {
                         {tabValue === 0 && (
                             <section className="owned-tickets tab">
                                 {mockData.map((data, index) => (
-                                    <Ticket key={index} data={data} onTicketClick={setActiveRental} />
+                                    <Ticket
+                                        key={index}
+                                        data={data}
+                                        onTicketClick={setActiveRental}
+                                        showDescription={false}
+                                    />
                                 ))}
                             </section>
                         )}
                         {tabValue === 1 && (
                             <section className="borrowed-tickets tab">
                                 {mockData.slice(5).map((data, index) => (
-                                    <Ticket key={index} data={data} onTicketClick={setActiveRental} />
+                                    <Ticket
+                                        key={index}
+                                        data={data}
+                                        onTicketClick={setActiveRental}
+                                        showDescription={false}
+                                    />
                                 ))}
                             </section>
                         )}

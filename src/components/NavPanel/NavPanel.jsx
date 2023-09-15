@@ -1,6 +1,6 @@
 import './NavPanel.scss';
 
-import { AccountCircle as AccountCircleIcon } from '@mui/icons-material';
+import { AccountCircle as AccountCircleIcon, ArrowBackIos as BackIcon } from '@mui/icons-material';
 import { NavLink } from 'react-router-dom';
 
 export const NavPanel = ({ toggleModal, toggleBag, bagOpen }) => {
@@ -22,7 +22,10 @@ export const NavPanel = ({ toggleModal, toggleBag, bagOpen }) => {
             </ul>
             <div className="nav-controls">
                 {bagOpen ? (
-                    <button onClick={toggleBag}>Back to Catalog</button>
+                    <button onClick={toggleBag} className="account-btn">
+                        <BackIcon fontSize="small" />
+                        Catalog
+                    </button>
                 ) : (
                     <>
                         <button onClick={toggleModal}>Rent Your NFT</button>

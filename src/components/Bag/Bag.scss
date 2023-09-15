@@ -49,8 +49,11 @@
         justify-content: space-between;
 
         .ticket {
-          flex-basis: calc(50% - 10px);
           margin: 10px 5px;
+
+          .ticket-image {
+            width: 200px;
+          }
         }
       }
     }
