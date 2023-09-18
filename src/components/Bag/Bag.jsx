@@ -5,7 +5,9 @@ import { AccountCircle as AccountCircleIcon } from '@mui/icons-material';
 import { Tabs, Tab } from '@mui/material';
 import { Ticket } from '../Ticket/Ticket.jsx';
 import { RentalModal } from '../RentalModal/RentalModal.jsx';
-import { mockData } from '../../pages/Explore/_mockData.js';
+
+// TODO: to be removed
+import { mockUtilityData } from '../../pages/Explore/_mockUtility.js';
 
 export const Bag = () => {
     const [tabValue, setTabValue] = useState(1);
@@ -66,7 +68,7 @@ export const Bag = () => {
                     <div className="tab-sections">
                         {tabValue === 0 && (
                             <section className="owned-tickets tab">
-                                {mockData.map((data, index) => (
+                                {mockUtilityData.map((data, index) => (
                                     <Ticket
                                         key={index}
                                         data={data}
@@ -78,7 +80,7 @@ export const Bag = () => {
                         )}
                         {tabValue === 1 && (
                             <section className="borrowed-tickets tab">
-                                {mockData.slice(5).map((data, index) => (
+                                {mockUtilityData.slice(2).map((data, index) => (
                                     <Ticket
                                         key={index}
                                         data={data}

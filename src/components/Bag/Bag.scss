@@ -2,7 +2,9 @@
 
 .bag-wrapper {
   border: 2px solid black;
-  max-width: 70%;
+
+  // TODO: Clarify the size
+  max-width: 65%;
   margin: auto;
 
   .bag-header {
@@ -47,6 +49,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+        gap: 50px;
 
         .ticket {
           margin: 10px 5px;
