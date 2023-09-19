@@ -5,6 +5,7 @@ import { Contact } from '../Contact/Contact.jsx';
 import { useState } from 'react';
 import { Explore } from '../Explore/Explore.jsx';
 import { AddProtocolModal } from '../../components/AddProtocolModal/AddProtocolModal.jsx';
+import { Box } from "@mui/material";
 
 export const Home = () => {
     const [open, setOpen] = useState(false);
