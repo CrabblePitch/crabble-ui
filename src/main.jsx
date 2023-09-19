@@ -35,6 +35,15 @@ const theme = createTheme({
         },
         onSurface: {
             main: '#2c2c44'
+        },
+        onSurfaceText: {
+            main: '#e5e1e6'
+        },
+        altText: {
+            main: '#e4e1ec'
+        },
+        container: {
+            main: '#e6dff9'
         }
     }
 })

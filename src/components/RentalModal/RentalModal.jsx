@@ -35,6 +35,11 @@ export const RentalModal = ({ utility, closeModal }) => {
         return Object.entries(uiConfig);
     };
 
+    const controllers = {
+        snackbar: console.log,
+        modal: () => console.log('This is not a modal'),
+    };
+
     return (
         <ModalWrapper className="rental-modal">
             <header className="modal-header">
@@ -82,8 +87,8 @@ export const RentalModal = ({ utility, closeModal }) => {
                     <UpdateRentalConfigButton rental={utility} overrides={{}} controllers={{}} />
                 )}
                 {utility.phase === 'available' && <WithdrawUtilityButton rental={utility} controllers={{}} />}
-                {utility.phase === 'liquidated' && <WithdrawCollateralButton rental={utility} controllers={{}} />}
-                <WithdrawRentalFeeButton rental={utility} controllers={{}} />
+                {utility.phase === 'liquidation' && <WithdrawCollateralButton rental={utility} controllers={controllers} />}
+                <WithdrawRentalFeeButton rental={utility} controllers={controllers} />
             </footer>
         </ModalWrapper>
     );

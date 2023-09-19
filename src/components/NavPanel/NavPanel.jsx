@@ -2,26 +2,23 @@ import './NavPanel.scss';
 
 import { AccountCircle as AccountCircleIcon, ArrowBackIos as BackIcon } from '@mui/icons-material';
 import { NavLink } from 'react-router-dom';
-import { AppBar, Box, Button, IconButton, Toolbar } from "@mui/material";
-import Container from "@mui/material/Container";
+import { AppBar, Box, Button, IconButton, SvgIcon, Toolbar } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import CrabbleIcon from "../CrabbleIcon.jsx";
 
 export const NavPanel = ({ toggleModal, toggleBag, bagOpen }) => {
     return (
         <AppBar position={"sticky"} color={'surface'}>
-            <Toolbar sx={{justifyContent: 'space-between', boxShadow: 'line'}}>
+            <Toolbar sx={{justifyContent: 'space-between', boxShadow: 'line', p: 0}}>
                 <Box sx={{
                     flexGrow: 1,
                     justifyContent: 'flex-start',
                     alignItems: 'center',
                     display:'inline-flex'
                 }}>
-                    <Button variant={'text'} >
-                        <AccountCircleIcon sx={{color: "primary.contrastText", mr: 1}}  />
+                    <Button variant={'text'} sx={{p: 0, m: 0}}>
                         <NavLink to="/explore">
-                            <Typography variant='h6' color='primary.contrastText' sx={{ textTransform: 'none'}}>
-                                CRABBLE
-                            </Typography>
+                            <CrabbleIcon/>
                         </NavLink>
                     </Button>
 
@@ -51,7 +48,7 @@ export const NavPanel = ({ toggleModal, toggleBag, bagOpen }) => {
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', flexGrow: 1 }}>
                     {bagOpen ? (
                         <>
-                            <Button variant='contained' onClick={toggleBag}>
+                            <Button variant='contained' color={'secondary'} onClick={toggleBag}>
                                 <BackIcon />
                                 <Typography color='primary.contrastText' sx={{ textTransform: 'none'}}>
                                     Catalog
@@ -62,12 +59,12 @@ export const NavPanel = ({ toggleModal, toggleBag, bagOpen }) => {
                         <>
                             <Button variant='contained' sx={{
                                 flexGrox: 1, mr: 2
-                            }} onClick={toggleModal}>
+                            }} color={'secondary'} onClick={toggleModal}>
                                 <Typography color='primary.contrastText' sx={{ textTransform: 'none'}}>
                                 Rent Your NFT
                             </Typography>
                             </Button>
-                            <Button variant='contained' onClick={toggleBag} sx={{ flexGrox: 1, backgroundColor: 'primary' }}>
+                            <Button variant='contained' color={'secondary'} onClick={toggleBag} sx={{ flexGrox: 1, backgroundColor: 'primary' }}>
                                 <AccountCircleIcon />
                                 <Typography color='primary.contrastText' sx={{ textTransform: 'none', ml: 1}}>
                                     My Bag
@@ -82,20 +79,3 @@ export const NavPanel = ({ toggleModal, toggleBag, bagOpen }) => {
         </AppBar>
     );
 };
-
-/**
- * {bagOpen ? (
- *                     <button onClick={toggleBag} className="account-btn">
- *                         <BackIcon fontSize="small" />
- *                         Catalog
- *                     </button>
- *                 ) : (
- *                     <>
- *                         <button onClick={toggleModal}>Rent Your NFT</button>
- *                         <button className="account-btn" onClick={toggleBag}>
- *                             <AccountCircleIcon />
- *                             My Bag
- *                         </button>
- *                     </>
- *                 )}
- */

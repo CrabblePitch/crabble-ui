@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1417 1417">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #2d2842;
+        stroke-linejoin: round;
+      }
+
+      .cls-2 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-2, .cls-3, .cls-4, .cls-5, .cls-6 {
+        fill-rule: evenodd;
+        stroke-width: 0px;
+      }
+
+      .cls-3 {
+        fill: url(#linear-gradient-3);
+      }
+
+      .cls-4 {
+        fill: url(#linear-gradient-2);
+      }
+
+      .cls-5 {
+        fill: url(#linear-gradient-4);
+      }
+
+      .cls-6 {
+        fill: url(#linear-gradient-5);
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="165.06" y1="-575.59" x2="105.08" y2="-515.59" gradientTransform="translate(-826.27 5001.39) scale(7.87)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fb7843"/>
+      <stop offset="1" stop-color="#e85cdb"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="225.05" y1="-635.57" x2="165.07" y2="-575.57" gradientTransform="translate(-826.27 5001.38) scale(7.87)" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-3" x1="225.05" y1="-515.6" x2="165.07" y2="-455.61" gradientTransform="translate(-826.27 5001.39) scale(7.87)" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-4" x1="283.07" y1="-488.05" x2="223.09" y2="-428.04" gradientTransform="translate(3840.48 2227.77) rotate(-90) scale(7.87)" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-5" x1="137.5" y1="-637.56" x2="77.52" y2="-577.55" gradientTransform="translate(-3599.89 334.63) rotate(90) scale(7.87)" xlink:href="#linear-gradient"/>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <path class="cls-2" d="m.5,472.5h472v472H.5v-472h0Z"/>
+    <path class="cls-1" d="m.5,472.5h472v472H.5v-472h0Z"/>
+    <path class="cls-4" d="m472.5.6h472v472h-472V.6Z"/>
+    <path class="cls-1" d="m472.5.6h472v472h-472V.6Z"/>
+    <path class="cls-3" d="m472.5,944.5h472v472h-472v-472Z"/>
+    <path class="cls-1" d="m472.5,944.5h472v472h-472v-472Z"/>
+    <path class="cls-5" d="m472.5,472.5H.5L472.5.5v472Z"/>
+    <path class="cls-1" d="m472.5,472.5H.5L472.5.5v472Z"/>
+    <path class="cls-6" d="m944.5,944.5h472l-472,472v-472Z"/>
+    <path class="cls-1" d="m944.5,944.5h472l-472,472v-472Z"/>
+  </g>
+</svg>

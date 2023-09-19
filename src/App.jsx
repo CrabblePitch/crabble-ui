@@ -26,8 +26,9 @@ export const App = () => {
 
     return (
         <>
-            <Box sx={{ height: '100%', bgcolor: 'surface.main' }} className='TEST'>
-                <Home/>
+            <Box sx={{ height: '100%', bgcolor: 'onSurface.main' }} className='TEST'>
+                {!wallet && <ConnectWallet/>}
+                {wallet && <Home/>}
             </Box>
         </>
 

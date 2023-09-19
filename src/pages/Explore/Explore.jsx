@@ -9,101 +9,68 @@ import useStore from '../../store/store.js';
 import Typography from "@mui/material/Typography";
 import { Box, Paper } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import { catalogData } from "../../utils/mockData.js";
 
 export const Explore = ({ bagOpen }) => {
     const catalog = useStore((state) => state.catalog) || [];
     const [activeTicket, setActiveTicket] = useState(null);
     console.log('activeTicket', activeTicket);
 
-    // const displayData = [...catalog].filter(({ phase }) => phase === 'available');
-    const displayData = [
-        {
-            configuration: {
-                collateralAmount: { value: 100n},
-                utilityTitle: 'House',
-                utilityDescription : 'Family house available for vacations',
-                rentingTier: 'Ad-Hoc',
-                rentingDurationUnit: 'minute',
-                minRentingDurationUnits: 1n,
-                maxRentingDurationUnits: 60n,
-                gracePeriodDuration: 10n * 60n, // 10 mins grace period,
-            },
-            phase: 'available'
-        },
-        {
-            configuration: {
-                collateralAmount: { value: 100n},
-                utilityTitle: 'House',
-                utilityDescription : 'Family house available for vacations',
-                rentingTier: 'Ad-Hoc',
-                rentingDurationUnit: 'minute',
-                minRentingDurationUnits: 1n,
-                maxRentingDurationUnits: 60n,
-                gracePeriodDuration: 10n * 60n, // 10 mins grace period,
-            },
-            phase: 'available'
-        },
-        {
-            configuration: {
-                collateralAmount: { value: 100n},
-                utilityTitle: 'House',
-                utilityDescription : 'Family house available for vacations',
-                rentingTier: 'Ad-Hoc',
-                rentingDurationUnit: 'minute',
-                minRentingDurationUnits: 1n,
-                maxRentingDurationUnits: 60n,
-                gracePeriodDuration: 10n * 60n, // 10 mins grace period,
-            },
-            phase: 'available'
-        },
-        {
-            configuration: {
-                collateralAmount: { value: 100n},
-                utilityTitle: 'House',
-                utilityDescription : 'Family house available for vacations',
-                rentingTier: 'Ad-Hoc',
-                rentingDurationUnit: 'minute',
-                minRentingDurationUnits: 1n,
-                maxRentingDurationUnits: 60n,
-                gracePeriodDuration: 10n * 60n, // 10 mins grace period,
-            },
-            phase: 'available'
-        }
-    ]
+    const displayData = [...catalog].filter(({ phase }) => phase === 'available');
+    // const displayData = catalogData;
 
     const closeActiveTicket = () => {
         setActiveTicket(null);
     };
 
     return (
-        <div className="explore">
-            {bagOpen ? (
-                <Bag />
-            ) : (
-                <Box className="catalog" sx={{width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
-                    <Typography variant="h3" align='center' m={2} color={'surface.contrastText'}>Rent whatever you want</Typography>
+        <Box className="catalog" sx={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            alignItems: 'center',
+            pb: 2,
+        }}>
+            <Typography variant="h3" align='center' m={2} color={'surface.contrastText'}>Rent whatever you
+                want</Typography>
 
-                    <Paper sx={{ width: '70%', height: '100vh', bgcolor: 'onSurface.main'}} elevation={3} className='Paper'>
-                        <Box sx={{ width: 1, pt: 2}}>
-                            <FilterBar />
+            <Paper sx={{
+                width: '70%',
+                height: '100vh',
+                overflow: 'auto',
+                pb: 2,
+                bgcolor: 'onSurface.main',
+                borderRadius: (theme) => theme.spacing(2),
+                boxShadow: '0px 0px 80px 0px rgba(0,0,0,0.75)'
+            }} elevation={3} className='Paper'>
+                {bagOpen ? (
+                    <Bag/>
+                ) : (
+                    <>
+                        <Box sx={{ width: 1, pt: 2 }}>
+                            <FilterBar/>
                         </Box>
 
-                        <Grid container rowSpacing={1} justifyContent='flex-start' className='GRID' sx={{bgcolor: 'secondary'}}>
+                        <Grid container rowSpacing={1} justifyContent='flex-start' className='GRID'
+                              sx={{ bgcolor: 'secondary' }}>
                             {displayData.map((data, index) => (
-                                <Grid key={index * 10} spacing={2} item xs={4} sx={{ display: 'flex', justifyContent: 'center'}}>
-                                    <Ticket key={index} data={data} onTicketClick={setActiveTicket} />
+                                <Grid key={index * 10} spacing={2} item xs={4}
+                                      sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                                    <Paper sx={{ p: 4, bgcolor: 'container.main' }}>
+                                        <Ticket
+                                            key={index}
+                                            data={data}
+                                            onTicketClick={setActiveTicket}
+                                        />
+                                    </Paper>
                                 </Grid>
                             ))}
                         </Grid>
-                    </Paper>
-                    {/*<div className="tickets">*/}
-                    {/*    {displayData.map((data, index) => (*/}
-                    {/*        <Ticket key={index} data={data} onTicketClick={setActiveTicket} />*/}
-                    {/*    ))}*/}
-                    {/*</div>*/}
-                    {activeTicket && <BorrowModal ticketData={activeTicket} closeTicket={closeActiveTicket} />}
-                </Box>
-            )}
-        </div>
+                    </>
+                )}
+            </Paper>
+            {activeTicket && <BorrowModal ticketData={activeTicket} closeTicket={closeActiveTicket}/>}
+        </Box>
     );
 };
