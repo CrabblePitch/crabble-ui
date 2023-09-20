@@ -1,6 +1,9 @@
+import './Bag.scss';
+
 import { useState } from 'react';
 import { Tabs, Box } from '@mui/material';
-import RentalModal from '../RentalModal/RentalModal.jsx';
+import { Ticket } from '../Ticket/Ticket.jsx';
+import { RentalModal } from '../RentalModal/RentalModal.jsx';
 
 // TODO: to be removed
 import { mockUtilityData } from '../../pages/Explore/_mockUtility.js';
@@ -8,6 +11,8 @@ import{ BagStyledTab } from "../BagTab.jsx";
 import BagInfo from "../BagInfo.jsx";
 import Grid from "@mui/material/Grid";
 import useStore from "../../store/store.js";
+import TicketContainer from "../TicketContainer.jsx";
+import { ReturnUtilityButton } from '../ReturnUtility/ReturnUtilityButton.jsx';
 import UtilityCard from "../UtilityCard.jsx";
 import ReturnUtilityCard from "../ReturnUtilityCard.jsx";
 
@@ -33,6 +38,11 @@ export const Bag = () => {
     const closeActiveRental = () => {
         setRentalDialogOpen(false);
         setActiveRental(null);
+    };
+
+    const controllers = {
+        snackbar: console.log,
+        modal: () => console.log('This is not a modal'),
     };
 
     const handleTicketClick = activeTicket => {
@@ -70,8 +80,17 @@ export const Bag = () => {
                         {tabValue === 1 && (
                             <Grid container spacing={2}>
                                 {borrowedRentals.map((data, index) => (
-                                    <Grid key={`borrowed-${index}`} item xs={4}>
-                                        <ReturnUtilityCard rental={data}/>
+                                    <Grid item xs={4}>
+                                        <TicketContainer>
+                                            <Ticket
+                                                key={index}
+                                                data={data}
+                                                onTicketClick={setActiveRental}
+                                                showDescription={false}
+                                                controllers={controllers}
+                                                showButton={true}
+                                            />
+                                        </TicketContainer>
                                     </Grid>
                                 ))}
                             </Grid>

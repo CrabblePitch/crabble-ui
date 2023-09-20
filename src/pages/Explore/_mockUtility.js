@@ -472,4 +472,47 @@ export const mockUtilityData = [
         },
         phase: 'available',
     },
+    {
+        id: '"create-rental-agoric1cjuauytr77gft3e3yprryeusu8766785779"',
+        configuration: {
+            collateralAmount: {
+                brand: {},
+                value: '33333',
+            },
+            gracePeriodDuration: '600',
+            maxRentingDurationUnits: '10',
+            minRentingDurationUnits: '1',
+            rentalFeePerUnitAmount: {
+                brand: {},
+                value: '1212',
+            },
+            rentingDurationUnit: 'minute',
+            rentingTier: 'Ad-Hoc',
+            utilityAmount: {
+                brand: {},
+                value: [
+                    {
+                        accessKeyHash: 'bf34q7hiufb3',
+                        address: 'Sesame Street n123456',
+                        id: '1694682821775',
+                        imagePath: 'https://sesameworkshop.org/wp-content/uploads/2023/03/SesameStreetShow_small.png',
+                        organization: 'Airbnb rental',
+                    },
+                ],
+            },
+            utilityDescription: 'Test Description',
+            utilityTitle: 'Test Title 6',
+        },
+        gracePeriod: {
+            gracePeriodEnd: {
+                absValue: '1694683682',
+                timerBrand: {},
+            },
+            gracePeriodStart: {
+                absValue: '1694683082',
+                timerBrand: {},
+            },
+        },
+        phase: 'liquidated',
+    },
 ];

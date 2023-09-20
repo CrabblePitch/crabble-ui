@@ -3,7 +3,7 @@ import { buildReturnUtilityOfferSpec, makeGenericOnStatusUpdate } from "../../ut
 import { Button } from "@mui/material";
 import { RentalPhase } from "../../utils/constants.js";
 
-const ReturnUtilityButton = ({ rental, styles = {} }) => {
+const ReturnUtilityButton = ({ rental, controllers, disabled, onButtonClick, styles }) => {
     const wallet = useStore(state => state.wallet);
     const notifyUser = useStore(state => state.notifyUser);
 
@@ -11,6 +11,10 @@ const ReturnUtilityButton = ({ rental, styles = {} }) => {
     const offerSpec = buildReturnUtilityOfferSpec(rental);
 
     const handleClick = () => {
+        if (onButtonClick) {
+            onButtonClick();
+        }
+
         assert(wallet, `Wallet not defined: ${wallet}`);
         assert(offerSpec, `OfferSpec not defined: ${offerSpec}`);
 
@@ -34,5 +38,3 @@ const ReturnUtilityButton = ({ rental, styles = {} }) => {
         </Button>
     );
 };
-
-export default ReturnUtilityButton;
