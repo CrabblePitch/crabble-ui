@@ -1,7 +1,8 @@
 import './Bag.scss';
 
-import { useState } from 'react';
 import { Tabs, Box } from '@mui/material';
+import React, { useState } from 'react';
+import { AccountCircle as AccountCircleIcon } from '@mui/icons-material';
 import { Ticket } from '../Ticket/Ticket.jsx';
 import { RentalModal } from '../RentalModal/RentalModal.jsx';
 
@@ -51,7 +52,7 @@ export const Bag = () => {
     };
 
     return (
-        <Box sx={{ height: '100vh', overflow: 'auto', p: 2}}>
+        <Box sx={{ height: '100vh', overflow: 'auto', p: 2 }}>
             <div>
                 <BagInfo></BagInfo>
                 <main>
@@ -60,19 +61,29 @@ export const Bag = () => {
                             bgcolor: 'surfaceDark.main',
                             width: '100%',
                             borderRadius: 2,
-                            mt: 2
+                            mt: 2,
                         }}
                         centered
-                        value={tabValue} indicatorColor={'surface.main'} onChange={handleTabChange}>
-                        <BagStyledTab label="Owned"/>
+                        value={tabValue}
+                        indicatorColor={'surface.main'}
+                        onChange={handleTabChange}
+                    >
+                        <BagStyledTab label="Owned" />
                         <BagStyledTab label="Borrowed" />
                     </Tabs>
-                    <Box sx={{ mt: 2}}>
+                    <Box sx={{ mt: 2 }}>
                         {tabValue === 0 && (
                             <Grid container spacing={2}>
                                 {ownedRentals.map((data, index) => (
-                                    <Grid key={`owned-${index}`} item xs={4}>
-                                        <UtilityCard data={data} onCardClick={handleTicketClick} detailed={false}/>
+                                    <Grid item xs={4}>
+                                        <TicketContainer>
+                                            <Ticket
+                                                key={index}
+                                                data={data}
+                                                onTicketClick={setActiveRental}
+                                                showDescription={false}
+                                            />
+                                        </TicketContainer>
                                     </Grid>
                                 ))}
                             </Grid>
@@ -98,7 +109,7 @@ export const Bag = () => {
                     </Box>
                 </main>
             </div>
-            <RentalModal rental={activeRental} closeModal={closeActiveRental} open={rentalDialogOpen}/>
+            {activeRental && <RentalModal utility={activeRental} closeModal={closeActiveRental} />}
         </Box>
     );
 };

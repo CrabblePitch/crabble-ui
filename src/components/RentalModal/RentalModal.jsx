@@ -1,12 +1,22 @@
 import './RentalModal.scss';
 
-import { Box, Divider, Modal } from '@mui/material';
-import ModalTitleBar from "../ModalTitleBar.jsx";
-import UpdateRentalConfiguration from "../UpdateRentalConfiguration.jsx";
-import DisplayUtility from "../DisplayUtility.jsx";
-import RentalManager from "../RentalManager.jsx";
+import { Chip } from '@mui/material';
+import { ModalWrapper } from '../shared/ModalWrapper/ModalWrapper.jsx';
+import { Close as CloseIcon } from '@mui/icons-material';
+import { UtilityConfig } from '../UtilityConfig/UtilityConfig.jsx';
+import { UpdateRentalConfigButton } from '../UpdateRentalConfig/UpdateRentalConfigButton.jsx';
+import {
+    WithdrawUtility as WithdrawUtilityButton,
+    WithdrawRentalFee as WithdrawRentalFeeButton,
+    WithdrawCollateral as WithdrawCollateralButton,
+} from '../Withdraw';
+import { capitalize } from '../../utils/text-utils.js';
+import { getValueFromSet } from '../../utils/helpers.js';
 
-const RentalModal = ({ rental, closeModal, open }) => {
+export const RentalModal = ({ utility, closeModal }) => {
+    const onModalClose = () => {
+        closeModal();
+    };
 
     const controllers = {
         snackbar: console.log,
@@ -21,65 +31,72 @@ const RentalModal = ({ rental, closeModal, open }) => {
         boxShadow: 24,
     };
 
+    const getChipClr = (phase) => {
+        if (phase === 'available') {
+            return 'success';
+        } else if (phase === 'rented') {
+            return 'warning';
+        } else {
+            return 'error';
+        }
+    };
+
+    const getListingDetails = () => {
+        const imagePath = utility.configuration.utilityAmount.value[0].imagePath;
+
+        return imagePath ? (
+            <div className="image">
+                <img src={utility.configuration.utilityAmount.value[0].imagePath} alt="Utility image" />
+            </div>
+        ) : (
+            <ul className="details">
+                {Object.entries(utility.configuration.utilityAmount.value[0]).map(([key, value]) => (
+                    <li key={key}>
+                        {key}: {value}
+                    </li>
+                ))}
+            </ul>
+        );
+    };
+
     return (
-        <Modal
-            open={open}
-            onClose={closeModal}
-            className='MODAL'
-            sx={{ display: 'flex', justifyContent: 'center', pt: 16, pb: 24}}
-        >
-            <Box sx={style}>
-                <ModalTitleBar text={'Rent Your NFT on Crabble!'}/>
-                <Box sx={{
-                    display: 'flex',
-                    alignItems: 'stretch',
-                    height: 1,
-                    pb: 2,
-                    bgcolor: 'surface.main',
-                    // p: 1
-                }} className="parent">
-                    <Box sx={{
-                        flex: 4,
-                        // m: 1,
-                        display: 'flex',
-                        alingnItems: 'stretch'
-                    }}>
-                        <DisplayUtility rental={rental} />
-                    </Box>
+        <ModalWrapper className="rental-modal">
+            <header className="modal-header">
+                <h2 className="modal-title">{utility.configuration.utilityTitle}</h2>
+                <span className="modal-close-btn" onClick={onModalClose}>
+                    <CloseIcon />
+                </span>
+            </header>
+            <main className="modal-body">
+                <section className="phase">
+                    <h4 className="title">Phase</h4>
+                    <Chip color={getChipClr(utility.phase)} label={capitalize(utility.phase)} variant="outlined" />
+                </section>
+                <section className="listing">
+                    <h4 className="title">Listing</h4>
+                    <div className="details">{getListingDetails()}</div>
+                </section>
+                <section className="config">
+                    <h4 className="title">Config</h4>
+                    <UtilityConfig config={utility.configuration} />
+                </section>
+            </main>
+            <footer className="modal-footer">
+                <button className="modal-footer-btn" onClick={onModalClose}>
+                    Cancel
+                </button>
 
-                    <Box sx={{
-                        flex: 6,
-                        p: 2
-                    }} className="target">
+                {/* TODO: clarify and provide correct values for 'overrides' and 'controllers' */}
 
-                        <Box sx={{
-                            height: 1,
-                            display: 'flex',
-                            flexDirection: 'column',
-                        }}>
-                            <Box sx={{
-                                display: 'flex',
-                                height: 1,
-                                flex: 2,
-                                flexDirection: 'column',
-                                justifyContent: 'space-between',
-                                alignItems: 'flex-end'
-                            }}>
-                                <RentalManager rental={rental} controllers={controllers} onClose={closeModal}/>
-                            </Box>
-                            <Divider sx={{mt: 1, bgcolor: 'onSurfaceTextDark.main'}}/>
-                            <Box sx={{
-                                flex: 4,
-                                overflow: 'auto',
-                            }}>
-                                <UpdateRentalConfiguration rental={rental} onClose={closeModal}/>
-                            </Box>
-                        </Box>
-                    </Box>
-                </Box>
-            </Box>
-        </Modal>
+                {utility.phase !== 'liquidated' && (
+                    <UpdateRentalConfigButton rental={utility} overrides={{}} controllers={{}} />
+                )}
+                {utility.phase === 'available' && <WithdrawUtilityButton rental={utility} controllers={{}} />}
+                {utility.phase === 'liquidation' && (
+                    <WithdrawCollateralButton rental={utility} controllers={controllers} />
+                )}
+                <WithdrawRentalFeeButton rental={utility} controllers={controllers} />
+            </footer>
+        </ModalWrapper>
     );
 };
-
-export default RentalModal;
