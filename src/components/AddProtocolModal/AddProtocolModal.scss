@@ -4,7 +4,6 @@
   .modal-body {
     @include flex-content(flex-start, 50px);
     justify-content: space-between;
-    padding: 10px 0;
     text-align: left;
 
     .renting-tier {

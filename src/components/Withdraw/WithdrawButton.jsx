@@ -1,9 +1,9 @@
-import { Button } from "@mui/material";
-import { makeGenericOnStatusUpdate } from "../../utils/helpers.js";
-import useStore from "../../store/store.js";
+import { Button } from '@mui/material';
+import { makeGenericOnStatusUpdate } from '../../utils/helpers.js';
+import useStore from '../../store/store.js';
 
-const WithdrawButton = ({ offerSpec, message, color, controllers }) => {
-    const wallet = useStore(state => state.wallet);
+export const WithdrawButton = ({ offerSpec, message, color, controllers }) => {
+    const wallet = useStore((state) => state.wallet);
 
     const { onStatusChange } = makeGenericOnStatusUpdate(controllers.snackbar, controllers.modal);
 
@@ -11,12 +11,17 @@ const WithdrawButton = ({ offerSpec, message, color, controllers }) => {
         assert(wallet, `Wallet not defined: ${wallet}`);
         assert(offerSpec, `OfferSpec not defined: ${offerSpec}`);
 
-        void wallet.makeOffer(offerSpec.invitationSpec, offerSpec.proposal,
-            offerSpec.offerArgs, onStatusChange, offerSpec.id);
+        void wallet.makeOffer(
+            offerSpec.invitationSpec,
+            offerSpec.proposal,
+            offerSpec.offerArgs,
+            onStatusChange,
+            offerSpec.id,
+        );
     };
 
     return (
-        <Button variant={"contained"} color={color} onClick={handleClick}>
+        <Button variant={'contained'} color={color} onClick={handleClick}>
             {message}
         </Button>
     );

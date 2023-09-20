@@ -1,8 +1,4 @@
 .ticket {
-  flex-basis: calc(25% - 10px);
-  flex-wrap: wrap;
-  margin: 10px 5px;
-
   .ticket-image {
     // TODO: image width/height should be clarified and make exact rather than sticking to it container's width
     width: 70%;

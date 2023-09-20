@@ -1,20 +1,39 @@
 import './Ticket.scss';
 
-export const Ticket = ({ data, onTicketClick }) => {
+import { capitalize } from '../../utils/text-utils.js';
+
+// TODO: Clarify: if the data shape for catalog items (see explore page) and rental/utility (see the provided mock data) is the same or not
+
+export const Ticket = ({ data, onTicketClick, showDescription = true }) => {
+    const ticketData = data.configuration ? data.configuration : data;
+
     const handleClick = () => {
-        onTicketClick(data);
-    }
+        if (onTicketClick) {
+            onTicketClick(data);
+        }
+    };
 
     return (
         <div className="ticket">
-            <div className="ticket-image">IMG</div>
+            <div className="ticket-image">
+                <img src={ticketData.utilityAmount.value[0].imagePath}/>
+            </div>
             <div className="ticket-info">
-                <p className="title" onClick={handleClick}>{data.utilityTitle}</p>
-                <p className="description">
-                    {Number(data.minRentingDurationUnits)} to {Number(data.maxRentingDurationUnits)} {data.rentingDurationUnit}(s), $
-                    {Number(data.rentalFeePerUnitAmount.value)} per {data.rentingDurationUnit}
+                <p className="title" onClick={handleClick}>
+                    {ticketData.utilityTitle}
                 </p>
-                <p className="description">${Number(data.collateralAmount.value)} Collateral</p>
+                {showDescription && (
+                    <>
+                        <p className="description">
+                            {Number(ticketData.minRentingDurationUnits)} to{' '}
+                            {Number(ticketData.maxRentingDurationUnits)} {ticketData.rentingDurationUnit}(s), $
+                            {Number(ticketData.rentalFeePerUnitAmount?.value)} per{' '}
+                            {ticketData.rentingDurationUnit}
+                        </p>
+                        <p className="description">${Number(ticketData.collateralAmount.value)} Collateral</p>
+                    </>
+                )}
+                {data.phase && <p className="description">Phase: {capitalize(data.phase)}</p>}
             </div>
         </div>
     );

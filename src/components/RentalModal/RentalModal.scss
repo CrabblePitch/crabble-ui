@@ -1,0 +1,40 @@
+@import '../../styles/mixins';
+
+.rental-modal {
+  .modal-body {
+    @include flex-content(flex-start, 30px);
+    justify-content: space-between;
+    text-align: left;
+
+    .listing {
+      // TODO: clarify the actual/required size of the image
+      .image {
+        width: 200px;
+        height: 200px;
+        margin-bottom: 20px;
+
+        img {
+          border-radius: 5px;
+        }
+      }
+    }
+
+    .phase {
+      .available {
+        color: green;
+      }
+
+      .rented {
+        color: orange;
+      }
+
+      .liquidated {
+        color: red;
+      }
+    }
+
+    .title {
+      font-size: 1.2rem;
+    }
+  }
+}

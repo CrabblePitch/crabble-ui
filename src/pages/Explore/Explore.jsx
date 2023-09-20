@@ -1,34 +1,77 @@
+import './Explore.scss';
+
 import { useState } from 'react';
 import { Ticket } from '../../components/Ticket/Ticket.jsx';
 import { FilterBar } from '../../components/FilterBar/FilterBar.jsx';
 import { BorrowModal } from '../../components/BorrowModal/BorrowModal.jsx';
+import { Bag } from '../../components/Bag/Bag.jsx';
+import useStore from '../../store/store.js';
+import Typography from "@mui/material/Typography";
+import { Box, Paper } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import { catalogData } from "../../utils/mockData.js";
+import TicketContainer from "../../components/TicketContainer.jsx";
 
-import './Explore.scss';
-import useStore from "../../store/store.js";
-
-export const Explore = () => {
-    const catalog = useStore(state => state.catalog);
+export const Explore = ({ bagOpen }) => {
+    const catalog = useStore((state) => state.catalog) || [];
     const [activeTicket, setActiveTicket] = useState(null);
     console.log('activeTicket', activeTicket);
 
-    if(!catalog) return;
-
-    const displayData = [...catalog].filter(({ phase }) => phase === 'available');
+    // const displayData = [...catalog].filter(({ phase }) => phase === 'available');
+    const displayData = catalogData;
 
     const closeActiveTicket = () => {
         setActiveTicket(null);
     };
 
     return (
-        <div className="explore">
-            <h1 className="title">Rent whatever you want</h1>
-            <FilterBar />
-            <div className="tickets">
-                {displayData.map((data, index) => (
-                    <Ticket key={index} data={data} onTicketClick={setActiveTicket} />
-                ))}
-            </div>
-            {activeTicket && <BorrowModal ticketData={activeTicket} closeTicket={closeActiveTicket} />}
-        </div>
+        <Box className="catalog" sx={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            alignItems: 'center',
+            pb: 2,
+        }}>
+            <Typography variant="h3" align='center' m={2} color={'surface.contrastText'}>Rent whatever you
+                want</Typography>
+
+            <Paper sx={{
+                width: '70%',
+                height: '100vh',
+                overflow: 'auto',
+                pb: 2,
+                bgcolor: 'surface.main',
+                borderRadius: (theme) => theme.spacing(2),
+                boxShadow: '0px 0px 80px 0px rgba(0,0,0,0.75)'
+            }} elevation={3} className='Paper'>
+                {bagOpen ? (
+                    <Bag/>
+                ) : (
+                    <>
+                        <Box sx={{ width: 1, pt: 2 }}>
+                            <FilterBar/>
+                        </Box>
+
+                        <Grid container rowSpacing={1} justifyContent='flex-start' className='GRID'
+                              sx={{ bgcolor: 'secondary' }}>
+                            {displayData.map((data, index) => (
+                                <Grid key={index * 10} spacing={2} item xs={4}
+                                      sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                                    <TicketContainer>
+                                        <Ticket
+                                            key={index}
+                                            data={data}
+                                            onTicketClick={setActiveTicket}
+                                        />
+                                    </TicketContainer>
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </>
+                )}
+            </Paper>
+            {activeTicket && <BorrowModal ticketData={activeTicket} closeTicket={closeActiveTicket}/>}
+        </Box>
     );
 };

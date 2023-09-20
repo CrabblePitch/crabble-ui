@@ -1,14 +1,14 @@
-import { Stack } from "@mui/material";
-import WithdrawUtility from "./WithdrawUtility.jsx";
-import useStore from "../../store/store.js";
-import WithdrawRentalFee from "./WithdrawRentalFee.jsx";
-import WithdrawCollateral from "./WithdrawCollateral.jsx";
-import ReturnUtilityButton from "../ReturnUtility/ReturnUtilityButton.jsx";
-import UpdateRentalConfigButton from "../UpdateRentalConfig/UpdateRentalConfigButton.jsx";
+import { Stack } from '@mui/material';
+import { WithdrawUtility } from './WithdrawUtility.jsx';
+import useStore from '../../store/store.js';
+import { WithdrawRentalFee } from './WithdrawRentalFee.jsx';
+import { WithdrawCollateral } from './WithdrawCollateral.jsx';
+import ReturnUtilityButton from '../ReturnUtility/ReturnUtilityButton.jsx';
+import { UpdateRentalConfigButton } from '../UpdateRentalConfig/UpdateRentalConfigButton.jsx';
 
 const TestComponent = () => {
-    const getOwnedRentals = useStore(state => state.getOwnedRentals);
-    const getBorrowedRentals = useStore(state => state.getBorrowedRentals);
+    const getOwnedRentals = useStore((state) => state.getOwnedRentals);
+    const getBorrowedRentals = useStore((state) => state.getBorrowedRentals);
 
     const ownedRentals = getOwnedRentals();
     const borrowedRentals = getBorrowedRentals();
@@ -32,13 +32,15 @@ const TestComponent = () => {
 
     return (
         <Stack direction="row" spacing={2}>
-            {ownedRental && <WithdrawUtility rental={ownedRental} controllers={controllers}/>}
-            {ownedRental && <WithdrawRentalFee rental={ownedRental} controllers={controllers}/>}
-            {ownedRental && <WithdrawCollateral rental={ownedRental} controllers={controllers}/>}
-            {ownedRental && <UpdateRentalConfigButton rental={ownedRental} overrides={overrides} controllers={controllers} />}
-            {borrowedRental && <ReturnUtilityButton rental={borrowedRental} controllers={controllers}/>}
+            {ownedRental && <WithdrawUtility rental={ownedRental} controllers={controllers} />}
+            {ownedRental && <WithdrawRentalFee rental={ownedRental} controllers={controllers} />}
+            {ownedRental && <WithdrawCollateral rental={ownedRental} controllers={controllers} />}
+            {ownedRental && (
+                <UpdateRentalConfigButton rental={ownedRental} overrides={overrides} controllers={controllers} />
+            )}
+            {borrowedRental && <ReturnUtilityButton rental={borrowedRental} controllers={controllers} />}
         </Stack>
-    )
+    );
 };
 
 export default TestComponent;
