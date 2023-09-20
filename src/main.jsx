@@ -5,8 +5,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './App.jsx';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Box, CssBaseline } from "@mui/material";
-import { Home } from "./pages/Home/Home.jsx";
+import { CssBaseline } from "@mui/material";
 
 const theme = createTheme({
     palette: {
@@ -27,17 +26,23 @@ const theme = createTheme({
             contrastText: '#ffdad9'
         },
         surface: {
-            main: '#1c1b1f',
+            main: '#2c2c44',
             contrastText: '#e5e1e6'
+        },
+        surfaceDark: {
+          main: '#1C1B1F'
         },
         line: {
             main: '#918f9a'
         },
         onSurface: {
-            main: '#2c2c44'
+            main: '#e5e1e6'
         },
         onSurfaceText: {
             main: '#e5e1e6'
+        },
+        onSurfaceTextDark: {
+            main: '#918f9a'
         },
         altText: {
             main: '#e4e1ec'
@@ -53,10 +58,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <App />
-            {/*<NavPanel toggleModal={console.log} toggleBag={console.log} bagOpen={console.log} />*/}
-
-            {/*<Album/>*/}
         </ThemeProvider>
-
     </React.StrictMode>,
 );

@@ -57,10 +57,10 @@ const BagInfo = () => {
                   <Box sx={{ maxHeight: 100, overflow: 'auto'}}>
                       {[...Object.entries(testData.rentalFeeBalance)].map(([key, value]) => (
                           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start'}}>
-                              <Typography variant='subtitle1' ml={1} sx={{ color: (theme) => theme.palette.line.main, ml: 2}}>
+                              <Typography variant='subtitle1' ml={1} sx={{ color: (theme) => theme.palette.onSurfaceTextDark.main, ml: 2}}>
                                   {Number(value.value)}
                               </Typography>
-                              <Typography variant='subtitle2' ml={1} sx={{ color: (theme) => theme.palette.line.main, ml: 2}}>
+                              <Typography variant='subtitle2' ml={1} sx={{ color: (theme) => theme.palette.onSurfaceTextDark.main, ml: 2}}>
                                   {key}
                               </Typography>
                           </Box>
@@ -75,10 +75,10 @@ const BagInfo = () => {
                   <Box sx={{ maxHeight: 100, overflow: 'auto'}}>
                       {[...Object.entries(testData.collateralAmount)].map(([key, value]) => (
                           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start'}}>
-                              <Typography variant='subtitle1' ml={1} sx={{ color: (theme) => theme.palette.line.main, ml: 2}}>
+                              <Typography variant='subtitle1' ml={1} sx={{ color: (theme) => theme.palette.onSurfaceTextDark.main, ml: 2}}>
                                   {Number(value.value)}
                               </Typography>
-                              <Typography variant='subtitle2' ml={1} sx={{ color: (theme) => theme.palette.line.main, ml: 2}}>
+                              <Typography variant='subtitle2' ml={1} sx={{ color: (theme) => theme.palette.onSurfaceTextDark.main, ml: 2}}>
                                   {key}
                               </Typography>
                           </Box>

@@ -1,8 +1,7 @@
 import './Bag.scss';
 
 import { useState } from 'react';
-import { AccountCircle as AccountCircleIcon } from '@mui/icons-material';
-import { Tabs, Tab, Divider, Paper, Box } from '@mui/material';
+import { Tabs, Box } from '@mui/material';
 import { Ticket } from '../Ticket/Ticket.jsx';
 import { RentalModal } from '../RentalModal/RentalModal.jsx';
 
@@ -12,13 +11,18 @@ import{ BagStyledTab } from "../BagTab.jsx";
 import BagInfo from "../BagInfo.jsx";
 import Grid from "@mui/material/Grid";
 import useStore from "../../store/store.js";
+import TicketContainer from "../TicketContainer.jsx";
 
 export const Bag = () => {
     const getOwnedRentals = useStore((state) => state.getOwnedRentals);
     const getBorrowedRentals = useStore((state) => state.getBorrowedRentals);
 
-    const ownedRentals = getOwnedRentals();
-    const borrowedRentals = getBorrowedRentals();
+    // const ownedRentals = getOwnedRentals();
+    // const borrowedRentals = getBorrowedRentals();
+
+    const ownedRentals = mockUtilityData;
+    const borrowedRentals = mockUtilityData;
+
     const [tabValue, setTabValue] = useState(1);
     const [activeRental, setActiveRental] = useState(false);
 
@@ -37,14 +41,14 @@ export const Bag = () => {
                 <main>
                     <Tabs
                         sx={{
-                            bgcolor: 'surface.main',
+                            bgcolor: 'surfaceDark.main',
                             width: '100%',
                             borderRadius: 2,
                             mt: 2
                         }}
                         centered
-                        value={tabValue} indicatorColor={'primary.contrastText'} onChange={handleTabChange}>
-                        <BagStyledTab color="secondary" label="Owned"/>
+                        value={tabValue} indicatorColor={'surface.main'} onChange={handleTabChange}>
+                        <BagStyledTab label="Owned"/>
                         <BagStyledTab label="Borrowed" />
                     </Tabs>
                     <Box sx={{ mt: 2}}>
@@ -52,14 +56,14 @@ export const Bag = () => {
                             <Grid container spacing={2}>
                                 {ownedRentals.map((data, index) => (
                                     <Grid item xs={4}>
-                                        <Paper sx={{ p: 4, bgcolor: 'container.main' }}>
+                                        <TicketContainer>
                                             <Ticket
                                                 key={index}
                                                 data={data}
                                                 onTicketClick={setActiveRental}
                                                 showDescription={false}
                                             />
-                                        </Paper>
+                                        </TicketContainer>
                                     </Grid>
                                 ))}
                             </Grid>
@@ -68,14 +72,14 @@ export const Bag = () => {
                             <Grid container spacing={2}>
                                 {borrowedRentals.map((data, index) => (
                                     <Grid item xs={4}>
-                                        <Paper sx={{ p: 4, bgcolor: 'container.main' }} elevation={3}>
+                                        <TicketContainer>
                                             <Ticket
                                                 key={index}
                                                 data={data}
                                                 onTicketClick={setActiveRental}
                                                 showDescription={false}
                                             />
-                                        </Paper>
+                                        </TicketContainer>
                                     </Grid>
                                 ))}
                             </Grid>

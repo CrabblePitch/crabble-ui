@@ -10,14 +10,15 @@ import Typography from "@mui/material/Typography";
 import { Box, Paper } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { catalogData } from "../../utils/mockData.js";
+import TicketContainer from "../../components/TicketContainer.jsx";
 
 export const Explore = ({ bagOpen }) => {
     const catalog = useStore((state) => state.catalog) || [];
     const [activeTicket, setActiveTicket] = useState(null);
     console.log('activeTicket', activeTicket);
 
-    const displayData = [...catalog].filter(({ phase }) => phase === 'available');
-    // const displayData = catalogData;
+    // const displayData = [...catalog].filter(({ phase }) => phase === 'available');
+    const displayData = catalogData;
 
     const closeActiveTicket = () => {
         setActiveTicket(null);
@@ -40,7 +41,7 @@ export const Explore = ({ bagOpen }) => {
                 height: '100vh',
                 overflow: 'auto',
                 pb: 2,
-                bgcolor: 'onSurface.main',
+                bgcolor: 'surface.main',
                 borderRadius: (theme) => theme.spacing(2),
                 boxShadow: '0px 0px 80px 0px rgba(0,0,0,0.75)'
             }} elevation={3} className='Paper'>
@@ -57,13 +58,13 @@ export const Explore = ({ bagOpen }) => {
                             {displayData.map((data, index) => (
                                 <Grid key={index * 10} spacing={2} item xs={4}
                                       sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                                    <Paper sx={{ p: 4, bgcolor: 'container.main' }}>
+                                    <TicketContainer>
                                         <Ticket
                                             key={index}
                                             data={data}
                                             onTicketClick={setActiveTicket}
                                         />
-                                    </Paper>
+                                    </TicketContainer>
                                 </Grid>
                             ))}
                         </Grid>
