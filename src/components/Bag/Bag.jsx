@@ -2,6 +2,9 @@ import './Bag.scss';
 
 import { useState } from 'react';
 import { Tabs, Box } from '@mui/material';
+import React, { useState } from 'react';
+import { AccountCircle as AccountCircleIcon } from '@mui/icons-material';
+import { Tabs, Tab } from '@mui/material';
 import { Ticket } from '../Ticket/Ticket.jsx';
 import { RentalModal } from '../RentalModal/RentalModal.jsx';
 
@@ -12,6 +15,7 @@ import BagInfo from "../BagInfo.jsx";
 import Grid from "@mui/material/Grid";
 import useStore from "../../store/store.js";
 import TicketContainer from "../TicketContainer.jsx";
+import { ReturnUtilityButton } from '../ReturnUtility/ReturnUtilityButton.jsx';
 
 export const Bag = () => {
     const getOwnedRentals = useStore((state) => state.getOwnedRentals);
@@ -32,6 +36,11 @@ export const Bag = () => {
 
     const closeActiveRental = () => {
         setActiveRental(null);
+    };
+
+    const controllers = {
+        snackbar: console.log,
+        modal: () => console.log('This is not a modal'),
     };
 
     return (
@@ -78,6 +87,8 @@ export const Bag = () => {
                                                 data={data}
                                                 onTicketClick={setActiveRental}
                                                 showDescription={false}
+                                                controllers={controllers}
+                                                showButton={true}
                                             />
                                         </TicketContainer>
                                     </Grid>

@@ -3,7 +3,7 @@ import { WithdrawUtility } from './WithdrawUtility.jsx';
 import useStore from '../../store/store.js';
 import { WithdrawRentalFee } from './WithdrawRentalFee.jsx';
 import { WithdrawCollateral } from './WithdrawCollateral.jsx';
-import ReturnUtilityButton from '../ReturnUtility/ReturnUtilityButton.jsx';
+import { ReturnUtilityButton } from '../ReturnUtility/ReturnUtilityButton.jsx';
 import { UpdateRentalConfigButton } from '../UpdateRentalConfig/UpdateRentalConfigButton.jsx';
 
 const TestComponent = () => {
