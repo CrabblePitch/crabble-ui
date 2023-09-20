@@ -12,18 +12,17 @@ import {
     createTheme,
     ThemeProvider,
 } from '@mui/material';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 // TODO: Clarify: if the data shape for catalog items (see explore page) and rental/utility (see the provided mock data) is the same or not
 
 export const Ticket = ({ data, onTicketClick, showDescription = true, rental, controllers, showButton = false }) => {
-    const { configuration } = data;
     const [openDialog, setOpenDialog] = useState(false);
 
     const handleClickOpen = () => {
         setOpenDialog(true);
     };
-export const Ticket = ({ data, onTicketClick, showDescription = true }) => {
+
     const ticketData = data.configuration ? data.configuration : data;
 
     const handleClose = () => {
@@ -54,7 +53,7 @@ export const Ticket = ({ data, onTicketClick, showDescription = true }) => {
     return (
         <div className="ticket">
             <div className="ticket-image">
-                <img src={ticketData.utilityAmount.value[0].imagePath}/>
+                <img src={ticketData.utilityAmount.value[0].imagePath} />
             </div>
             <div className="ticket-info">
                 <p className="title" onClick={handleClick}>
@@ -63,9 +62,8 @@ export const Ticket = ({ data, onTicketClick, showDescription = true }) => {
                 {showDescription && (
                     <>
                         <p className="description">
-                            {Number(ticketData.minRentingDurationUnits)} to{' '}
-                            {Number(ticketData.maxRentingDurationUnits)} {ticketData.rentingDurationUnit}(s), $
-                            {Number(ticketData.rentalFeePerUnitAmount?.value)} per{' '}
+                            {Number(ticketData.minRentingDurationUnits)} to {Number(ticketData.maxRentingDurationUnits)}{' '}
+                            {ticketData.rentingDurationUnit}(s), ${Number(ticketData.rentalFeePerUnitAmount?.value)} per{' '}
                             {ticketData.rentingDurationUnit}
                         </p>
                         <p className="description">${Number(ticketData.collateralAmount.value)} Collateral</p>

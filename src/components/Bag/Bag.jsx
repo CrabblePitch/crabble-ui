@@ -1,20 +1,18 @@
 import './Bag.scss';
 
-import { useState } from 'react';
 import { Tabs, Box } from '@mui/material';
 import React, { useState } from 'react';
 import { AccountCircle as AccountCircleIcon } from '@mui/icons-material';
-import { Tabs, Tab } from '@mui/material';
 import { Ticket } from '../Ticket/Ticket.jsx';
 import { RentalModal } from '../RentalModal/RentalModal.jsx';
 
 // TODO: to be removed
 import { mockUtilityData } from '../../pages/Explore/_mockUtility.js';
-import{ BagStyledTab } from "../BagTab.jsx";
-import BagInfo from "../BagInfo.jsx";
-import Grid from "@mui/material/Grid";
-import useStore from "../../store/store.js";
-import TicketContainer from "../TicketContainer.jsx";
+import { BagStyledTab } from '../BagTab.jsx';
+import BagInfo from '../BagInfo.jsx';
+import Grid from '@mui/material/Grid';
+import useStore from '../../store/store.js';
+import TicketContainer from '../TicketContainer.jsx';
 import { ReturnUtilityButton } from '../ReturnUtility/ReturnUtilityButton.jsx';
 
 export const Bag = () => {
@@ -44,7 +42,7 @@ export const Bag = () => {
     };
 
     return (
-        <Box sx={{ height: '100vh', overflow: 'auto', p: 2}}>
+        <Box sx={{ height: '100vh', overflow: 'auto', p: 2 }}>
             <div>
                 <BagInfo></BagInfo>
                 <main>
@@ -53,14 +51,17 @@ export const Bag = () => {
                             bgcolor: 'surfaceDark.main',
                             width: '100%',
                             borderRadius: 2,
-                            mt: 2
+                            mt: 2,
                         }}
                         centered
-                        value={tabValue} indicatorColor={'surface.main'} onChange={handleTabChange}>
-                        <BagStyledTab label="Owned"/>
+                        value={tabValue}
+                        indicatorColor={'surface.main'}
+                        onChange={handleTabChange}
+                    >
+                        <BagStyledTab label="Owned" />
                         <BagStyledTab label="Borrowed" />
                     </Tabs>
-                    <Box sx={{ mt: 2}}>
+                    <Box sx={{ mt: 2 }}>
                         {tabValue === 0 && (
                             <Grid container spacing={2}>
                                 {ownedRentals.map((data, index) => (
