@@ -118,7 +118,7 @@ harden(getValueFromSet);
 const getValueFromNat = natAmount => {
     const { value } = natAmount;
     assert(typeof  value === 'bigint', 'Amount must be NAT');
-    return value;
+    return Number(value);
 };
 harden(getValueFromNat);
 
@@ -289,6 +289,7 @@ export {
     checkPositiveNumber,
     buildBorrowAdHocOfferSpec,
     getValueFromSet,
+    getValueFromNat,
     makeGenericOnStatusUpdate,
     buildWithdrawUtilityOfferSpec,
     buildWithdrawRentalFeeOfferSpec,

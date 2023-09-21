@@ -12,6 +12,7 @@ import BagInfo from "../BagInfo.jsx";
 import Grid from "@mui/material/Grid";
 import useStore from "../../store/store.js";
 import TicketContainer from "../TicketContainer.jsx";
+import UtilityCard from "../UtilityCard.jsx";
 
 export const Bag = () => {
     const getOwnedRentals = useStore((state) => state.getOwnedRentals);
@@ -63,14 +64,7 @@ export const Bag = () => {
                             <Grid container spacing={2}>
                                 {ownedRentals.map((data, index) => (
                                     <Grid item xs={4}>
-                                        <TicketContainer>
-                                            <Ticket
-                                                key={index}
-                                                data={data}
-                                                onTicketClick={handleTicketClick}
-                                                showDescription={false}
-                                            />
-                                        </TicketContainer>
+                                        <UtilityCard key={index} data={data} onCardClick={handleTicketClick} detailed={false}/>
                                     </Grid>
                                 ))}
                             </Grid>
@@ -79,14 +73,7 @@ export const Bag = () => {
                             <Grid container spacing={2}>
                                 {borrowedRentals.map((data, index) => (
                                     <Grid item xs={4}>
-                                        <TicketContainer>
-                                            <Ticket
-                                                key={index}
-                                                data={data}
-                                                onTicketClick={handleTicketClick}
-                                                showDescription={false}
-                                            />
-                                        </TicketContainer>
+                                        <UtilityCard key={index} data={data} onCardClick={handleTicketClick} detailed={false}/>
                                     </Grid>
                                 ))}
                             </Grid>

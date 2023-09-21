@@ -2,7 +2,7 @@ import useStore from '../../store/store.js';
 import { buildUpdateRentalConfigOfferSpec, makeGenericOnStatusUpdate } from '../../utils/helpers.js';
 import { Button } from '@mui/material';
 
-export const UpdateRentalConfigButton = ({ rental, overrides, controllers }) => {
+export const UpdateRentalConfigButton = ({ rental, overrides, controllers, disabled = false }) => {
     const wallet = useStore((state) => state.wallet);
 
     // TODO: to be uncommented
@@ -23,7 +23,7 @@ export const UpdateRentalConfigButton = ({ rental, overrides, controllers }) => 
     // };
 
     return (
-        <Button variant={'contained'} color={'secondary'} onClick={() => {}}>
+        <Button variant={'contained'} color={'secondary'} onClick={() => {}} disabled={disabled}>
             Update Rental Config
         </Button>
     );

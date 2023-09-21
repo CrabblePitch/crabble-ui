@@ -4,14 +4,14 @@ export const mockUtilityData = [
         configuration: {
             collateralAmount: {
                 brand: {},
-                value: '33333',
+                value: 33333n,
             },
-            gracePeriodDuration: '600',
-            maxRentingDurationUnits: '10',
-            minRentingDurationUnits: '1',
+            gracePeriodDuration: 600n,
+            maxRentingDurationUnits: 10n,
+            minRentingDurationUnits: 1n,
             rentalFeePerUnitAmount: {
                 brand: {},
-                value: '1212',
+                value: 1212n,
             },
             rentingDurationUnit: 'minute',
             rentingTier: 'Ad-Hoc',
@@ -32,11 +32,11 @@ export const mockUtilityData = [
         },
         gracePeriod: {
             gracePeriodEnd: {
-                absValue: '1694683682',
+                absValue: 1694683682n,
                 timerBrand: {},
             },
             gracePeriodStart: {
-                absValue: '1694683082',
+                absValue: 1694683082n,
                 timerBrand: {},
             },
         },
@@ -47,14 +47,14 @@ export const mockUtilityData = [
         configuration: {
             collateralAmount: {
                 brand: {},
-                value: '44444',
+                value: 44444n,
             },
-            gracePeriodDuration: '700',
-            maxRentingDurationUnits: '10',
-            minRentingDurationUnits: '1',
+            gracePeriodDuration: 700n,
+            maxRentingDurationUnits: 10n,
+            minRentingDurationUnits: 1n,
             rentalFeePerUnitAmount: {
                 brand: {},
-                value: '654',
+                value: 654n,
             },
             rentingDurationUnit: 'day',
             rentingTier: 'Ad-Hoc',
@@ -75,11 +75,11 @@ export const mockUtilityData = [
         },
         gracePeriod: {
             gracePeriodEnd: {
-                absValue: '1694683682',
+                absValue: 1694683682n,
                 timerBrand: {},
             },
             gracePeriodStart: {
-                absValue: '1694683082',
+                absValue: 1694683082n,
                 timerBrand: {},
             },
         },
@@ -90,14 +90,14 @@ export const mockUtilityData = [
         configuration: {
             collateralAmount: {
                 brand: {},
-                value: '5435',
+                value: 5435n,
             },
-            gracePeriodDuration: '600',
-            maxRentingDurationUnits: '10',
-            minRentingDurationUnits: '1',
+            gracePeriodDuration: 700n,
+            maxRentingDurationUnits: 10n,
+            minRentingDurationUnits: 1n,
             rentalFeePerUnitAmount: {
                 brand: {},
-                value: '1212',
+                value: 1212n,
             },
             rentingDurationUnit: 'minute',
             rentingTier: 'Ad-Hoc',
@@ -118,11 +118,11 @@ export const mockUtilityData = [
         },
         gracePeriod: {
             gracePeriodEnd: {
-                absValue: '1694683682',
+                absValue: 1694683682n,
                 timerBrand: {},
             },
             gracePeriodStart: {
-                absValue: '1694683082',
+                absValue: 1694683082n,
                 timerBrand: {},
             },
         },
@@ -133,14 +133,14 @@ export const mockUtilityData = [
         configuration: {
             collateralAmount: {
                 brand: {},
-                value: '33333',
+                value: 33333n,
             },
-            gracePeriodDuration: '600',
-            maxRentingDurationUnits: '10',
-            minRentingDurationUnits: '1',
+            gracePeriodDuration: 700n,
+            maxRentingDurationUnits: 10n,
+            minRentingDurationUnits: 1n,
             rentalFeePerUnitAmount: {
                 brand: {},
-                value: '1212',
+                value: 1212n,
             },
             rentingDurationUnit: 'minute',
             rentingTier: 'Ad-Hoc',
@@ -161,11 +161,11 @@ export const mockUtilityData = [
         },
         gracePeriod: {
             gracePeriodEnd: {
-                absValue: '1694683682',
+                absValue: 1694683682n,
                 timerBrand: {},
             },
             gracePeriodStart: {
-                absValue: '1694683082',
+                absValue: 1694683082n,
                 timerBrand: {},
             },
         },
@@ -176,14 +176,14 @@ export const mockUtilityData = [
         configuration: {
             collateralAmount: {
                 brand: {},
-                value: '33333',
+                value: 33333n,
             },
-            gracePeriodDuration: '600',
-            maxRentingDurationUnits: '10',
-            minRentingDurationUnits: '1',
+            gracePeriodDuration: 700n,
+            maxRentingDurationUnits: 10n,
+            minRentingDurationUnits: 1n,
             rentalFeePerUnitAmount: {
                 brand: {},
-                value: '1212',
+                value: 1212n,
             },
             rentingDurationUnit: 'minute',
             rentingTier: 'Ad-Hoc',
@@ -204,11 +204,11 @@ export const mockUtilityData = [
         },
         gracePeriod: {
             gracePeriodEnd: {
-                absValue: '1694683682',
+                absValue: 1694683682n,
                 timerBrand: {},
             },
             gracePeriodStart: {
-                absValue: '1694683082',
+                absValue: 1694683082n,
                 timerBrand: {},
             },
         },
@@ -219,14 +219,14 @@ export const mockUtilityData = [
         configuration: {
             collateralAmount: {
                 brand: {},
-                value: '33333',
+                value: 33333n,
             },
-            gracePeriodDuration: '600',
-            maxRentingDurationUnits: '10',
-            minRentingDurationUnits: '1',
+            gracePeriodDuration: 700n,
+            maxRentingDurationUnits: 10n,
+            minRentingDurationUnits: 1n,
             rentalFeePerUnitAmount: {
                 brand: {},
-                value: '1212',
+                value: 1212n,
             },
             rentingDurationUnit: 'minute',
             rentingTier: 'Ad-Hoc',
@@ -247,11 +247,11 @@ export const mockUtilityData = [
         },
         gracePeriod: {
             gracePeriodEnd: {
-                absValue: '1694683682',
+                absValue: 1694683682n,
                 timerBrand: {},
             },
             gracePeriodStart: {
-                absValue: '1694683082',
+                absValue: 1694683082n,
                 timerBrand: {},
             },
         },
@@ -262,14 +262,14 @@ export const mockUtilityData = [
         configuration: {
             collateralAmount: {
                 brand: {},
-                value: '33333',
+                value: 33333n,
             },
-            gracePeriodDuration: '600',
-            maxRentingDurationUnits: '10',
-            minRentingDurationUnits: '1',
+            gracePeriodDuration: 700n,
+            maxRentingDurationUnits: 10n,
+            minRentingDurationUnits: 1n,
             rentalFeePerUnitAmount: {
                 brand: {},
-                value: '1212',
+                value: 1212n,
             },
             rentingDurationUnit: 'minute',
             rentingTier: 'Ad-Hoc',
@@ -290,11 +290,11 @@ export const mockUtilityData = [
         },
         gracePeriod: {
             gracePeriodEnd: {
-                absValue: '1694683682',
+                absValue: 1694683682n,
                 timerBrand: {},
             },
             gracePeriodStart: {
-                absValue: '1694683082',
+                absValue: 1694683082n,
                 timerBrand: {},
             },
         },
@@ -305,14 +305,14 @@ export const mockUtilityData = [
         configuration: {
             collateralAmount: {
                 brand: {},
-                value: '33333',
+                value: 33333n,
             },
-            gracePeriodDuration: '600',
-            maxRentingDurationUnits: '10',
-            minRentingDurationUnits: '1',
+            gracePeriodDuration: 700n,
+            maxRentingDurationUnits: 10n,
+            minRentingDurationUnits: 1n,
             rentalFeePerUnitAmount: {
                 brand: {},
-                value: '1212',
+                value: 1212n,
             },
             rentingDurationUnit: 'minute',
             rentingTier: 'Ad-Hoc',
@@ -333,11 +333,11 @@ export const mockUtilityData = [
         },
         gracePeriod: {
             gracePeriodEnd: {
-                absValue: '1694683682',
+                absValue: 1694683682n,
                 timerBrand: {},
             },
             gracePeriodStart: {
-                absValue: '1694683082',
+                absValue: 1694683082n,
                 timerBrand: {},
             },
         },
@@ -348,14 +348,14 @@ export const mockUtilityData = [
         configuration: {
             collateralAmount: {
                 brand: {},
-                value: '33333',
+                value: 33333n,
             },
-            gracePeriodDuration: '600',
-            maxRentingDurationUnits: '10',
-            minRentingDurationUnits: '1',
+            gracePeriodDuration: 700n,
+            maxRentingDurationUnits: 10n,
+            minRentingDurationUnits: 1n,
             rentalFeePerUnitAmount: {
                 brand: {},
-                value: '1212',
+                value: 1212n,
             },
             rentingDurationUnit: 'minute',
             rentingTier: 'Ad-Hoc',
@@ -376,11 +376,11 @@ export const mockUtilityData = [
         },
         gracePeriod: {
             gracePeriodEnd: {
-                absValue: '1694683682',
+                absValue: 1694683682n,
                 timerBrand: {},
             },
             gracePeriodStart: {
-                absValue: '1694683082',
+                absValue: 1694683082n,
                 timerBrand: {},
             },
         },
@@ -391,14 +391,14 @@ export const mockUtilityData = [
         configuration: {
             collateralAmount: {
                 brand: {},
-                value: '33333',
+                value: 33333n,
             },
-            gracePeriodDuration: '600',
-            maxRentingDurationUnits: '10',
-            minRentingDurationUnits: '1',
+            gracePeriodDuration: 700n,
+            maxRentingDurationUnits: 10n,
+            minRentingDurationUnits: 1n,
             rentalFeePerUnitAmount: {
                 brand: {},
-                value: '1212',
+                value: 1212n,
             },
             rentingDurationUnit: 'minute',
             rentingTier: 'Ad-Hoc',
@@ -419,11 +419,11 @@ export const mockUtilityData = [
         },
         gracePeriod: {
             gracePeriodEnd: {
-                absValue: '1694683682',
+                absValue: 1694683682n,
                 timerBrand: {},
             },
             gracePeriodStart: {
-                absValue: '1694683082',
+                absValue: 1694683082n,
                 timerBrand: {},
             },
         },
@@ -434,14 +434,14 @@ export const mockUtilityData = [
         configuration: {
             collateralAmount: {
                 brand: {},
-                value: '33333',
+                value: 33333n,
             },
-            gracePeriodDuration: '600',
-            maxRentingDurationUnits: '10',
-            minRentingDurationUnits: '1',
+            gracePeriodDuration: 700n,
+            maxRentingDurationUnits: 10n,
+            minRentingDurationUnits: 1n,
             rentalFeePerUnitAmount: {
                 brand: {},
-                value: '1212',
+                value: 1212n,
             },
             rentingDurationUnit: 'minute',
             rentingTier: 'Ad-Hoc',
@@ -462,11 +462,11 @@ export const mockUtilityData = [
         },
         gracePeriod: {
             gracePeriodEnd: {
-                absValue: '1694683682',
+                absValue: 1694683682n,
                 timerBrand: {},
             },
             gracePeriodStart: {
-                absValue: '1694683082',
+                absValue: 1694683082n,
                 timerBrand: {},
             },
         },

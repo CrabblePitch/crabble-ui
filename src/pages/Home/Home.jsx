@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Explore } from '../Explore/Explore.jsx';
 import { AddProtocolModal } from '../../components/AddProtocolModal/AddProtocolModal.jsx';
 import { Box } from "@mui/material";
+import CreateRentalDialog from "../../components/CreateRentalDialog.jsx";
 
 export const Home = () => {
     const [open, setOpen] = useState(false);
@@ -29,7 +30,8 @@ export const Home = () => {
                     <Route path="/about" element={<About />} />
                     <Route path="/contact" element={<Contact />} />
                 </Routes>
-                <AddProtocolModal open={open} onClose={toggleModal} />
+                {/*<AddProtocolModal open={open} onClose={toggleModal} />*/}
+                <CreateRentalDialog open={open} onClose={toggleModal} />
             </BrowserRouter>
         </div>
     );
