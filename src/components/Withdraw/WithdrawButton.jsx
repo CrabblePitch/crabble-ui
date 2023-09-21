@@ -21,7 +21,7 @@ export const WithdrawButton = ({ offerSpec, message, color, controllers }) => {
     };
 
     return (
-        <Button variant={'contained'} color={color} onClick={handleClick}>
+        <Button variant={'contained'} color={color} onClick={handleClick} sx={{ textTransform: 'none', ml: 1 }}>
             {message}
         </Button>
     );

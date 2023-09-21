@@ -10,8 +10,19 @@ import {
 } from '../Withdraw';
 import { mockUtilityData } from '../../pages/Explore/_mockUtility.js';
 import { capitalize } from '../../utils/text-utils.js';
+import { Box, Chip, FormControl, InputLabel, MenuItem, Modal, Paper, Select, Stack, TextField } from '@mui/material';
+import Typography from "@mui/material/Typography";
+import ModalTitleBar from "../ModalTitleBar.jsx";
+import { getValueFromSet } from "../../utils/helpers.js";
+import Grid from "@mui/material/Grid";
+import { useState } from "react";
 
-export const RentalModal = ({ utility, closeModal }) => {
+const RentalModal = ({ rental, closeModal, open }) => {
+
+    const [overrides] = useState('');
+
+    if (!rental) return;
+
     const onModalClose = () => {
         closeModal();
     };
@@ -40,56 +51,175 @@ export const RentalModal = ({ utility, closeModal }) => {
         modal: () => console.log('This is not a modal'),
     };
 
+    const style = {
+        position: 'sticky',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '50%',
+        bgcolor: 'surface.main',
+        borderColor: 'line.main',
+        boxShadow: 24,
+        overflow: 'visible',
+        pb: 2,
+    };
+
     return (
-        <ModalWrapper className="rental-modal">
-            <header className="modal-header">
-                <h2 className="modal-title">{utility.configuration.utilityTitle}</h2>
-                <span className="modal-close-btn" onClick={onModalClose}>
-                    <CloseIcon />
-                </span>
-            </header>
-            <main className="modal-body">
-                <section className="phase">
-                    <h4 className="title">Phase</h4>
-                    <p className={utility.phase}>{capitalize(utility.phase)}</p>
-                </section>
-                <section className="listing">
-                    <h4 className="title">Listing</h4>
-                    <div className="details">
-                        <div className="image">
-                            <img src={utility.configuration.utilityAmount.value[0].imagePath} alt="Utility image" />
-                        </div>
+        <Modal
+            open={open}
+            onClose={closeModal}
+            className='MODAL'
+        >
+            <Box  sx={style}>
+                <ModalTitleBar text={'Rent Your NFT on Crabble!'}/>
+                <Box sx={{
+                    display: 'flex',
+                    alignItems: 'stretch',
+                }} className="parent">
+                    <Box sx={{
+                        flex: 4,
+                    }}>
+                        <Box>
+                            <Box sx={{
+                                borderRadius: 1,
+                                p: 2,
+                            }} component="img" src={rental.configuration.utilityAmount.value[0].imagePath}/>
 
-                        {/* TODO: clarify what should be listing props */}
+                            <Box sx={{
+                                width: 1,
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                pl: 2,
+                                pr: 2,
+                            }}>
+                                <Typography variant='h5' align='left' sx={{ color: 'onSurfaceText.main'}}>
+                                    {rental.configuration.utilityTitle}
+                                </Typography>
+                                <Chip label={rental.phase} color='success'/>
+                            </Box>
 
-                        <div className="properties">Props</div>
-                    </div>
-                </section>
-                <section className="config">
-                    <h4 className="title">Config</h4>
-                    <ul>
-                        {prepareUtilityConfig(utility).map(([title, value]) => (
-                            <li key={title}>
-                                <strong>{title}:</strong> {value}
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            </main>
-            <footer className="modal-footer">
-                <button className="modal-footer-btn" onClick={onModalClose}>
-                    Cancel
-                </button>
 
-                {/* TODO: clarify and provide correct values for 'overrides' and 'controllers' */}
 
-                {utility.phase !== 'liquidated' && (
-                    <UpdateRentalConfigButton rental={utility} overrides={{}} controllers={{}} />
-                )}
-                {utility.phase === 'available' && <WithdrawUtilityButton rental={utility} controllers={{}} />}
-                {utility.phase === 'liquidation' && <WithdrawCollateralButton rental={utility} controllers={controllers} />}
-                <WithdrawRentalFeeButton rental={utility} controllers={controllers} />
-            </footer>
-        </ModalWrapper>
+                            {[...Object.entries(getValueFromSet(rental.configuration.utilityAmount))]
+                                .filter(([key]) => key !== 'imagePath')
+                                .map(([key, value]) => (
+                                    <Stack sx={{pl: 2}}>
+                                        <Typography variant='subtitle1' align='left' sx={{color: 'onSurfaceText.main'}}>
+                                            {key}
+                                        </Typography>
+                                        <Typography variant='body' align='left' sx={{color: 'onSurfaceTextDark.main'}}>
+                                            {value}
+                                        </Typography>
+                                    </Stack>
+                                ))}
+                        </Box>
+                        </Box>
+
+                    <Box sx={{
+                        flex: 6,
+                        overflow: 'auto',
+                        pr: 2,
+                    }} className="target">
+
+                        <Box sx={{
+                            height: 1,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'stretch',
+                        }}>
+                            <Box sx={{
+                                display: 'flex',
+                                justifyContent: 'flex-end',
+                                alignItems: 'flex-end',
+                                flex: 2,
+                            }}>
+                                <WithdrawUtilityButton rental={rental} controllers={controllers}/>
+                                <WithdrawCollateralButton rental={rental} controllers={controllers}/>
+                                <WithdrawRentalFeeButton rental={rental} controllers={controllers}/>
+                            </Box>
+
+                            <Box sx={{
+                                flex: 4,
+                            }}>
+                                <Typography variant='h6' align='left' sx={{ color: 'onSurfaceText.main', mt: 2}}>
+                                    Config
+                                </Typography>
+
+                                <Box sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between'
+                                }}>
+                                    <TextField id="standard-basic" label="100" variant="standard" size="small" helperText="Collateral Amount" InputProps={{
+                                        readOnly: true,
+                                    }}/>
+                                    <TextField id="standard-basic" label="100" variant="standard" size="small" helperText="Rental Fee Per Unit Amount" InputProps={{
+                                        readOnly: true,
+                                    }}/>
+                                </Box>
+
+                                <Box sx={{
+                                    mt: 2,
+                                    display: 'flex',
+                                    justifyContent: 'space-between'
+                                }}>
+                                    <TextField id="standard-basic" label="100" variant="standard" size="small" helperText="Utility Title" InputProps={{
+                                        readOnly: false,
+                                    }} sx={{
+                                        ' label.Mui-focused': { bgcolor: 'secondary.main' },
+                                        '& .MuiInput-underline:before': {
+                                            color: 'onSurfaceTextDark.dark',
+                                            borderBottomColor: 'onSurfaceTextDark.dark'
+                                        },
+                                        '& .MuiInputBase-root:hover': { color: 'onSurfaceTextDark.dark' },
+                                        '& .MuiInputBase-root:before': { color: 'onSurfaceTextDark.dark' },
+                                        'p.MuiFormHelperText-root' : { color: 'onSurfaceTextDark.main' }
+                                    }}/>
+                                    <TextField id="standard-basic" label="100" variant="standard" size="small" helperText="Utility Description" InputProps={{
+                                        readOnly: true,
+                                    }}/>
+                                </Box>
+
+                                <Box sx={{
+                                    mt: 2,
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                }}  color="onSurfaceTextDark">
+                                    <FormControl variant="standard" color="onSurfaceTextDark" sx={{ minWidth: 120 }}>
+                                        <InputLabel id="demo-simple-select-filled-label"  sx={{ color: 'onSurfaceTextDark.main' }}>Age</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-filled-label"
+                                            id="demo-simple-select-filled"
+                                            color="onSurfaceTextDark"
+                                            sx={{
+                                                '&:before': { borderColor: 'onSurfaceTextDark.main'},
+                                                '&:not(.Mui-disabled):hover::before': {
+                                                    borderColor: 'onSurfaceTextDark.main',
+                                                },
+                                                '& .MuiSelect-select': { color: 'onSurfaceTextDark.main'},
+                                                '& .MuiSelect-icon': { color: 'onSurfaceTextDark.main'},
+                                            }}
+                                        >
+                                            <MenuItem value="">
+                                                <em>None</em>
+                                            </MenuItem>
+                                            <MenuItem value={10}>Ten</MenuItem>
+                                            <MenuItem value={20}>Twenty</MenuItem>
+                                            <MenuItem value={30}>Thirty</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                    <TextField id="standard-basic" label="100" variant="standard" size="small" helperText="Rental Fee Per Unit Amount" InputProps={{
+                                        readOnly: true,
+                                    }}/>
+                                </Box>
+
+                            </Box>
+
+                        </Box>
+                    </Box>
+                </Box>
+            </Box>
+        </Modal>
     );
 };
+
+export default RentalModal;

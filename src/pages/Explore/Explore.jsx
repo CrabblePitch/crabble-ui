@@ -38,9 +38,11 @@ export const Explore = ({ bagOpen }) => {
 
             <Paper sx={{
                 width: '70%',
+                minWidth: 0,
+                minHeight: 0,
                 height: '100vh',
                 overflow: 'auto',
-                pb: 2,
+                p: 2,
                 bgcolor: 'surface.main',
                 borderRadius: (theme) => theme.spacing(2),
                 boxShadow: '0px 0px 80px 0px rgba(0,0,0,0.75)'
@@ -49,15 +51,14 @@ export const Explore = ({ bagOpen }) => {
                     <Bag/>
                 ) : (
                     <>
-                        <Box sx={{ width: 1, pt: 2 }}>
+                        <Box sx={{ width: 1}}>
                             <FilterBar/>
                         </Box>
 
-                        <Grid container rowSpacing={1} justifyContent='flex-start' className='GRID'
-                              sx={{ bgcolor: 'secondary' }}>
+                        <Grid container spacing={2} className='GRID'>
                             {displayData.map((data, index) => (
-                                <Grid key={index * 10} spacing={2} item xs={4}
-                                      sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                                <Grid key={index * 10} item xs={4}
+                                      sx={{ display: 'flex', justifyContent: 'center' }}>
                                     <TicketContainer>
                                         <Ticket
                                             key={index}

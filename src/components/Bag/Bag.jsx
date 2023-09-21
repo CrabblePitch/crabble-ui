@@ -1,9 +1,9 @@
-import './Bag.scss';
+// import './Bag.scss';
 
 import { useState } from 'react';
 import { Tabs, Box } from '@mui/material';
 import { Ticket } from '../Ticket/Ticket.jsx';
-import { RentalModal } from '../RentalModal/RentalModal.jsx';
+import RentalModal from '../RentalModal/RentalModal.jsx';
 
 // TODO: to be removed
 import { mockUtilityData } from '../../pages/Explore/_mockUtility.js';
@@ -25,13 +25,20 @@ export const Bag = () => {
 
     const [tabValue, setTabValue] = useState(1);
     const [activeRental, setActiveRental] = useState(false);
+    const [rentalDialogOpen, setRentalDialogOpen] = useState(false);
 
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
     };
 
     const closeActiveRental = () => {
+        setRentalDialogOpen(false);
         setActiveRental(null);
+    };
+
+    const handleTicketClick = activeTicket => {
+      setRentalDialogOpen(true);
+      setActiveRental(activeTicket);
     };
 
     return (
@@ -60,7 +67,7 @@ export const Bag = () => {
                                             <Ticket
                                                 key={index}
                                                 data={data}
-                                                onTicketClick={setActiveRental}
+                                                onTicketClick={handleTicketClick}
                                                 showDescription={false}
                                             />
                                         </TicketContainer>
@@ -76,7 +83,7 @@ export const Bag = () => {
                                             <Ticket
                                                 key={index}
                                                 data={data}
-                                                onTicketClick={setActiveRental}
+                                                onTicketClick={handleTicketClick}
                                                 showDescription={false}
                                             />
                                         </TicketContainer>
@@ -87,7 +94,8 @@ export const Bag = () => {
                     </Box>
                 </main>
             </div>
-            {activeRental && <RentalModal utility={activeRental} closeModal={closeActiveRental} />}
+            <RentalModal rental={activeRental} closeModal={closeActiveRental} open={rentalDialogOpen}/>
+            {/*{activeRental && <RentalModal utility={activeRental} closeModal={closeActiveRental} />}*/}
         </Box>
     );
 };

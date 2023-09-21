@@ -3,14 +3,4 @@
     margin-bottom: 20px;
   }
 
-  .tickets {
-    display: flex;
-    flex-wrap: wrap;
-
-    .ticket {
-      flex-basis: calc(25% - 10px);
-      flex-wrap: wrap;
-      margin: 10px 5px;
-    }
-  }
 }
