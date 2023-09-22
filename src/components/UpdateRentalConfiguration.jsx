@@ -63,15 +63,15 @@ const UpdateRentalConfiguration = ({ rental }) => {
                     bgcolor: 'primary.main',
                     color: 'onSurfaceText.main',
                     borderRadius: 2,
-                    mr: 2
-                }} disabled={configDisabled}>
+                    mr: 2,
+                }} disabled={!(rental.phase === RentalPhase.AVAILABLE)}>
                     <EditIcon/>
                 </IconButton>}
                 {isEditing && <IconButton onClick={handleClearClick} size={"small"} sx={{
                     bgcolor: 'error.main',
                     color: 'onSurfaceText.main',
                     borderRadius: 2
-                }} disabled={configDisabled}>
+                }} disabled={!(rental.phase === RentalPhase.AVAILABLE)}>
                     <ClearRoundedIcon/>
                 </IconButton>}
             </Box>
@@ -135,7 +135,7 @@ const UpdateRentalConfiguration = ({ rental }) => {
                 justifyContent: 'flex-end',
                 alignItems: 'flex-end'
             }}>
-                <UpdateRentalConfigButton disabled={configDisabled}/>
+                <UpdateRentalConfigButton rental={rental}/>
             </Box>
 
         </Box>

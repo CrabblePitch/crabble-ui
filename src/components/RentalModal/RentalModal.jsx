@@ -34,6 +34,7 @@ const RentalModal = ({ rental, closeModal, open }) => {
                     display: 'flex',
                     alignItems: 'stretch',
                     height: 1,
+                    pb: 2,
                     bgcolor: 'surface.main',
                     // p: 1
                 }} className="parent">

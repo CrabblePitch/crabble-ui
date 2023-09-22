@@ -3,9 +3,9 @@ import { Box, FormControl, InputLabel, Select, TextField } from "@mui/material";
 const textColorLight = 'onSurfaceText.main';
 const textColorDark = 'onSurfaceTextDark.main';
 
-const Selector = ({ label, children, current, callback }) => {
+const Selector = ({ label, children, current, callback, fullWidth }) => {
   return (
-      <FormControl variant="standard" color="onSurfaceTextDark" sx={{ minWidth: 120 }}>
+      <FormControl variant="standard" color="onSurfaceTextDark" fullWidth={fullWidth}  sx={{ minWidth: 120, mt: 1 }}>
           <InputLabel id="demo-simple-select-filled-label"  sx={{ color: 'onSurfaceTextDark.main' }}>{label}</InputLabel>
           <Select
               labelId="demo-simple-select-filled-label"
@@ -27,7 +27,7 @@ const Selector = ({ label, children, current, callback }) => {
   )
 };
 
-const TextInput = ({ name, current, onChange}) => {
+const TextInput = ({ name, current, onChange, size = 'medium', width}) => {
     return (
         <Box>
             <TextField
@@ -37,9 +37,12 @@ const TextInput = ({ name, current, onChange}) => {
                 value={current}
                 onChange={ev => onChange(ev.target.value)}
                 size="small"
+                fullWidth
                 autoComplete="off"
                 helperText={name}
                 sx={{
+                    width,
+                    // maxWidth: 150,
                     ' label.Mui-focused': { color: textColorDark },
                     ' label': { color: textColorDark },
                     '& .MuiInput-underline:before': {

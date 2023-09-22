@@ -1,8 +1,9 @@
 import useStore from '../../store/store.js';
 import { buildUpdateRentalConfigOfferSpec, makeGenericOnStatusUpdate } from '../../utils/helpers.js';
 import { Button } from '@mui/material';
+import { RentalPhase } from "../../utils/constants.js";
 
-export const UpdateRentalConfigButton = ({ rental, overrides, controllers, disabled = false }) => {
+export const UpdateRentalConfigButton = ({ rental, overrides, controllers = false }) => {
     const wallet = useStore((state) => state.wallet);
 
     // TODO: to be uncommented
@@ -23,7 +24,15 @@ export const UpdateRentalConfigButton = ({ rental, overrides, controllers, disab
     // };
 
     return (
-        <Button variant={'contained'} color={'secondary'} onClick={() => {}} disabled={disabled}>
+        <Button
+            variant={'contained'}
+            color={'secondary'}
+            onClick={() => {}} disabled={!(rental.phase === RentalPhase.AVAILABLE)}
+            sx={{
+                display: rental.phase === RentalPhase.LIQUIDATED ? 'none' : '',
+                ':disabled': { color: 'onSurfaceTextDark.main' }
+            }}
+        >
             Update Rental Config
         </Button>
     );

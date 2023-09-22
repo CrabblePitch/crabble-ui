@@ -4,7 +4,7 @@ import { getValueFromSet } from "../utils/helpers.js";
 import PhaseChip from "./PhaseChip.jsx";
 
 const DisplayUtility = ({ rental }) => {
-    const  { phase, configuration} = rental;
+    const  { configuration } = rental;
     const utilityValue = getValueFromSet(configuration.utilityAmount);
     return (
         <Box sx={{
