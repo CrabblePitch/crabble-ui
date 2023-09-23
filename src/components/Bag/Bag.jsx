@@ -1,8 +1,5 @@
-// import './Bag.scss';
-
 import { useState } from 'react';
 import { Tabs, Box } from '@mui/material';
-import { Ticket } from '../Ticket/Ticket.jsx';
 import RentalModal from '../RentalModal/RentalModal.jsx';
 
 // TODO: to be removed
@@ -11,18 +8,17 @@ import{ BagStyledTab } from "../BagTab.jsx";
 import BagInfo from "../BagInfo.jsx";
 import Grid from "@mui/material/Grid";
 import useStore from "../../store/store.js";
-import TicketContainer from "../TicketContainer.jsx";
 import UtilityCard from "../UtilityCard.jsx";
 
 export const Bag = () => {
     const getOwnedRentals = useStore((state) => state.getOwnedRentals);
     const getBorrowedRentals = useStore((state) => state.getBorrowedRentals);
 
-    // const ownedRentals = getOwnedRentals();
-    // const borrowedRentals = getBorrowedRentals();
-
-    const ownedRentals = mockUtilityData;
-    const borrowedRentals = mockUtilityData;
+    const ownedRentals = getOwnedRentals();
+    const borrowedRentals = getBorrowedRentals();
+    //
+    // const ownedRentals = mockUtilityData;
+    // const borrowedRentals = mockUtilityData;
 
     const [tabValue, setTabValue] = useState(1);
     const [activeRental, setActiveRental] = useState(false);
@@ -63,8 +59,8 @@ export const Bag = () => {
                         {tabValue === 0 && (
                             <Grid container spacing={2}>
                                 {ownedRentals.map((data, index) => (
-                                    <Grid item xs={4}>
-                                        <UtilityCard key={index} data={data} onCardClick={handleTicketClick} detailed={false}/>
+                                    <Grid key={`owned-${index}`} item xs={4}>
+                                        <UtilityCard data={data} onCardClick={handleTicketClick} detailed={false}/>
                                     </Grid>
                                 ))}
                             </Grid>
@@ -72,8 +68,8 @@ export const Bag = () => {
                         {tabValue === 1 && (
                             <Grid container spacing={2}>
                                 {borrowedRentals.map((data, index) => (
-                                    <Grid item xs={4}>
-                                        <UtilityCard key={index} data={data} onCardClick={handleTicketClick} detailed={false}/>
+                                    <Grid key={`borrowed-${index}`} item xs={4}>
+                                        <UtilityCard data={data} onCardClick={handleTicketClick} detailed={false}/>
                                     </Grid>
                                 ))}
                             </Grid>
@@ -82,7 +78,6 @@ export const Bag = () => {
                 </main>
             </div>
             <RentalModal rental={activeRental} closeModal={closeActiveRental} open={rentalDialogOpen}/>
-            {/*{activeRental && <RentalModal utility={activeRental} closeModal={closeActiveRental} />}*/}
         </Box>
     );
 };

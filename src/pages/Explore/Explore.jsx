@@ -20,8 +20,8 @@ export const Explore = ({ bagOpen }) => {
     const [borrowOpen, setBorrowOpen] = useState(false);
     console.log('activeTicket', activeTicket);
 
-    // const displayData = [...catalog].filter(({ phase }) => phase === 'available');
-    const displayData = catalogData;
+    const displayData = [...catalog].filter(({ phase }) => phase === 'available');
+    // const displayData = catalogData;
 
     const handleCardClick = rentalData => {
       setActiveTicket(rentalData);
@@ -76,7 +76,6 @@ export const Explore = ({ bagOpen }) => {
                 )}
             </Paper>
             <BorrowRentalDialog open={borrowOpen} rentalData={activeTicket} onClose={closeActiveTicket}/>
-            {/*{activeTicket && <BorrowModal ticketData={activeTicket} closeTicket={closeActiveTicket}/>}*/}
         </Box>
     );
 };

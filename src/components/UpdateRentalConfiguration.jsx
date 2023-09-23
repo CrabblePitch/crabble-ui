@@ -2,40 +2,92 @@ import Typography from "@mui/material/Typography";
 import { Box, IconButton, MenuItem, Stack } from "@mui/material";
 import { Selector, TextInput } from "./CustomComponents.jsx";
 import { UpdateRentalConfigButton } from "./UpdateRentalConfig/UpdateRentalConfigButton.jsx";
-import { getValueFromNat, getValueFromSet } from "../utils/helpers.js";
+import { getValueFromNat, makeRentalConfigValidator } from "../utils/helpers.js";
 import { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
-import { RentalPhase } from "../utils/constants.js";
+import { ErrorMessages, RentalPhase } from "../utils/constants.js";
 
-const UpdateRentalConfiguration = ({ rental }) => {
+const getDisplayConfigDefaults = configuration => {
+    return harden({
+        rentingDurationUnit: configuration.rentingDurationUnit,
+        rentalFeePerUnitVal: String(getValueFromNat(configuration.rentalFeePerUnitAmount)),
+        collateralVal: String(getValueFromNat(configuration.collateralAmount)),
+        gracePeriodDuration: String(configuration.gracePeriodDuration),
+        minRentingDurationUnits: String(configuration.minRentingDurationUnits),
+        maxRentingDurationUnits: String(configuration.maxRentingDurationUnits),
+    })
+};
+
+const makeUpdateHelper = (currentValues, configuration) => {
+    const defaults = getDisplayConfigDefaults(configuration);
+
+    const checkForChange = (overrides) => {
+        return Object.entries(overrides).length > 0;
+    };
+
+    const buildOverrides = () => {
+        const overrides = {};
+
+        [...Object.entries(currentValues)].forEach(([key, value]) => {
+            if (defaults[key] !== value) overrides[key] = value;
+        });
+
+        return overrides;
+    };
+
+    return harden({
+        checkForChange,
+        buildOverrides,
+    })
+};
+
+const UpdateRentalConfiguration = ({ rental, onClose }) => {
     const [isEditing, setEditing] = useState(false);
 
     // Override State
-    const [collateralAmount, setColAmount] = useState('');
-    const [rentalFeePerUnitAmount, setRentalFeePerUnitAmount] = useState('');
-    const [utilityDescription, setUtilityDescription] = useState('');
-    const [utilityTitle, setUtilityTitle] = useState('');
-    const [rentingDurationUnit, setRentinDurationUnit] = useState('');
-    const [minRentingDurationUnits, setMinRentinDurationUnit] = useState('');
-    let configDisabled = false;
+    const [collateralVal, setCollateralVal] = useState(0);
+    const [rentalFeePerUnitVal, setRentalFeePerUnitVal] = useState(0);
+    const [rentingDurationUnit, setRentinDurationUnit] = useState('minute');
+    const [gracePeriodDuration, setGracePeriodDuration] = useState(0);
+    const [minRentingDurationUnits, setMinRentingDurationUnits] = useState(0);
+    const [maxRentingDurationUnits, setMaxRentingDurationUnits] = useState(0);
+
+    const [errors, setErrors] = useState({
+        rentingDurationUnit: false,
+        rentalFeePerUnitVal: false,
+        collateralVal: false,
+        gracePeriodDuration: false,
+        minRentingDurationUnits: false,
+        maxRentingDurationUnits: false,
+    });
+
+    const validationConfig = {
+        rentingDurationUnit,
+        rentalFeePerUnitVal,
+        collateralVal,
+        gracePeriodDuration,
+        minRentingDurationUnits,
+        maxRentingDurationUnits,
+    };
+
+    const { validate } = makeRentalConfigValidator(errors, setErrors, validationConfig);
 
     useEffect(() => {
         if (!rental) return;
 
         resetState(rental.configuration);
-
-        configDisabled = !(rental.phase === RentalPhase.AVAILABLE);
     }, [rental]);
 
     const resetState = (configuration) => {
+        const defaults = getDisplayConfigDefaults(configuration);
         setEditing(false);
-        setColAmount(getValueFromNat(configuration.collateralAmount));
-        setRentalFeePerUnitAmount(getValueFromNat(configuration.rentalFeePerUnitAmount));
-        setUtilityDescription(configuration.utilityDescription);
-        setUtilityTitle(configuration.utilityTitle);
-        setRentinDurationUnit(configuration.rentingDurationUnit);
-        setMinRentinDurationUnit(Number(configuration.minRentingDurationUnits))
+        setCollateralVal(defaults.collateralVal);
+        setRentalFeePerUnitVal(defaults.rentalFeePerUnitVal);
+        setRentinDurationUnit(defaults.rentingDurationUnit);
+        setMinRentingDurationUnits(defaults.minRentingDurationUnits);
+        setMaxRentingDurationUnits(defaults.maxRentingDurationUnits);
+        setGracePeriodDuration(defaults.gracePeriodDuration);
     };
 
     const handleEditClick = () => {
@@ -91,13 +143,15 @@ const UpdateRentalConfiguration = ({ rental }) => {
                     justifyContent: 'space-between'
                 }}>
 
-                    <TextInput  name={'Collateral Amount'}
-                               current={collateralAmount}
-                                onChange={setColAmount}
+                    <TextInput name={'Collateral Amount'}
+                               current={collateralVal}
+                               onChange={setCollateralVal}
+                               error={{value: errors.collateralVal, text: ErrorMessages.NUMERIC}}
                     />
-                    <TextInput  name={'Rental Fee Per Unit Amount'}
-                               current={rentalFeePerUnitAmount}
-                                onChange={setRentalFeePerUnitAmount}
+                    <TextInput onChange={setRentalFeePerUnitVal}
+                               name={'Rental Fee Per Unit'}
+                               current={rentalFeePerUnitVal}
+                               error={{ value: errors.rentalFeePerUnitVal, text: ErrorMessages.NUMERIC}}
                     />
                 </Box>
 
@@ -106,27 +160,51 @@ const UpdateRentalConfiguration = ({ rental }) => {
                     display: 'flex',
                     justifyContent: 'space-between'
                 }}>
-                    <TextInput onChange={setUtilityTitle}  name={'Utility Title'} current={utilityTitle}/>
-                    <TextInput onChange={setUtilityDescription}  name={'Utility Description'} current={utilityDescription}/>
-                </Box>
-
-                <Box sx={{
-                    mt: 2,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                }}>
-                    <Selector label={"Renting Unit"} helperText={"Renting Unit"}
-                              current={rentingDurationUnit} callback={setRentinDurationUnit}
+                    <Selector label={"Renting Unit"}
+                              helperText={"Renting Unit"}
+                              current={rentingDurationUnit}
+                              callback={setRentinDurationUnit}
+                              // fullWidth={true}
+                              error={{ value: errors.rentingDurationUnit, text: ErrorMessages.STRING}}
                     >
                         <MenuItem value="minute">Minute</MenuItem>
                         <MenuItem value="hour">Hour</MenuItem>
                         <MenuItem value="day">Day</MenuItem>
                         <MenuItem value="week">Week</MenuItem>
                     </Selector>
-                    <TextInput onChange={setMinRentinDurationUnit} name={'Minimum Renting Duration'}
-                               current={Number(minRentingDurationUnits)}
-                    />
 
+
+                    <TextInput onChange={setGracePeriodDuration}
+                               name={'Grace Period'}
+                               current={gracePeriodDuration}
+                               error={{value: errors.gracePeriodDuration, text: ErrorMessages.NUMERIC}}
+                    />
+                </Box>
+
+                <Box sx={{
+                    mt: 2,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    color: 'onSurfaceText.main'
+                }}>
+                    <Stack direction="row" justifyContent='flex-start' alignItems="center">
+
+                        <TextInput onChange={setMinRentingDurationUnits}
+                                   name={'Min'}
+                                   current={minRentingDurationUnits}
+                                   size={"small"}
+                                   width={50}
+                                   error={{ value: errors.minRentingDurationUnits, text: ErrorMessages.NUMERIC }}
+                        />
+                        <Typography sx={{ ml: 2, mr: 2 }} variant="body1">{rentingDurationUnit}(s) to</Typography>
+                        <TextInput onChange={setMaxRentingDurationUnits}
+                                   name={'Max'}
+                                   current={maxRentingDurationUnits}
+                                   width={50}
+                                   error={{ value: errors.maxRentingDurationUnits, text: ErrorMessages.NUMERIC }}
+                        />
+                        <Typography variant="body1" sx={{ ml: 1, mr: 1 }}>{rentingDurationUnit}(s)</Typography>
+                    </Stack>
                 </Box>
             </Box>
 
@@ -135,7 +213,11 @@ const UpdateRentalConfiguration = ({ rental }) => {
                 justifyContent: 'flex-end',
                 alignItems: 'flex-end'
             }}>
-                <UpdateRentalConfigButton rental={rental}/>
+                <UpdateRentalConfigButton
+                    rental={rental}
+                    controllers={{ validate, helper: makeUpdateHelper(validationConfig, rental.configuration) }}
+                    onClose={onClose}
+                />
             </Box>
 
         </Box>

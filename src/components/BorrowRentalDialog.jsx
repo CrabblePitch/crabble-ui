@@ -1,32 +1,74 @@
 import {
     Button,
     Dialog,
-    DialogActions,
-    DialogContent, Divider,
-    MenuItem, Radio,
+    DialogContent,
+    Divider,
     Stack,
 } from "@mui/material";
 import ModalTitleBar from "./ModalTitleBar.jsx";
 import Typography from "@mui/material/Typography";
-import { Selector, TextInput } from "./CustomComponents.jsx";
+import { TextInput } from "./CustomComponents.jsx";
 import { useEffect, useState } from "react";
 import DisplayUtility from "./DisplayUtility.jsx";
-import { getValueFromNat, getValueFromSet } from "../utils/helpers.js";
+import {
+    buildBorrowAdHocOfferSpec,
+    getValueFromNat,
+    isNumeric,
+    makeGenericOnStatusUpdate,
+    makeRentalConfigValidator
+} from "../utils/helpers.js";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { ErrorMessages } from "../utils/constants.js";
+import useStore from "../store/store.js";
 
 const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
-    const [rentingDuration, setRentinDuration] = useState(0);
+    const notifyUser = useStore(state => state.notifyUser);
+    const wallet = useStore(state => state.wallet);
+    const getKeywordFromBrand = useStore(state => state.getKeywordFromBrand);
+
+    const [rentingDuration, setRentinDuration] = useState('0');
+    const [errors, setErrors] = useState({ rentingDuration: false });
+    const configuration = { rentingDuration };
+
 
     useEffect(() => {
         if (!rentalData) return;
-        setRentinDuration(rentalData.minRentingDurationUnits);
+        setRentinDuration(String(rentalData.minRentingDurationUnits));
     }, [rentalData]);
 
     if (!rentalData) return;
 
-    const calculateRentinFee = () => {
-      return Number(rentingDuration) * getValueFromNat(rentalData.rentalFeePerUnitAmount);
+    const handleBorrowClick = () => {
+        if (!validate()) {
+            console.log('Something wrong', configuration);
+            return;
+        }
+
+        const offerSpec = buildBorrowAdHocOfferSpec({ ...rentalData, rentingDuration });
+        console.log('Offer Spec', { offerSpec });
+
+        console.log({ offerSpec });
+        void wallet.makeOffer(
+            offerSpec.invitationSpec,
+            offerSpec.proposal,
+            offerSpec.offerArgs,
+            onStatusChange,
+            offerSpec.id,
+        );
     };
+
+    const handleClose = () => {
+      setRentinDuration(String(rentalData.minRentingDurationUnits));
+      onClose();
+    };
+
+    const calculateRentinFee = () => {
+        if (!isNumeric(rentingDuration)) return '';
+        return Number(rentingDuration) * getValueFromNat(rentalData.rentalFeePerUnitAmount);
+    };
+
+    const { validate } = makeRentalConfigValidator(errors, setErrors, configuration);
+    const { onStatusChange } = makeGenericOnStatusUpdate(notifyUser, handleClose);
 
     return (
         <Dialog open={open} onClose={() => console.log('closing!')} sx={{
@@ -38,7 +80,6 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
                 bgcolor: 'surface.main',
                 '& .MuiDialog-paper': {bgcolor: ''},
                 display: 'flex',
-                // alignItems: 'stretch'
             }}>
                 <Stack flex={2}>
                     <DisplayUtility rental={{ configuration: rentalData }}/>
@@ -48,8 +89,10 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
                     <Stack>
                         <Stack direction={"row"} justifyContent={"space-between"} mt={1}>
                             <Typography sx={{mt:2}} variant="h6">How long you'll be renting?</Typography>
-                            <TextInput onChange={setRentinDuration} name={`Renting Duration ${rentalData.rentingDurationUnit}s`}
-                                       current={Number(rentingDuration)}
+                            <TextInput onChange={setRentinDuration}
+                                       name={`Renting Duration in ${rentalData.rentingDurationUnit}s`}
+                                       current={rentingDuration}
+                                       error={{ value: errors.rentingDuration, text: ErrorMessages.NUMERIC}}
                             />
                         </Stack>
 
@@ -59,11 +102,11 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
 
                             <Stack direction="row" justifyContent={'space-between'} sx={{mt: 1}}>
                                 <Typography variant="subtitle1">Collateral</Typography>
-                                <Typography variant="subtitle2">{`${getValueFromNat(rentalData.collateralAmount)} {COL_KEYWORD}`}</Typography>
+                                <Typography variant="subtitle2">{`${getValueFromNat(rentalData.collateralAmount)} ${getKeywordFromBrand(rentalData.collateralAmount.brand)}`}</Typography>
                             </Stack>
                             <Stack direction="row" justifyContent={'space-between'}>
                                 <Typography variant="subtitle1">Rental Fee</Typography>
-                                <Typography variant="subtitle2">{`${calculateRentinFee()} {FEE_KEYWORD}`}</Typography>
+                                <Typography variant="subtitle2">{`${calculateRentinFee()} ${getKeywordFromBrand(rentalData.rentalFeePerUnitAmount.brand)}`}</Typography>
                             </Stack>
                         </Stack>
 
@@ -88,8 +131,8 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
                     </Stack>
 
                     <Stack direction={"row"} justifyContent={"flex-end"} mb={1}>
-                        <Button sx={{mr: 1}} variant="outlined" color={"onSurface"} onClick={onClose}>Cancel</Button>
-                        <Button variant="contained" color={"secondary"} onClick={onClose}>List My NFT</Button>
+                        <Button sx={{mr: 1}} variant="outlined" color={"onSurface"} onClick={handleClose}>Cancel</Button>
+                        <Button variant="contained" color={"secondary"} onClick={handleBorrowClick}>Borrow</Button>
                     </Stack>
 
 

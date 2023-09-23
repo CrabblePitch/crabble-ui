@@ -5,8 +5,8 @@ const PhaseChip = ({ phase }) => {
   let color  = 'onSurface.main';
 
   if (phase === RentalPhase.AVAILABLE) color = 'success';
-  else if (phase === RentalPhase.REMOVED) color = 'onSurfaceTextDark';
-  else if (phase === RentalPhase.LIQUIDATED) color = 'error';
+  else if (phase === RentalPhase.REMOVED) color = 'primary';
+  else if (phase === RentalPhase.LIQUIDATED) color = 'tertiary';
   else if (phase === RentalPhase.RENTED) color = 'secondary';
   else if (phase === RentalPhase.GRACE_PERIOD) color = 'warning';
 

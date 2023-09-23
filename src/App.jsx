@@ -6,6 +6,7 @@ import { Home } from './pages/Home/Home.jsx';
 import { ConnectWallet } from './components/ConnectWallet/ConnectWallet.jsx';
 import { makeStorageWatcher } from './utils/storageWatcher.js';
 import { Box } from "@mui/material";
+import UserNotifier from "./components/UserNotifier.jsx";
 
 export const App = () => {
     console.log('App!!!');
@@ -22,6 +23,7 @@ export const App = () => {
                 {/*{!wallet && <ConnectWallet/>}*/}
                 {/*{wallet && <Home/>}*/}
                 <Home/>
+                <UserNotifier/>
             </Box>
         </>
 

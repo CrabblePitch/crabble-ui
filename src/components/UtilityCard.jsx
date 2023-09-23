@@ -2,10 +2,15 @@ import Typography from "@mui/material/Typography";
 import { Card, CardActionArea, CardContent, CardMedia, Stack } from "@mui/material";
 import PhaseChip from "./PhaseChip.jsx";
 import { getValueFromSet } from "../utils/helpers.js";
+import useStore from "../store/store.js";
 
 const UtilityCard = ({ data, onCardClick, detailed = true }) => {
+    const getKeywordFromBrand = useStore(state => state.getKeywordFromBrand);
+
     const ticketData = data.configuration ? data.configuration : data;
     const utilityValue = getValueFromSet(ticketData.utilityAmount);
+
+    console.log('Utility Card', { data });
 
     return (
         <Card sx={{
@@ -35,15 +40,13 @@ const UtilityCard = ({ data, onCardClick, detailed = true }) => {
                             <>
                                 <Typography variant="subtitle1">
                                     {Number(ticketData.minRentingDurationUnits)} to{' '}
-                                    {Number(ticketData.maxRentingDurationUnits)} {ticketData.rentingDurationUnit}(s), $
-                                    {Number(ticketData.rentalFeePerUnitAmount?.value)} per{' '}
-                                    {ticketData.rentingDurationUnit}
+                                    {Number(ticketData.maxRentingDurationUnits)} {ticketData.rentingDurationUnit}(s),
+                                    {Number(ticketData.rentalFeePerUnitAmount.value)} {getKeywordFromBrand(ticketData.rentalFeePerUnitAmount.brand)} per {ticketData.rentingDurationUnit}
                                 </Typography>
                                 <Typography variant="subtitle1">
-                                    ${Number(ticketData.collateralAmount.value)} Collateral
+                                    {Number(ticketData.collateralAmount.value)} {getKeywordFromBrand(ticketData.collateralAmount.brand)} of Collateral
                                 </Typography>
                             </>
-
                         ) :
                         (
                             <>

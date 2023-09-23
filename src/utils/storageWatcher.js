@@ -3,7 +3,7 @@ import { AgoricChainStoragePathKind } from "@agoric/rpc";
 import { subscribeLatest } from "@agoric/notifier";
 
 const makeStorageWatcher = () => {
-    const { watcher, wallet, registerRentals } = useStore.getState();
+    const { watcher, wallet, registerRentals, updateBrands } = useStore.getState();
 
     const watchSmartWallet = () => {
         watcher.watchLatest(
@@ -33,7 +33,7 @@ const makeStorageWatcher = () => {
             [AgoricChainStoragePathKind.Data, 'published.agoricNames.brand'],
             brands => {
                 console.log('Brand Update', brands);
-                useStore.setState({ brands });
+                updateBrands(brands);
             }
         );
     };

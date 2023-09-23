@@ -65,14 +65,14 @@ const RentalModal = ({ rental, closeModal, open }) => {
                                 justifyContent: 'space-between',
                                 alignItems: 'flex-end'
                             }}>
-                                <RentalManager rental={rental} controllers={controllers}/>
+                                <RentalManager rental={rental} controllers={controllers} onClose={closeModal}/>
                             </Box>
                             <Divider sx={{mt: 1, bgcolor: 'onSurfaceTextDark.main'}}/>
                             <Box sx={{
                                 flex: 4,
                                 overflow: 'auto',
                             }}>
-                                <UpdateRentalConfiguration rental={rental}/>
+                                <UpdateRentalConfiguration rental={rental} onClose={closeModal}/>
                             </Box>
                         </Box>
                     </Box>

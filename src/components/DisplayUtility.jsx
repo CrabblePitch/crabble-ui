@@ -39,7 +39,7 @@ const DisplayUtility = ({ rental }) => {
                 {[...Object.entries(utilityValue)]
                     .filter(([key]) => key !== 'imagePath')
                     .map(([key, value]) => (
-                        <Stack sx={{flex: 1}}>
+                        <Stack key={`display-${key}`} sx={{flex: 1}}>
                             <Typography variant='subtitle1' align='left'
                                         sx={{ color: 'onSurfaceText.main' }}>
                                 {key}

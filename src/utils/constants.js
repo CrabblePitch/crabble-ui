@@ -6,12 +6,38 @@ const Rental_Keywords = harden({
 const RentalPhase = harden({
    AVAILABLE: 'available',
    RENTED: 'rented',
-   LIQUIDATED: 'liquidated',
+   LIQUIDATED: 'liquidation',
    GRACE_PERIOD: 'gracePeriod',
    REMOVED: 'removed',
+});
+
+const RentalConfigKeywords = harden({
+    UTILITY_AMOUNT_INDEX: 'utilityAmountIndex',
+    COLLATERAL_VAL: 'collateralVal',
+    RENTAL_FEE_PER_UNIT_VAL: 'rentalFeePerUnitVal',
+    UTILITY_TITLE: 'utilityTitle',
+    UTILITY_DESCRIPTION: 'utilityDescription',
+    RENTING_TIER: 'rentingTier',
+    RENTING_DURATION_UNIT: 'rentingDurationUnit',
+    MIN_RENTING_DURATION_UNITS: 'minRentingDurationUnits',
+    MAX_RENTING_DURATION_UNITS: 'maxRentingDurationUnits',
+    GRACE_PERIOD_DURATION: 'gracePeriodDuration',
+    RENTING_DURATION: 'rentingDuration',
+    UTILITY_BRAND: 'utilityBrand',
+    RENTAL_FEE_BRAND: 'rentalFeeBrand',
+    COLLATERAL_BRAND: 'collateralBrand',
+});
+
+const ErrorMessages = harden({
+    UTILITY_AMOUNT_INDEX: 'You must choose an NFT!',
+    NUMERIC: 'The entry must enter a number!',
+    STRING: 'The entry must enter a string!',
+    BRAND: 'You must specify a brand!'
 });
 
 export {
     Rental_Keywords,
     RentalPhase,
+    RentalConfigKeywords,
+    ErrorMessages,
 }

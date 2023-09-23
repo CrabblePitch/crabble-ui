@@ -1,6 +1,6 @@
 import useStore from '../store/store.js';
 import { AmountMath } from "@agoric/ertp";
-import { Rental_Keywords } from "./constants.js";
+import { Rental_Keywords, RentalConfigKeywords } from "./constants.js";
 
 const getBrand = (brandPetname) => {
     const { brands } = useStore.getState();
@@ -18,20 +18,18 @@ harden(getPurseFromSmartWallet);
 
 const buildCreateRentalOfferSpec = rawData => {
     const { crabbleInstance, wallet } = useStore.getState();
-    const utilityBrand = getBrand('Utility');
-    const collateralBrand = getBrand('Collateral');
-    const rentalFeeBrand = getBrand('RentalFee');
-    const utilityPurse = getPurseFromSmartWallet(utilityBrand);
+
+    const utilityPurse = getPurseFromSmartWallet(rawData.utilityBrand);
 
     console.log({ rawData })
 
-    if (!utilityBrand || !rentalFeeBrand || !collateralBrand || !utilityPurse || !crabbleInstance || !wallet)
+    if (!utilityPurse || !crabbleInstance || !wallet)
         throw new Error('No data');
 
-    const utilityAmount = AmountMath.make(utilityBrand,
+    const utilityAmount = AmountMath.make(rawData.utilityBrand,
         harden([utilityPurse.value[+rawData.utilityAmountIndex]]));
-    const collateralAmount = AmountMath.make(collateralBrand, BigInt(+rawData.collateralVal));
-    const rentalFeePerUnitAmount = AmountMath.make(rentalFeeBrand, BigInt(+rawData.rentalFeePerUnitVal));
+    const collateralAmount = AmountMath.make(rawData.collateralBrand, BigInt(+rawData.collateralVal));
+    const rentalFeePerUnitAmount = AmountMath.make(rawData.rentalFeeBrand, BigInt(+rawData.rentalFeePerUnitVal));
 
     return harden({
         id: `create-rental-${wallet.address}-${Date.now()}`,
@@ -48,7 +46,7 @@ const buildCreateRentalOfferSpec = rawData => {
                 utilityAmount,
                 collateralAmount,
                 rentalFeePerUnitAmount,
-                utilityTitle: rawData.utilityTitle,
+                utilityTitle: rawData.utilityTitle ,
                 utilityDescription: rawData.utilityDescription,
                 rentingTier: rawData.rentingTier,
                 rentingDurationUnit: rawData.rentingDurationUnit,
@@ -73,15 +71,14 @@ harden(checkPositiveNumber)
 
 const buildBorrowAdHocOfferSpec = rawData => {
     const { crabbleInstance, wallet } = useStore.getState();
-    const collateralBrand = getBrand('Collateral');
     const rentalFeeBrand = getBrand('RentalFee');
 
     console.log({ rawData })
 
-    if (!rentalFeeBrand || !collateralBrand || !crabbleInstance || !wallet)
+    if (!crabbleInstance || !wallet)
         throw new Error('No data');
 
-    const rentalFeeValue = BigInt(rawData.rentingDuration) * getValueFromNat(rawData.rentalFeePerUnitAmount);
+    const rentalFeeValue = BigInt(rawData.rentingDuration) * BigInt(getValueFromNat(rawData.rentalFeePerUnitAmount));
 
     return harden({
         id: `borrow-adhoc-${wallet.address}-${Date.now()}`,
@@ -128,17 +125,23 @@ const makeGenericOnStatusUpdate = (snackBarUpdater, modalUpdater) => {
         const { status, data } = args;
 
         if (status === 'error') {
-            snackBarUpdater('Offer error', data);
+            snackBarUpdater('error', 'Offer with error');
+            console.log('ERROR', data);
         }
         if (status === 'seated') {
-            snackBarUpdater('Transaction submitted:', data.txn);
-            snackBarUpdater('Offer id:', data.offerId);
+            snackBarUpdater('secondary', 'Transaction submitted');
+            console.log('Transaction:', data.txn);
+            console.log('Offer id:', data.offerId);
         }
         if (status === 'refunded') {
-            snackBarUpdater('Offer refunded');
+            snackBarUpdater('warning', 'Transaction refunded');
+            console.log('Transaction:', data.txn);
+            console.log('Offer id:', data.offerId);
         }
         if (status === 'accepted') {
-            snackBarUpdater('Offer accepted');
+            snackBarUpdater('success', 'Offer accepted');
+            console.log('Transaction:', data.txn);
+            console.log('Offer id:', data.offerId);
         }
 
         modalUpdater();
@@ -241,11 +244,16 @@ const buildReturnUtilityOfferSpec = rental => {
 };
 harden(buildReturnUtilityOfferSpec);
 
-const buildUpdateRentalConfigOfferSpec = (rental, overrides) => {
+const buildUpdateRentalConfigOfferSpec = (rental, rawUpdates) => {
     const { wallet } = useStore.getState();
 
     assert(wallet && wallet.address, `Wallet must be defined: ${wallet}`);
     assert(rental, `Rental must be defined: ${rental}`);
+
+    const overrides = updateMapper(rawUpdates);
+    console.log({
+        overrides
+    });
 
     return harden({
         id: `update-rental-config-${wallet.address}-${Date.now()}`,
@@ -265,6 +273,40 @@ const buildUpdateRentalConfigOfferSpec = (rental, overrides) => {
 };
 harden(buildUpdateRentalConfigOfferSpec);
 
+const updateMapper = rawUpdates => {
+    const collateralBrand = getBrand('Collateral');
+    const rentalFeeBrand = getBrand('RentalFee');
+
+    const overrides = {};
+
+    if (rawUpdates.collateralVal) {
+        overrides.collateralAmount = AmountMath.make(collateralBrand, BigInt(+rawUpdates.collateralVal));
+    }
+
+    if (rawUpdates.rentalFeePerUnitVal) {
+        overrides.rentalFeePerUnitAmount = AmountMath.make(rentalFeeBrand, BigInt(+rawUpdates.rentalFeePerUnitVal));
+    }
+
+    if (rawUpdates.rentingDurationUnit) {
+        overrides.rentingDurationUnit = rawUpdates.rentingDurationUnit;
+    }
+
+    if (rawUpdates.minRentingDurationUnits) {
+        overrides.minRentingDurationUnits = BigInt(+rawUpdates.minRentingDurationUnits);
+    }
+
+    if (rawUpdates.maxRentingDurationUnits) {
+        overrides.maxRentingDurationUnits = BigInt(+rawUpdates.maxRentingDurationUnits);
+    }
+
+    if (rawUpdates.gracePeriodDuration) {
+        overrides.gracePeriodDuration = BigInt(+rawUpdates.gracePeriodDuration);
+    }
+
+    return overrides;
+
+};
+
 const getFirstWordFromOfferId = offerId => {
   try {
       return  String(offerId).split('-').at(0);
@@ -279,6 +321,69 @@ const isCreateOffer = offerId => {
 
 const isBorrowOffer = offerId => {
     return getFirstWordFromOfferId(offerId) === Rental_Keywords.BORROW;
+};
+
+const isNumeric = (str) => {
+    if (typeof str != "string") return false;
+    return !isNaN(str) &&
+        !isNaN(parseFloat(str));
+};
+
+const isSet = amount => {
+    const { value } = AmountMath.makeEmptyFromAmount(amount);
+    return typeof value !== 'bigint';
+};
+
+const makeRentalConfigValidator = (errorRecordState, setErrorRecord, validations) => {
+
+    const updateResult = (errors) => {
+        const validated = {
+            ...errorRecordState,
+            ...errors
+        };
+
+        setErrorRecord(validated);
+    };
+
+    const validate = () => {
+        const errors = {};
+        let result = false;
+        [...Object.entries(validations)].forEach(([key, value]) => {
+            switch (key) {
+                case RentalConfigKeywords.UTILITY_AMOUNT_INDEX:
+                    errors[key] = !(value !== undefined && typeof value === 'number' && value >= 0);
+                    result = result === true ? result : errors[key];
+                    break;
+                case RentalConfigKeywords.MIN_RENTING_DURATION_UNITS:
+                case RentalConfigKeywords.MAX_RENTING_DURATION_UNITS:
+                case RentalConfigKeywords.GRACE_PERIOD_DURATION:
+                case RentalConfigKeywords.RENTAL_FEE_PER_UNIT_VAL:
+                case RentalConfigKeywords.COLLATERAL_VAL:
+                case RentalConfigKeywords.RENTING_DURATION:
+                    errors[key] = !(isNumeric(value) && checkPositiveNumber(value));
+                    result = result === true ? result : errors[key];
+                    break;
+                case RentalConfigKeywords.UTILITY_DESCRIPTION:
+                case RentalConfigKeywords.UTILITY_TITLE:
+                    errors[key] = (value === "" || value === null || value === undefined)
+                    result = result === true ? result : errors[key];
+                    break;
+                case RentalConfigKeywords.UTILITY_BRAND:
+                case RentalConfigKeywords.RENTAL_FEE_BRAND:
+                case RentalConfigKeywords.COLLATERAL_BRAND:
+                    errors[key] = !(value && typeof value === 'object');
+                    break;
+            }
+        });
+
+        updateResult(errors);
+
+        return !result;
+    }
+
+    return harden({
+        validate
+    });
 };
 
 export {
@@ -298,4 +403,7 @@ export {
     buildUpdateRentalConfigOfferSpec,
     isCreateOffer,
     isBorrowOffer,
+    makeRentalConfigValidator,
+    isNumeric,
+    isSet
 };

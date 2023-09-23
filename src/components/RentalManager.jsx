@@ -8,10 +8,11 @@ import { RentalPhase } from "../utils/constants.js";
 import WithdrawUtility from "./Withdraw/WithdrawUtility.jsx";
 import PhaseChip from "./PhaseChip.jsx";
 
-const RentalManager = ({ rental, controllers }) => {
+const RentalManager = ({ rental, onClose }) => {
     const { phase } = rental;
     const withdrawCollateralVisible = phase === RentalPhase.LIQUIDATED;
     const withdrawUtilityVisible = phase === RentalPhase.AVAILABLE;
+    const withdrawRentalFeeVisible = phase !== RentalPhase.REMOVED;
 
     return (
         <>
@@ -41,9 +42,9 @@ const RentalManager = ({ rental, controllers }) => {
             </Stack>
 
             <Stack direction="row">
-                {withdrawCollateralVisible && <WithdrawCollateralButton rental={rental} controllers={controllers}/>}
-                {withdrawUtilityVisible && <WithdrawUtility rental={rental} controllers={controllers}/>}
-                <WithdrawRentalFeeButton rental={rental} controllers={controllers}/>
+                {withdrawCollateralVisible && <WithdrawCollateralButton rental={rental} onClose={onClose}/>}
+                {withdrawUtilityVisible && <WithdrawUtility rental={rental} onClose={onClose}/>}
+                {withdrawRentalFeeVisible && <WithdrawRentalFeeButton rental={rental} onClose={onClose}/>}
             </Stack>
 
 
