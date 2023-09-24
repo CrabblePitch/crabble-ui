@@ -1,11 +1,13 @@
 import useStore from "../../store/store.js";
 import { buildReturnUtilityOfferSpec, makeGenericOnStatusUpdate } from "../../utils/helpers.js";
 import { Button } from "@mui/material";
+import { RentalPhase } from "../../utils/constants.js";
 
-const ReturnUtilityButton = ({ rental, controllers }) => {
+const ReturnUtilityButton = ({ rental, styles = {} }) => {
     const wallet = useStore(state => state.wallet);
+    const notifyUser = useStore(state => state.notifyUser);
 
-    const { onStatusChange } = makeGenericOnStatusUpdate(controllers.snackbar, controllers.modal);
+    const { onStatusChange } = makeGenericOnStatusUpdate(notifyUser, () => console.log('BYPASS'));
     const offerSpec = buildReturnUtilityOfferSpec(rental);
 
     const handleClick = () => {
@@ -17,7 +19,17 @@ const ReturnUtilityButton = ({ rental, controllers }) => {
     };
 
     return (
-        <Button variant={"contained"} color={"primary"} onClick={handleClick}>
+        <Button
+            disabled={rental.phase === RentalPhase.RENTED}
+            sx={{
+                ...styles,
+                ':disabled': { color: 'onSurfaceTextDark.main', bgcolor: 'secondary.dark' }
+            }}
+            fullWidth
+            variant={"contained"}
+            color={"secondary"}
+            onClick={handleClick}
+        >
             Return Utility
         </Button>
     );

@@ -9,16 +9,18 @@ import BagInfo from "../BagInfo.jsx";
 import Grid from "@mui/material/Grid";
 import useStore from "../../store/store.js";
 import UtilityCard from "../UtilityCard.jsx";
+import ReturnUtilityCard from "../ReturnUtilityCard.jsx";
 
 export const Bag = () => {
     const getOwnedRentals = useStore((state) => state.getOwnedRentals);
     const getBorrowedRentals = useStore((state) => state.getBorrowedRentals);
+    const getActiveBorrows = useStore((state) => state.getAtiveBorrows);
 
     const ownedRentals = getOwnedRentals();
-    const borrowedRentals = getBorrowedRentals();
+    // const borrowedRentals = getActiveBorrows();
     //
     // const ownedRentals = mockUtilityData;
-    // const borrowedRentals = mockUtilityData;
+    const borrowedRentals = mockUtilityData;
 
     const [tabValue, setTabValue] = useState(1);
     const [activeRental, setActiveRental] = useState(false);
@@ -69,7 +71,7 @@ export const Bag = () => {
                             <Grid container spacing={2}>
                                 {borrowedRentals.map((data, index) => (
                                     <Grid key={`borrowed-${index}`} item xs={4}>
-                                        <UtilityCard data={data} onCardClick={handleTicketClick} detailed={false}/>
+                                        <ReturnUtilityCard rental={data}/>
                                     </Grid>
                                 ))}
                             </Grid>

@@ -11,7 +11,7 @@ import { TextInput } from "./CustomComponents.jsx";
 import { useEffect, useState } from "react";
 import DisplayUtility from "./DisplayUtility.jsx";
 import {
-    buildBorrowAdHocOfferSpec,
+    buildBorrowAdHocOfferSpec, displayAmount,
     getValueFromNat,
     isNumeric,
     makeGenericOnStatusUpdate,
@@ -20,6 +20,8 @@ import {
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { ErrorMessages } from "../utils/constants.js";
 import useStore from "../store/store.js";
+import { makeDisplayTimeHelper } from "../utils/time.js";
+import { AmountMath } from "@agoric/ertp";
 
 const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
     const notifyUser = useStore(state => state.notifyUser);
@@ -37,6 +39,8 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
     }, [rentalData]);
 
     if (!rentalData) return;
+
+    const timeHelper = makeDisplayTimeHelper(rentalData);
 
     const handleBorrowClick = () => {
         if (!validate()) {
@@ -64,7 +68,8 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
 
     const calculateRentinFee = () => {
         if (!isNumeric(rentingDuration)) return '';
-        return Number(rentingDuration) * getValueFromNat(rentalData.rentalFeePerUnitAmount);
+        const total = BigInt(Number(rentingDuration) * getValueFromNat(rentalData.rentalFeePerUnitAmount));
+        return AmountMath.make(rentalData.rentalFeePerUnitAmount.brand, total);
     };
 
     const { validate } = makeRentalConfigValidator(errors, setErrors, configuration);
@@ -102,11 +107,11 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
 
                             <Stack direction="row" justifyContent={'space-between'} sx={{mt: 1}}>
                                 <Typography variant="subtitle1">Collateral</Typography>
-                                <Typography variant="subtitle2">{`${getValueFromNat(rentalData.collateralAmount)} ${getKeywordFromBrand(rentalData.collateralAmount.brand)}`}</Typography>
+                                <Typography variant="subtitle2">{`${displayAmount(rentalData.collateralAmount)} ${getKeywordFromBrand(rentalData.collateralAmount.brand)}`}</Typography>
                             </Stack>
                             <Stack direction="row" justifyContent={'space-between'}>
                                 <Typography variant="subtitle1">Rental Fee</Typography>
-                                <Typography variant="subtitle2">{`${calculateRentinFee()} ${getKeywordFromBrand(rentalData.rentalFeePerUnitAmount.brand)}`}</Typography>
+                                <Typography variant="subtitle2">{`${displayAmount(calculateRentinFee())} ${getKeywordFromBrand(rentalData.rentalFeePerUnitAmount.brand)}`}</Typography>
                             </Stack>
                         </Stack>
 
@@ -116,15 +121,21 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
 
                             <Stack direction="row" justifyContent={'flex-start'} sx={{mt: 2}}>
                                 <InfoOutlinedIcon sx={{mr: 1}}/>
-                                <Typography variant="subtitle2">{`${getValueFromNat(rentalData.collateralAmount)} {COL_KEYWORD}`}</Typography>
+                                <Typography variant="subtitle2">
+                                    You will rent {rentalData.utilityTitle} until {timeHelper.getRentingEnd(rentingDuration)} for {timeHelper.rentingDurationToHumanReadable(rentingDuration)}
+                                </Typography>
                             </Stack>
                             <Stack direction="row" justifyContent={'flex-start'} sx={{mt: 1}}>
                                 <InfoOutlinedIcon sx={{mr: 1}}/>
-                                <Typography variant="subtitle2">{`${getValueFromNat(rentalData.collateralAmount)} {COL_KEYWORD}`}</Typography>
+                                <Typography variant="subtitle2">
+                                    You must return {rentalData.utilityTitle} between {timeHelper.getRentingEnd(rentingDuration)} and {timeHelper.getLiquidateAt(rentingDuration)}
+                                </Typography>
                             </Stack>
                             <Stack direction="row" justifyContent={'flex-start'} sx={{mt: 1}}>
                                 <InfoOutlinedIcon sx={{mr: 1}}/>
-                                <Typography variant="subtitle2">{`${getValueFromNat(rentalData.collateralAmount)} {COL_KEYWORD}`}</Typography>
+                                <Typography variant="subtitle2">
+                                    You will lose you collateral if you don't return {rentalData.utilityTitle} before {timeHelper.getLiquidateAt(rentingDuration)}
+                                </Typography>
                             </Stack>
 
                         </Stack>
@@ -134,12 +145,7 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
                         <Button sx={{mr: 1}} variant="outlined" color={"onSurface"} onClick={handleClose}>Cancel</Button>
                         <Button variant="contained" color={"secondary"} onClick={handleBorrowClick}>Borrow</Button>
                     </Stack>
-
-
-
                 </Stack>
-
-
             </DialogContent>
         </Dialog>
     )

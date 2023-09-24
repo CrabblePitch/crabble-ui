@@ -4,23 +4,7 @@ import Grid from "@mui/material/Grid";
 import { AccountCircle } from "@mui/icons-material";
 import useStore from "../store/store.js";
 import { AmountMath, AssetKind } from "@agoric/ertp";
-import { isSet } from "../utils/helpers.js";
-
-const testData = {
-    address: 'agoric1cjua9sp5adzyee38nnj77gft3e3yprryeusu4w',
-    renting: 2,
-    borrowing: 0,
-    rentalFeeBalance: {
-        IST: { brand: {}, value: 100n},
-        USDC_axl: { brand: {}, value: 90n},
-        USDT_grv: { brand: {}, value: 90n},
-    },
-    collateralAmount: {
-        IST: { brand: {}, value: 100n},
-        USDC_axl: { brand: {}, value: 90n},
-        USDT_grv: { brand: {}, value: 90n},
-    }
-}
+import { displayAmount, isSet } from "../utils/helpers.js";
 
 const mergeRentalBalances = (rentalBalances, policy = AssetKind.NAT) => {
     const mergedBalances = new Map();
@@ -103,7 +87,7 @@ const BagInfo = () => {
                             }}>
                                 <Typography variant='subtitle1'
                                             sx={{ color: (theme) => theme.palette.onSurfaceTextDark.main, ml: 2 }}>
-                                    {Number(amount.value)}
+                                    {displayAmount(amount)}
                                 </Typography>
                                 <Typography variant='subtitle2'
                                             sx={{ color: (theme) => theme.palette.onSurfaceTextDark.main, ml: 2 }}>
@@ -128,7 +112,7 @@ const BagInfo = () => {
                             }}>
                                 <Typography align={"justify"} variant='subtitle1'
                                             sx={{ color: (theme) => theme.palette.onSurfaceTextDark.main, ml: 2 }}>
-                                    {Number(amount.value)}
+                                    {displayAmount(amount)}
                                 </Typography>
                                 <Typography variant='subtitle2'
                                             sx={{ color: (theme) => theme.palette.onSurfaceTextDark.main, ml: 2 }}>

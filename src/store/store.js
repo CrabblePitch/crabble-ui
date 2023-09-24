@@ -2,12 +2,14 @@ import { create } from 'zustand';
 import { AgoricChainStoragePathKind, makeAgoricChainStorageWatcher } from '@agoric/rpc';
 import { isBorrowOffer, isCreateOffer } from "../utils/helpers.js";
 import { AmountMath } from "@agoric/ertp";
+import { RentalPhase } from "../utils/constants.js";
 
 const useStore = create((set, get) => ({
     watcher: makeAgoricChainStorageWatcher('http://localhost:26657', 'agoriclocal'),
     brands: [],
     brandToKeyword: {},
     keywordToBrand: {},
+    brandToDisplayInfo: {},
     smartWalletPurses: [],
     wallet: null,
     crabbleInstance: null,
@@ -25,6 +27,13 @@ const useStore = create((set, get) => ({
       });
 
       set(() => ({ brandToKeyword, keywordToBrand, brands: brandArray}));
+    },
+    updateVBank: vbankAssets => {
+        const brandToDisplayInfo = {};
+        [...Object.values(vbankAssets)].
+        forEach(([_, { brand, displayInfo }]) => brandToDisplayInfo[brand] = displayInfo);
+
+        set(() => ({ brandToDisplayInfo }));
     },
     registerRentals: subscriberPaths => {
         const produceWatchedRentals = state => {
@@ -74,6 +83,11 @@ const useStore = create((set, get) => ({
         return [...Object.entries(get().borrowedRentals)]
             .map(([id, rental]) => ({ id, ...rental }));
     },
+    getAtiveBorrows: () => {
+        return [...Object.entries(get().borrowedRentals)]
+            .filter(([_, rental]) => rental.phase === RentalPhase.RENTED || rental.phase === RentalPhase.GRACE_PERIOD)
+            .map(([id, rental]) => ({ id, ...rental }));
+    },
     notifyUser: (severity, message) => {
         set( () => ({
             notifierState: { open: true, severity, message }
@@ -113,6 +127,10 @@ const useStore = create((set, get) => ({
         const { ownedRentals } = get();
         return [...Object.values(ownedRentals)].map(value => [...Object.entries(value.collateralBalance)]).flat()
     },
+    getDisplayInfo: brand => {
+        const { brandToDisplayInfo } = get();
+        return brandToDisplayInfo[brand];
+    }
 }));
 
 const stopIfPhaseMatches = (stopWatching, phaseChecker) => {

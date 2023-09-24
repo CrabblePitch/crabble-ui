@@ -1,6 +1,7 @@
 import useStore from '../store/store.js';
 import { AmountMath } from "@agoric/ertp";
 import { Rental_Keywords, RentalConfigKeywords } from "./constants.js";
+import { stringifyValue } from "@agoric/ui-components";
 
 const getBrand = (brandPetname) => {
     const { brands } = useStore.getState();
@@ -28,8 +29,8 @@ const buildCreateRentalOfferSpec = rawData => {
 
     const utilityAmount = AmountMath.make(rawData.utilityBrand,
         harden([utilityPurse.value[+rawData.utilityAmountIndex]]));
-    const collateralAmount = AmountMath.make(rawData.collateralBrand, BigInt(+rawData.collateralVal));
-    const rentalFeePerUnitAmount = AmountMath.make(rawData.rentalFeeBrand, BigInt(+rawData.rentalFeePerUnitVal));
+    const collateralAmount = AmountMath.make(rawData.collateralBrand, BigInt(rawData.collateralVal));
+    const rentalFeePerUnitAmount = AmountMath.make(rawData.rentalFeeBrand, BigInt(rawData.rentalFeePerUnitVal));
 
     return harden({
         id: `create-rental-${wallet.address}-${Date.now()}`,
@@ -71,7 +72,6 @@ harden(checkPositiveNumber)
 
 const buildBorrowAdHocOfferSpec = rawData => {
     const { crabbleInstance, wallet } = useStore.getState();
-    const rentalFeeBrand = getBrand('RentalFee');
 
     console.log({ rawData })
 
@@ -93,7 +93,7 @@ const buildBorrowAdHocOfferSpec = rawData => {
         proposal: {
             give: {
                 Collateral: rawData.collateralAmount,
-                RentalFee: AmountMath.make(rentalFeeBrand, rentalFeeValue),
+                RentalFee: AmountMath.make(rawData.rentalFeePerUnitAmount.brand, rentalFeeValue),
             },
             want: {
                 Utility: rawData.utilityAmount,
@@ -250,7 +250,9 @@ const buildUpdateRentalConfigOfferSpec = (rental, rawUpdates) => {
     assert(wallet && wallet.address, `Wallet must be defined: ${wallet}`);
     assert(rental, `Rental must be defined: ${rental}`);
 
-    const overrides = updateMapper(rawUpdates);
+    const rentalConfig = rental.configuration;
+
+    const overrides = updateMapper(rawUpdates, rentalConfig.collateralAmount.brand, rentalConfig.rentalFeePerUnitAmount.brand);
     console.log({
         overrides
     });
@@ -265,7 +267,7 @@ const buildUpdateRentalConfigOfferSpec = (rental, rawUpdates) => {
         proposal: {},
         offerArgs: {
             updatedRentalConfig: {
-                ...rental.configuration,
+                ...rentalConfig,
                 ...overrides,
             }
         }
@@ -273,18 +275,16 @@ const buildUpdateRentalConfigOfferSpec = (rental, rawUpdates) => {
 };
 harden(buildUpdateRentalConfigOfferSpec);
 
-const updateMapper = rawUpdates => {
-    const collateralBrand = getBrand('Collateral');
-    const rentalFeeBrand = getBrand('RentalFee');
+const updateMapper = (rawUpdates, collateralBrand, rentalFeeBrand) => {
 
     const overrides = {};
 
     if (rawUpdates.collateralVal) {
-        overrides.collateralAmount = AmountMath.make(collateralBrand, BigInt(+rawUpdates.collateralVal));
+        overrides.collateralAmount = AmountMath.make(collateralBrand, BigInt(rawUpdates.collateralVal));
     }
 
     if (rawUpdates.rentalFeePerUnitVal) {
-        overrides.rentalFeePerUnitAmount = AmountMath.make(rentalFeeBrand, BigInt(+rawUpdates.rentalFeePerUnitVal));
+        overrides.rentalFeePerUnitAmount = AmountMath.make(rentalFeeBrand, BigInt(rawUpdates.rentalFeePerUnitVal));
     }
 
     if (rawUpdates.rentingDurationUnit) {
@@ -357,8 +357,6 @@ const makeRentalConfigValidator = (errorRecordState, setErrorRecord, validations
                 case RentalConfigKeywords.MIN_RENTING_DURATION_UNITS:
                 case RentalConfigKeywords.MAX_RENTING_DURATION_UNITS:
                 case RentalConfigKeywords.GRACE_PERIOD_DURATION:
-                case RentalConfigKeywords.RENTAL_FEE_PER_UNIT_VAL:
-                case RentalConfigKeywords.COLLATERAL_VAL:
                 case RentalConfigKeywords.RENTING_DURATION:
                     errors[key] = !(isNumeric(value) && checkPositiveNumber(value));
                     result = result === true ? result : errors[key];
@@ -373,6 +371,10 @@ const makeRentalConfigValidator = (errorRecordState, setErrorRecord, validations
                 case RentalConfigKeywords.COLLATERAL_BRAND:
                     errors[key] = !(value && typeof value === 'object');
                     break;
+                case RentalConfigKeywords.COLLATERAL_VAL:
+                case RentalConfigKeywords.RENTAL_FEE_PER_UNIT_VAL:
+                    errors[key] = !(value && typeof value === 'bigint');
+                    break;
             }
         });
 
@@ -384,6 +386,17 @@ const makeRentalConfigValidator = (errorRecordState, setErrorRecord, validations
     return harden({
         validate
     });
+};
+
+const displayAmount = amount => {
+    const { brand, value } = amount;
+    const { getDisplayInfo } = useStore.getState();
+    const displayInfo = getDisplayInfo(brand);
+
+    if (!displayInfo) return '';
+
+    const { assetKind, decimalPlaces } = displayInfo;
+    return stringifyValue(value, assetKind, decimalPlaces);
 };
 
 export {
@@ -405,5 +418,6 @@ export {
     isBorrowOffer,
     makeRentalConfigValidator,
     isNumeric,
-    isSet
+    isSet,
+    displayAmount,
 };

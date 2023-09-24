@@ -12,13 +12,15 @@ import { Selector, TextInput } from "./CustomComponents.jsx";
 import { useState } from "react";
 import { ErrorMessages } from "../utils/constants.js";
 import {
-    buildCreateRentalOfferSpec,
+    buildCreateRentalOfferSpec, displayAmount,
     getBrand,
     getPurseFromSmartWallet, makeGenericOnStatusUpdate,
     makeRentalConfigValidator
 } from "../utils/helpers.js";
 import useStore from "../store/store.js";
 import { brandData } from "../utils/mockData.js";
+import { stringifyValue } from "@agoric/ui-components";
+import { AssetKind } from "@agoric/ertp";
 
 const CreateRentalDialog = ({ open, onClose }) => {
     const wallet = useStore(state => state.wallet);
@@ -26,19 +28,19 @@ const CreateRentalDialog = ({ open, onClose }) => {
     const getDisplayableUtilityBrands = useStore(state => state.getDisplayableUtilityBrands);
     const vbankPurses = useStore(state => state.vbankPurses);
 
-    const [utilityAmountIndex, setutilityAmountIndex] = useState(0);
+    const [utilityAmountIndex, setutilityAmountIndex] = useState('');
     const [rentingDurationUnit, setRentinDurationUnit] = useState('minute');
     const [rentingTier, setRentingTier] = useState('Ad-Hoc');
-    const [rentalFeePerUnitVal, setRentalFeePerUnitVal] = useState('0');
-    const [collateralVal, setCollateralVal] = useState('0');
+    const [rentalFeePerUnitVal, setRentalFeePerUnitVal] = useState(0n);
+    const [collateralVal, setCollateralVal] = useState(0n);
     const [gracePeriodDuration, setGracePeriodDuration] = useState('0');
     const [minRentingDurationUnits, setMinRentingDurationUnits] = useState('0');
     const [maxRentingDurationUnits, setMaxRentingDurationUnits] = useState('0');
     const [utilityTitle, setUtilityTitle] = useState('');
     const [utilityDescription, setUtilityDescription] = useState('');
-    const [utilityBrand, setUtilityBrand] = useState(undefined);
-    const [rentalFeeBrand, setRentalFeeBrand] = useState(undefined);
-    const [collateralBrand, setCollateralBrand] = useState(undefined);
+    const [utilityBrand, setUtilityBrand] = useState('');
+    const [rentalFeeBrand, setRentalFeeBrand] = useState('');
+    const [collateralBrand, setCollateralBrand] = useState('');
 
     const [errors, setErrors] = useState({
         utilityAmountIndex: false,
@@ -121,16 +123,16 @@ const CreateRentalDialog = ({ open, onClose }) => {
         setutilityAmountIndex(0);
         setRentinDurationUnit('minute');
         setRentingTier('Ad-Hoc');
-        setRentalFeePerUnitVal('0');
-        setCollateralVal('0');
+        setRentalFeePerUnitVal(0n);
+        setCollateralVal(0n);
         setGracePeriodDuration('0');
         setMinRentingDurationUnits('0');
         setMaxRentingDurationUnits('0');
         setUtilityTitle('');
         setUtilityDescription('');
-        setUtilityBrand(undefined);
-        setRentalFeeBrand(undefined);
-        setCollateralBrand(undefined);
+        setUtilityBrand('');
+        setRentalFeeBrand('');
+        setCollateralBrand('');
     };
 
     const { validate } = makeRentalConfigValidator(errors, setErrors, validationConfig);
@@ -168,7 +170,7 @@ const CreateRentalDialog = ({ open, onClose }) => {
                                       widths={{minWidth: 100}}
                                       error={{ value: errors.utilityBrand, text: ErrorMessages.BRAND}}
                             >
-                                <MenuItem key="balance-empty" value={undefined}>
+                                <MenuItem key="balance-empty" value={''}>
                                     <em>None</em>
                                 </MenuItem>
                                 {[...utilityBrands].map(({keyword, brand}) => (
@@ -238,8 +240,9 @@ const CreateRentalDialog = ({ open, onClose }) => {
                         <Stack direction={"row"} alignItems={"baseline"}>
                             <TextInput onChange={setRentalFeePerUnitVal}
                                        name={'Rental Fee Per Unit'}
-                                       current={rentalFeePerUnitVal}
+                                       current={displayAmount({ brand: rentalFeeBrand, value: rentalFeePerUnitVal})}
                                        error={{ value: errors.rentalFeePerUnitVal, text: ErrorMessages.NUMERIC}}
+                                       amountInput={true}
                             />
                             <Selector label={"Rental Fee Brand"}
                                       current={rentalFeeBrand}
@@ -248,7 +251,7 @@ const CreateRentalDialog = ({ open, onClose }) => {
                                       widths={{minWidth: 100}}
                                       error={{ value: errors.rentalFeeBrand, text: ErrorMessages.BRAND}}
                             >
-                                <MenuItem key="balance-empty" value={undefined}>
+                                <MenuItem key="balance-empty" value={''}>
                                     <em>None</em>
                                 </MenuItem>
                                 {[...vbankDisplayData].map(({brandPetname, brand}) => (
@@ -264,9 +267,11 @@ const CreateRentalDialog = ({ open, onClose }) => {
                         <Stack direction={"row"} alignItems={"baseline"}>
                             <TextInput onChange={setCollateralVal}
                                        name={'Collateral Amount'}
-                                       current={collateralVal}
+                                       amountInput={true}
+                                       current={displayAmount({ brand: collateralBrand, value: collateralVal})}
                                        error={{value: errors.collateralVal, text: ErrorMessages.NUMERIC}}
                                        fullWidth={false}
+                                       validate={validate}
                             />
                             <Selector label={"Collateral Brand"}
                                       current={collateralBrand}
@@ -275,7 +280,7 @@ const CreateRentalDialog = ({ open, onClose }) => {
                                       widths={{minWidth: 100}}
                                       error={{ value: errors.collateralBrand, text: ErrorMessages.BRAND}}
                             >
-                                <MenuItem key="balance-empty" value={undefined}>
+                                <MenuItem key="balance-empty" value={''}>
                                     <em>None</em>
                                 </MenuItem>
                                 {[...vbankDisplayData].map(({brandPetname, brand}) => (

@@ -32,15 +32,15 @@ export const mockUtilityData = [
         },
         gracePeriod: {
             gracePeriodEnd: {
-                absValue: 1694683682n,
+                absValue: 1695557720,
                 timerBrand: {},
             },
             gracePeriodStart: {
-                absValue: 1694683082n,
+                absValue: 1695742791n,
                 timerBrand: {},
             },
         },
-        phase: 'available',
+        phase: 'gracePeriod',
     },
     {
         id: '"create-rental-agoric1cjua9sp5adzyhgfgfgfrryeusu4w-16jhgfgf"',
@@ -83,7 +83,7 @@ export const mockUtilityData = [
                 timerBrand: {},
             },
         },
-        phase: 'liquidated',
+        phase: 'liquidation',
     },
     {
         id: '"create-rental-agoric1cjuagfnhgfdrryeusu4w-jhgf"',
@@ -99,7 +99,7 @@ export const mockUtilityData = [
                 brand: {},
                 value: 1212n,
             },
-            rentingDurationUnit: 'minute',
+            rentingDurationUnit: 'day',
             rentingTier: 'Ad-Hoc',
             utilityAmount: {
                 brand: {},
@@ -118,11 +118,11 @@ export const mockUtilityData = [
         },
         gracePeriod: {
             gracePeriodEnd: {
-                absValue: 1694683682n,
+                absValue: 1695557720n,
                 timerBrand: {},
             },
             gracePeriodStart: {
-                absValue: 1694683082n,
+                absValue: 1695989720,
                 timerBrand: {},
             },
         },

@@ -1,5 +1,7 @@
 import { FormControl, FormHelperText, InputLabel, Select, Stack, TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import { stringifyValue, parseAsValue } from '@agoric/ui-components';
+import { AssetKind } from "@agoric/ertp";
 
 const textColorLight = 'onSurfaceText.main';
 const textColorDark = 'onSurfaceTextDark.main';
@@ -62,8 +64,25 @@ const TextInput = ({
                        margins,
                        width,
                        multiline = false,
-                       error = { value: false, text: '' }
+                       error = { value: false, text: '' },
+                       amountInput = false,
                    }) => {
+    const handleChange = ev => {
+        const str = ev.target.value;
+
+        if (amountInput) {
+            const str = ev.target?.value
+                ?.replace('-', '')
+                .replace('e', '')
+                .replace('E', '');
+            const parsed = parseAsValue(str, AssetKind.NAT, 6);
+            onChange(parsed);
+            return;
+        }
+
+        onChange(str);
+    }
+
     return (
         <Stack>
             <TextField
@@ -71,7 +90,7 @@ const TextInput = ({
                 label={" "}
                 variant="standard"
                 value={current}
-                onChange={ev => onChange(ev.target.value)}
+                onChange={handleChange}
                 size="small"
                 fullWidth
                 multiline={multiline}

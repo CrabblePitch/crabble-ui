@@ -2,7 +2,7 @@ import Typography from "@mui/material/Typography";
 import { Box, IconButton, MenuItem, Stack } from "@mui/material";
 import { Selector, TextInput } from "./CustomComponents.jsx";
 import { UpdateRentalConfigButton } from "./UpdateRentalConfig/UpdateRentalConfigButton.jsx";
-import { getValueFromNat, makeRentalConfigValidator } from "../utils/helpers.js";
+import { displayAmount, getValueFromNat, makeRentalConfigValidator } from "../utils/helpers.js";
 import { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
@@ -11,8 +11,8 @@ import { ErrorMessages, RentalPhase } from "../utils/constants.js";
 const getDisplayConfigDefaults = configuration => {
     return harden({
         rentingDurationUnit: configuration.rentingDurationUnit,
-        rentalFeePerUnitVal: String(getValueFromNat(configuration.rentalFeePerUnitAmount)),
-        collateralVal: String(getValueFromNat(configuration.collateralAmount)),
+        rentalFeePerUnitVal: configuration.rentalFeePerUnitAmount.value,
+        collateralVal: configuration.collateralAmount.value,
         gracePeriodDuration: String(configuration.gracePeriodDuration),
         minRentingDurationUnits: String(configuration.minRentingDurationUnits),
         maxRentingDurationUnits: String(configuration.maxRentingDurationUnits),
@@ -46,8 +46,8 @@ const UpdateRentalConfiguration = ({ rental, onClose }) => {
     const [isEditing, setEditing] = useState(false);
 
     // Override State
-    const [collateralVal, setCollateralVal] = useState(0);
-    const [rentalFeePerUnitVal, setRentalFeePerUnitVal] = useState(0);
+    const [collateralVal, setCollateralVal] = useState(0n);
+    const [rentalFeePerUnitVal, setRentalFeePerUnitVal] = useState(0n);
     const [rentingDurationUnit, setRentinDurationUnit] = useState('minute');
     const [gracePeriodDuration, setGracePeriodDuration] = useState(0);
     const [minRentingDurationUnits, setMinRentingDurationUnits] = useState(0);
@@ -98,6 +98,20 @@ const UpdateRentalConfiguration = ({ rental, onClose }) => {
         resetState(rental.configuration);
     };
 
+    const displayCollateral = () => {
+        if (!rental) return '';
+
+        const brand = rental.configuration.collateralAmount.brand;
+        return displayAmount({ brand, value: collateralVal });
+    };
+
+    const displayRentalFeePerUnit = () => {
+        if (!rental) return '';
+
+        const brand = rental.configuration.rentalFeePerUnitAmount.brand;
+        return displayAmount({ brand, value: rentalFeePerUnitVal });
+    };
+
     if (!rental) return;
 
     return (
@@ -144,13 +158,15 @@ const UpdateRentalConfiguration = ({ rental, onClose }) => {
                 }}>
 
                     <TextInput name={'Collateral Amount'}
-                               current={collateralVal}
+                               current={displayCollateral()}
                                onChange={setCollateralVal}
+                               amountInput={true}
                                error={{value: errors.collateralVal, text: ErrorMessages.NUMERIC}}
                     />
                     <TextInput onChange={setRentalFeePerUnitVal}
                                name={'Rental Fee Per Unit'}
-                               current={rentalFeePerUnitVal}
+                               current={displayRentalFeePerUnit()}
+                               amountInput={true}
                                error={{ value: errors.rentalFeePerUnitVal, text: ErrorMessages.NUMERIC}}
                     />
                 </Box>
