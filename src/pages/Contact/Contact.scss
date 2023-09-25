@@ -1,0 +1,64 @@
+.contact {
+  width: 100vw;
+  height: 100vh;
+
+  .MuiIconButton-root {
+    .MuiTouchRipple-root {
+      display: none;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .crabble-logo {
+    width: 100px;
+    height: auto;
+  }
+
+  .title {
+    align-self: center;
+    margin: 20px 0;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    input, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #555;
+      }
+    }
+  }
+
+  .content-paper {
+    width: 70%;
+    max-height: 60vh;
+    overflow: auto;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.4);
+  }
+}
