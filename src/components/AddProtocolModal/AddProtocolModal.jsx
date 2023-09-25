@@ -8,7 +8,7 @@ import {
     checkPositiveNumber,
     getBrand,
     getPurseFromSmartWallet,
-    makeGenericOnStatusUpdate
+    makeGenericOnStatusUpdate,
 } from '../../utils/helpers.js';
 import useStore from '../../store/store.js';
 import { ModalWrapper } from '../shared/ModalWrapper/ModalWrapper.jsx';
@@ -52,7 +52,7 @@ export const AddProtocolModal = ({ open, onClose }) => {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        console.log('handleChange', { name, value })
+        console.log('handleChange', { name, value });
 
         if (name === 'minRentingDurationUnits') {
             const convertedValue = Number(value);
