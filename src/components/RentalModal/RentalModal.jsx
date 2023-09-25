@@ -1,43 +1,54 @@
 import './RentalModal.scss';
 
+import { Chip } from '@mui/material';
 import { ModalWrapper } from '../shared/ModalWrapper/ModalWrapper.jsx';
 import { Close as CloseIcon } from '@mui/icons-material';
+import { UtilityConfig } from '../UtilityConfig/UtilityConfig.jsx';
 import { UpdateRentalConfigButton } from '../UpdateRentalConfig/UpdateRentalConfigButton.jsx';
 import {
     WithdrawUtility as WithdrawUtilityButton,
     WithdrawRentalFee as WithdrawRentalFeeButton,
     WithdrawCollateral as WithdrawCollateralButton,
 } from '../Withdraw';
-import { mockUtilityData } from '../../pages/Explore/_mockUtility.js';
 import { capitalize } from '../../utils/text-utils.js';
+import { getValueFromSet } from '../../utils/helpers.js';
 
 export const RentalModal = ({ utility, closeModal }) => {
     const onModalClose = () => {
         closeModal();
     };
 
-    const prepareUtilityConfig = (utility) => {
-        const { configuration } = utility;
-
-        // INFO: modify according to the requirements if needed
-        const uiConfig = {
-            'Collateral amount': configuration.collateralAmount.value,
-            'Rental fee (per unit)': configuration.rentalFeePerUnitAmount.value,
-            'Utility title': configuration.utilityTitle,
-            'Utility description': configuration.utilityDescription,
-            'Renting tier': configuration.rentingTier,
-            'Renting duration unit': configuration.rentingDurationUnit,
-            'Maximum renting duration': configuration.maxRentingDurationUnits,
-            'Minimum renting duration': configuration.minRentingDurationUnits,
-            'Grace period duration': configuration.gracePeriodDuration,
-        };
-
-        return Object.entries(uiConfig);
-    };
-
     const controllers = {
         snackbar: console.log,
         modal: () => console.log('This is not a modal'),
+    };
+
+    const getChipClr = (phase) => {
+        if (phase === 'available') {
+            return 'success';
+        } else if (phase === 'rented') {
+            return 'warning';
+        } else {
+            return 'error';
+        }
+    };
+
+    const getListingDetails = () => {
+        const imagePath = utility.configuration.utilityAmount.value[0].imagePath;
+
+        return imagePath ? (
+            <div className="image">
+                <img src={utility.configuration.utilityAmount.value[0].imagePath} alt="Utility image" />
+            </div>
+        ) : (
+            <ul className="details">
+                {Object.entries(utility.configuration.utilityAmount.value[0]).map(([key, value]) => (
+                    <li key={key}>
+                        {key}: {value}
+                    </li>
+                ))}
+            </ul>
+        );
     };
 
     return (
@@ -51,29 +62,15 @@ export const RentalModal = ({ utility, closeModal }) => {
             <main className="modal-body">
                 <section className="phase">
                     <h4 className="title">Phase</h4>
-                    <p className={utility.phase}>{capitalize(utility.phase)}</p>
+                    <Chip color={getChipClr(utility.phase)} label={capitalize(utility.phase)} variant="outlined" />
                 </section>
                 <section className="listing">
                     <h4 className="title">Listing</h4>
-                    <div className="details">
-                        <div className="image">
-                            <img src={utility.configuration.utilityAmount.value[0].imagePath} alt="Utility image" />
-                        </div>
-
-                        {/* TODO: clarify what should be listing props */}
-
-                        <div className="properties">Props</div>
-                    </div>
+                    <div className="details">{getListingDetails()}</div>
                 </section>
                 <section className="config">
                     <h4 className="title">Config</h4>
-                    <ul>
-                        {prepareUtilityConfig(utility).map(([title, value]) => (
-                            <li key={title}>
-                                <strong>{title}:</strong> {value}
-                            </li>
-                        ))}
-                    </ul>
+                    <UtilityConfig config={utility.configuration} />
                 </section>
             </main>
             <footer className="modal-footer">
@@ -87,7 +84,9 @@ export const RentalModal = ({ utility, closeModal }) => {
                     <UpdateRentalConfigButton rental={utility} overrides={{}} controllers={{}} />
                 )}
                 {utility.phase === 'available' && <WithdrawUtilityButton rental={utility} controllers={{}} />}
-                {utility.phase === 'liquidation' && <WithdrawCollateralButton rental={utility} controllers={controllers} />}
+                {utility.phase === 'liquidation' && (
+                    <WithdrawCollateralButton rental={utility} controllers={controllers} />
+                )}
                 <WithdrawRentalFeeButton rental={utility} controllers={controllers} />
             </footer>
         </ModalWrapper>

@@ -1,26 +1,34 @@
-import useStore from "../../store/store.js";
-import { buildReturnUtilityOfferSpec, makeGenericOnStatusUpdate } from "../../utils/helpers.js";
-import { Button } from "@mui/material";
+import useStore from '../../store/store.js';
+import { buildReturnUtilityOfferSpec, makeGenericOnStatusUpdate } from '../../utils/helpers.js';
+import { Button } from '@mui/material';
 
-const ReturnUtilityButton = ({ rental, controllers }) => {
-    const wallet = useStore(state => state.wallet);
+export const ReturnUtilityButton = ({ rental, controllers, disabled, onButtonClick }) => {
+    // const wallet = useStore((state) => state.wallet);
 
-    const { onStatusChange } = makeGenericOnStatusUpdate(controllers.snackbar, controllers.modal);
-    const offerSpec = buildReturnUtilityOfferSpec(rental);
+    // const { onStatusChange } = makeGenericOnStatusUpdate(controllers.snackbar, controllers.modal);
+    // const offerSpec = buildReturnUtilityOfferSpec(rental);
 
     const handleClick = () => {
-        assert(wallet, `Wallet not defined: ${wallet}`);
-        assert(offerSpec, `OfferSpec not defined: ${offerSpec}`);
+        if (onButtonClick) {
+            onButtonClick();
+        }
 
-        void wallet.makeOffer(offerSpec.invitationSpec, offerSpec.proposal,
-            offerSpec.offerArgs, onStatusChange, offerSpec.id);
+        console.log('popopopopopopo -----');
+        // assert(wallet, `Wallet not defined: ${wallet}`);
+        // assert(offerSpec, `OfferSpec not defined: ${offerSpec}`);
+        // void wallet.makeOffer(
+        //     offerSpec.invitationSpec,
+        //     offerSpec.proposal,
+        //     offerSpec.offerArgs,
+        //     onStatusChange,
+        //     offerSpec.id,
+        // );
+        console.log('pupupu');
     };
 
     return (
-        <Button variant={"contained"} color={"primary"} onClick={handleClick}>
+        <Button variant={'contained'} color={'primary'} onClick={handleClick} disabled={disabled}>
             Return Utility
         </Button>
     );
 };
-
-export default ReturnUtilityButton;
