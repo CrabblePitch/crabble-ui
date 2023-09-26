@@ -49,15 +49,25 @@ export const Contact = () => {
                 }}
                 elevation={3}
             >
-                <Box sx={{ padding: '2rem' }}>
-                    <Box sx={{ marginBottom: 3 }}>
-                        <Typography variant="h4" sx={{ color: (theme) => theme.palette.onSurfaceText.main }}>
-                            Crabble
-                        </Typography>
+                <Box sx={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Box sx={{ marginBottom: 3, ml: ['25%', '17%', '10%', '10%'] }}>
                         <img src={crabbleLogo} alt="Crabble Logo" className="crabble-logo" />
                         <Typography
+                            variant="h4"
+                            sx={{
+                                color: (theme) => theme.palette.onSurfaceText.main,
+                                marginLeft: ['-5%', '-3%', '-2%', '-3%'],
+                            }}
+                        >
+                            Crabble
+                        </Typography>
+                        <Typography
                             variant="body1"
-                            sx={{ color: (theme) => theme.palette.onSurfaceText.main, marginTop: 2 }}
+                            sx={{
+                                color: (theme) => theme.palette.onSurfaceText.main,
+                                marginTop: 2,
+                                marginLeft: ['-22%', '-20%', '-18%', '-18%'],
+                            }}
                         >
                             You can reach out or join us via
                         </Typography>
