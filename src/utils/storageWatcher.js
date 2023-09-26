@@ -3,7 +3,7 @@ import { AgoricChainStoragePathKind } from "@agoric/rpc";
 import { subscribeLatest } from "@agoric/notifier";
 
 const makeStorageWatcher = () => {
-    const { watcher, wallet, registerRentals } = useStore.getState();
+    const { watcher, wallet, registerRentals, updateBrands, updateVBank } = useStore.getState();
 
     const watchSmartWallet = () => {
         watcher.watchLatest(
@@ -33,7 +33,7 @@ const makeStorageWatcher = () => {
             [AgoricChainStoragePathKind.Data, 'published.agoricNames.brand'],
             brands => {
                 console.log('Brand Update', brands);
-                useStore.setState({ brands });
+                updateBrands(brands);
             }
         );
     };
@@ -60,6 +60,16 @@ const makeStorageWatcher = () => {
         );
     };
 
+    const watchVBankAssets = () => {
+        watcher.watchLatest(
+            [AgoricChainStoragePathKind.Data, 'published.agoricNames.vbankAsset'],
+            vbankAssets => {
+                console.log('VBankAsset Update', vbankAssets);
+                updateVBank(vbankAssets);
+            }
+        );
+    };
+
     const startWatching = () => {
         if (!wallet || !watcher) {
             console.log({
@@ -74,6 +84,7 @@ const makeStorageWatcher = () => {
         watchBrands();
         watchInstances();
         watchCatalog();
+        watchVBankAssets();
     };
 
     return { startWatching };

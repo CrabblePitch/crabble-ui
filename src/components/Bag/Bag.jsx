@@ -1,9 +1,6 @@
-import './Bag.scss';
-
 import { useState } from 'react';
 import { Tabs, Box } from '@mui/material';
-import { Ticket } from '../Ticket/Ticket.jsx';
-import { RentalModal } from '../RentalModal/RentalModal.jsx';
+import RentalModal from '../RentalModal/RentalModal.jsx';
 
 // TODO: to be removed
 import { mockUtilityData } from '../../pages/Explore/_mockUtility.js';
@@ -11,27 +8,36 @@ import{ BagStyledTab } from "../BagTab.jsx";
 import BagInfo from "../BagInfo.jsx";
 import Grid from "@mui/material/Grid";
 import useStore from "../../store/store.js";
-import TicketContainer from "../TicketContainer.jsx";
+import UtilityCard from "../UtilityCard.jsx";
+import ReturnUtilityCard from "../ReturnUtilityCard.jsx";
 
 export const Bag = () => {
     const getOwnedRentals = useStore((state) => state.getOwnedRentals);
     const getBorrowedRentals = useStore((state) => state.getBorrowedRentals);
+    const getActiveBorrows = useStore((state) => state.getAtiveBorrows);
 
-    // const ownedRentals = getOwnedRentals();
-    // const borrowedRentals = getBorrowedRentals();
-
-    const ownedRentals = mockUtilityData;
+    const ownedRentals = getOwnedRentals();
+    // const borrowedRentals = getActiveBorrows();
+    //
+    // const ownedRentals = mockUtilityData;
     const borrowedRentals = mockUtilityData;
 
     const [tabValue, setTabValue] = useState(1);
     const [activeRental, setActiveRental] = useState(false);
+    const [rentalDialogOpen, setRentalDialogOpen] = useState(false);
 
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
     };
 
     const closeActiveRental = () => {
+        setRentalDialogOpen(false);
         setActiveRental(null);
+    };
+
+    const handleTicketClick = activeTicket => {
+      setRentalDialogOpen(true);
+      setActiveRental(activeTicket);
     };
 
     return (
@@ -55,15 +61,8 @@ export const Bag = () => {
                         {tabValue === 0 && (
                             <Grid container spacing={2}>
                                 {ownedRentals.map((data, index) => (
-                                    <Grid item xs={4}>
-                                        <TicketContainer>
-                                            <Ticket
-                                                key={index}
-                                                data={data}
-                                                onTicketClick={setActiveRental}
-                                                showDescription={false}
-                                            />
-                                        </TicketContainer>
+                                    <Grid key={`owned-${index}`} item xs={4}>
+                                        <UtilityCard data={data} onCardClick={handleTicketClick} detailed={false}/>
                                     </Grid>
                                 ))}
                             </Grid>
@@ -71,15 +70,8 @@ export const Bag = () => {
                         {tabValue === 1 && (
                             <Grid container spacing={2}>
                                 {borrowedRentals.map((data, index) => (
-                                    <Grid item xs={4}>
-                                        <TicketContainer>
-                                            <Ticket
-                                                key={index}
-                                                data={data}
-                                                onTicketClick={setActiveRental}
-                                                showDescription={false}
-                                            />
-                                        </TicketContainer>
+                                    <Grid key={`borrowed-${index}`} item xs={4}>
+                                        <ReturnUtilityCard rental={data}/>
                                     </Grid>
                                 ))}
                             </Grid>
@@ -87,7 +79,7 @@ export const Bag = () => {
                     </Box>
                 </main>
             </div>
-            {activeRental && <RentalModal utility={activeRental} closeModal={closeActiveRental} />}
+            <RentalModal rental={activeRental} closeModal={closeActiveRental} open={rentalDialogOpen}/>
         </Box>
     );
 };

@@ -11,17 +11,26 @@ import { Box, Paper } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { catalogData } from "../../utils/mockData.js";
 import TicketContainer from "../../components/TicketContainer.jsx";
+import UtilityCard from "../../components/UtilityCard.jsx";
+import BorrowRentalDialog from "../../components/BorrowRentalDialog.jsx";
 
 export const Explore = ({ bagOpen }) => {
     const catalog = useStore((state) => state.catalog) || [];
     const [activeTicket, setActiveTicket] = useState(null);
+    const [borrowOpen, setBorrowOpen] = useState(false);
     console.log('activeTicket', activeTicket);
 
-    // const displayData = [...catalog].filter(({ phase }) => phase === 'available');
-    const displayData = catalogData;
+    const displayData = [...catalog].filter(({ phase }) => phase === 'available');
+    // const displayData = catalogData;
+
+    const handleCardClick = rentalData => {
+      setActiveTicket(rentalData);
+      setBorrowOpen(true);
+    };
 
     const closeActiveTicket = () => {
         setActiveTicket(null);
+        setBorrowOpen(false);
     };
 
     return (
@@ -38,9 +47,11 @@ export const Explore = ({ bagOpen }) => {
 
             <Paper sx={{
                 width: '70%',
+                minWidth: 0,
+                minHeight: 0,
                 height: '100vh',
                 overflow: 'auto',
-                pb: 2,
+                p: 2,
                 bgcolor: 'surface.main',
                 borderRadius: (theme) => theme.spacing(2),
                 boxShadow: '0px 0px 80px 0px rgba(0,0,0,0.75)'
@@ -49,29 +60,22 @@ export const Explore = ({ bagOpen }) => {
                     <Bag/>
                 ) : (
                     <>
-                        <Box sx={{ width: 1, pt: 2 }}>
+                        <Box sx={{ width: 1}}>
                             <FilterBar/>
                         </Box>
 
-                        <Grid container rowSpacing={1} justifyContent='flex-start' className='GRID'
-                              sx={{ bgcolor: 'secondary' }}>
+                        <Grid container spacing={4} className='GRID'>
                             {displayData.map((data, index) => (
-                                <Grid key={index * 10} spacing={2} item xs={4}
-                                      sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                                    <TicketContainer>
-                                        <Ticket
-                                            key={index}
-                                            data={data}
-                                            onTicketClick={setActiveTicket}
-                                        />
-                                    </TicketContainer>
+                                <Grid key={index * 10} item xs={4}
+                                      sx={{ display: 'flex', justifyContent: 'center' }}>
+                                    <UtilityCard key={index} data={data} onCardClick={handleCardClick}/>
                                 </Grid>
                             ))}
                         </Grid>
                     </>
                 )}
             </Paper>
-            {activeTicket && <BorrowModal ticketData={activeTicket} closeTicket={closeActiveTicket}/>}
+            <BorrowRentalDialog open={borrowOpen} rentalData={activeTicket} onClose={closeActiveTicket}/>
         </Box>
     );
 };

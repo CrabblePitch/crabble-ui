@@ -24,6 +24,13 @@ const catalogData = [...new Array(30)].fill({
     rentalHandle: {}
 });
 harden(catalogData);
+
+const brandData = harden([
+    ["AwesomeCollection", {}],
+    ["GreatMonkeys", {}],
+    ["GatingHub", {}],
+]);
 export {
-    catalogData
+    catalogData,
+    brandData,
 }

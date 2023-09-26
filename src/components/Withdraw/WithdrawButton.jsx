@@ -2,10 +2,11 @@ import { Button } from '@mui/material';
 import { makeGenericOnStatusUpdate } from '../../utils/helpers.js';
 import useStore from '../../store/store.js';
 
-export const WithdrawButton = ({ offerSpec, message, color, controllers }) => {
+export const WithdrawButton = ({ offerSpec, message, color, onClose }) => {
     const wallet = useStore((state) => state.wallet);
+    const notifyUser = useStore((state) => state.notifyUser);
 
-    const { onStatusChange } = makeGenericOnStatusUpdate(controllers.snackbar, controllers.modal);
+    const { onStatusChange } = makeGenericOnStatusUpdate(notifyUser, onClose);
 
     const handleClick = () => {
         assert(wallet, `Wallet not defined: ${wallet}`);
@@ -21,7 +22,7 @@ export const WithdrawButton = ({ offerSpec, message, color, controllers }) => {
     };
 
     return (
-        <Button variant={'contained'} color={color} onClick={handleClick}>
+        <Button variant={'contained'} color={color} onClick={handleClick} sx={{ textTransform: 'none', ml: 1 }}>
             {message}
         </Button>
     );
