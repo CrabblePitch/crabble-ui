@@ -8,14 +8,11 @@ import { RentalModal } from '../RentalModal/RentalModal.jsx';
 
 // TODO: to be removed
 import { mockUtilityData } from '../../pages/Explore/_mockUtility.js';
-import{ BagStyledTab } from "../BagTab.jsx";
-import BagInfo from "../BagInfo.jsx";
-import Grid from "@mui/material/Grid";
-import useStore from "../../store/store.js";
-import TicketContainer from "../TicketContainer.jsx";
-import { ReturnUtilityButton } from '../ReturnUtility/ReturnUtilityButton.jsx';
-import UtilityCard from "../UtilityCard.jsx";
-import ReturnUtilityCard from "../ReturnUtilityCard.jsx";
+import { BagStyledTab } from '../BagTab.jsx';
+import BagInfo from '../BagInfo.jsx';
+import Grid from '@mui/material/Grid';
+import useStore from '../../store/store.js';
+import TicketContainer from '../TicketContainer.jsx';
 
 export const Bag = () => {
     const getOwnedRentals = useStore((state) => state.getOwnedRentals);
@@ -46,9 +43,9 @@ export const Bag = () => {
         modal: () => console.log('This is not a modal'),
     };
 
-    const handleTicketClick = activeTicket => {
-      setRentalDialogOpen(true);
-      setActiveRental(activeTicket);
+    const handleTicketClick = (activeTicket) => {
+        setRentalDialogOpen(true);
+        setActiveRental(activeTicket);
     };
 
     return (
