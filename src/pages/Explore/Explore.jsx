@@ -11,6 +11,7 @@ import { Box, Paper } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { catalogData } from '../../utils/mockData.js';
 import TicketContainer from '../../components/TicketContainer.jsx';
+import UtilityCard from '../../components/UtilityCard.jsx';
 
 export const Explore = ({ bagOpen }) => {
     const catalog = useStore((state) => state.catalog) || [];
@@ -19,7 +20,7 @@ export const Explore = ({ bagOpen }) => {
 
     // const displayData = [...catalog].filter(({ phase }) => phase === 'available');
     let displayData = catalogData;
-    displayData = [];
+    // displayData = [];
     const closeActiveTicket = () => {
         setActiveTicket(null);
     };
@@ -108,11 +109,18 @@ export const Explore = ({ bagOpen }) => {
                                         spacing={2}
                                         item
                                         xs={4}
-                                        sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}
+                                        sx={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            mt: 2,
+                                        }}
                                     >
-                                        <TicketContainer>
-                                            <Ticket key={index} data={data} onTicketClick={setActiveTicket} />
-                                        </TicketContainer>
+                                        <UtilityCard
+                                            key={index}
+                                            data={data}
+                                            onTicketClick={setActiveTicket}
+                                            cardWidth="calc(100% - 40px)"
+                                        />
                                     </Grid>
                                 ))
                             )}
