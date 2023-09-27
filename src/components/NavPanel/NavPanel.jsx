@@ -61,15 +61,12 @@ export const NavPanel = ({ toggleModal, toggleBag, bagOpen }) => {
                     </Button>
 
                     <Button variant={'text'} >
-                        {/*<NavLink to="/about">*/}
-                        {/*    <Typography color='primary.contrastText' sx={{ textTransform: 'none'}}>*/}
-                        {/*        How it works?*/}
-                        {/*    </Typography>*/}
-                        {/*</NavLink>*/}
+                        <NavLink to="/about">
+                            <Typography color='primary.contrastText' sx={{ textTransform: 'none'}}>
+                                How it works?
+                            </Typography>
+                        </NavLink>
 
-                        <Typography color='primary.contrastText' sx={{ textTransform: 'none'}}>
-                            How it works?
-                        </Typography>
                     </Button>
                     <Button variant='text'>
                         <NavLink to="/explore">
