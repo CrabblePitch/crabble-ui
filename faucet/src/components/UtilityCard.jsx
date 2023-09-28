@@ -2,7 +2,9 @@ import { Button, Card, CardContent, CardMedia, Grid, Typography, Paper } from '@
 
 export const UtilityCard = ({ data }) => {
     return (
-        <Card sx={{ width: '100%', boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.75)', mb: 2 }}>
+        <Card
+            sx={{ width: '100%', bgcolor: 'surface.main', boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.75)', mb: 2, p: 2 }}
+        >
             <Grid container>
                 <Grid item md={5}>
                     <Paper elevation={3} sx={{ m: 2 }}>
@@ -20,7 +22,7 @@ export const UtilityCard = ({ data }) => {
                         {Object.keys(data).map((key, index) => {
                             if (key !== 'imagePath') {
                                 return (
-                                    <Typography key={index} variant="body2">
+                                    <Typography key={index} variant="body2" sx={{ color: 'onSurfaceText.main' }}>
                                         {key.charAt(0).toUpperCase() + key.slice(1)}: {data[key]}
                                     </Typography>
                                 );
@@ -32,7 +34,7 @@ export const UtilityCard = ({ data }) => {
             </Grid>
             <Button
                 variant="contained"
-                color="primary"
+                color="secondary"
                 fullWidth
                 sx={{
                     mt: 1,
