@@ -2,9 +2,13 @@ import { AppBar, Box, Button, Toolbar } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import CrabbleIcon from "./CrabbleIcon.jsx";
 import Typography from "@mui/material/Typography";
-// import { ConnectWallet } from "../../../src/components/ConnectWallet/ConnectWallet.jsx";
+import ConnectWallet from "./ConnectWallet.jsx";
+import useStore from "../store.js";
+import DoneIcon from '@mui/icons-material/Done';
 
 const Navbar = (props) => {
+    const wallet = useStore(state => state.wallet);
+
   return (
       <AppBar position={"sticky"} color={'surface'}>
           <Toolbar sx={{justifyContent: 'space-between', boxShadow: 'line', p: 0}}>
@@ -49,7 +53,12 @@ const Navbar = (props) => {
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', flexGrow: 1 }}>
-                  <Button variant={"contained"} color={"secondary"}>Connect Wallet</Button>
+                  {wallet ? (
+                          <Button variant={'contained'} color={'secondary'} startIcon={<DoneIcon/>} sx={{ pointerEvents: 'none'}}>
+                              Wallet Connected
+                          </Button>) :
+                      (<ConnectWallet/>)
+                  }
               </Box>
           </Toolbar>
       </AppBar>

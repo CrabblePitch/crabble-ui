@@ -6,7 +6,7 @@ import { Box, Paper } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { UtilityCard } from './UtilityCard.jsx';
 
-export const Explore = ({ displayData }) => {
+export const Explore = ({ displayData, assetKeyword }) => {
     useEffect(() => {
         console.log('Data updated:', displayData);
     }, [displayData]);
@@ -45,7 +45,7 @@ export const Explore = ({ displayData }) => {
                 <Grid container spacing={4} className="GRID">
                     {displayData.map((data, index) => (
                         <Grid key={index * 10} item xs={6} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <UtilityCard key={index} data={data} />
+                            <UtilityCard key={index} data={data} keyword={assetKeyword} />
                         </Grid>
                     ))}
                 </Grid>

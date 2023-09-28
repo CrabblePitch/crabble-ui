@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import Typography from '@mui/material/Typography';
 import { chainboardTicketData } from '../mockData.js';
 import { Explore } from './Explore.jsx';
 
@@ -9,7 +8,7 @@ const ChainboardTicket = () => {
 
     return (
         <Box>
-            <Explore displayData={displayData} />
+            <Explore displayData={displayData} assetKeyword={"ChainboardTicket"}/>
         </Box>
     );
 };
