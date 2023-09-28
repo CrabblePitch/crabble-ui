@@ -29,14 +29,14 @@ const mergeRentalBalances = (rentalBalances, policy = AssetKind.NAT) => {
 const BagInfo = () => {
     const wallet = useStore(state => state.wallet);
     const getOwnedRentals = useStore(state => state.getOwnedRentals);
-    const getBorrowedRentals = useStore(state => state.getBorrowedRentals);
+    const getActibeBorrows = useStore(state => state.getAtiveBorrows);
     const getRentalBalances = useStore(state => state.getRentalBalances);
     const getCollateralBalances = useStore(state => state.getCollateralBalances);
 
-    if(!wallet || !getBorrowedRentals || !getBorrowedRentals) return;
+    if(!wallet || !getActibeBorrows) return;
 
     const ownedRentals = getOwnedRentals() || [];
-    const borrowedRentals = getBorrowedRentals() || [];
+    const borrowedRentals = getActibeBorrows() || [];
 
     const rentalBalances = getRentalBalances();
     const collateralBalances = getCollateralBalances();

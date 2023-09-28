@@ -13,14 +13,13 @@ import ReturnUtilityCard from "../ReturnUtilityCard.jsx";
 
 export const Bag = () => {
     const getOwnedRentals = useStore((state) => state.getOwnedRentals);
-    const getBorrowedRentals = useStore((state) => state.getBorrowedRentals);
     const getActiveBorrows = useStore((state) => state.getAtiveBorrows);
 
     const ownedRentals = getOwnedRentals();
-    // const borrowedRentals = getActiveBorrows();
+    const borrowedRentals = getActiveBorrows();
     //
     // const ownedRentals = mockUtilityData;
-    const borrowedRentals = mockUtilityData;
+    // const borrowedRentals = mockUtilityData;
 
     const [tabValue, setTabValue] = useState(1);
     const [activeRental, setActiveRental] = useState(false);
@@ -59,7 +58,7 @@ export const Bag = () => {
                     </Tabs>
                     <Box sx={{ mt: 2}}>
                         {tabValue === 0 && (
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} >
                                 {ownedRentals.map((data, index) => (
                                     <Grid key={`owned-${index}`} item xs={4}>
                                         <UtilityCard data={data} onCardClick={handleTicketClick} detailed={false}/>

@@ -2,11 +2,12 @@ import Typography from "@mui/material/Typography";
 import { Box, IconButton, MenuItem, Stack } from "@mui/material";
 import { Selector, TextInput } from "./CustomComponents.jsx";
 import { UpdateRentalConfigButton } from "./UpdateRentalConfig/UpdateRentalConfigButton.jsx";
-import { displayAmount, getValueFromNat, makeRentalConfigValidator } from "../utils/helpers.js";
+import { displayAmount, makeRentalConfigValidator } from "../utils/helpers.js";
 import { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import { ErrorMessages, RentalPhase } from "../utils/constants.js";
+import { secToUnitOfTime, unitOfTimeToSec } from "../utils/time.js";
 
 const getDisplayConfigDefaults = configuration => {
     return harden({
@@ -98,6 +99,11 @@ const UpdateRentalConfiguration = ({ rental, onClose }) => {
         resetState(rental.configuration);
     };
 
+    const handleRentalDurationUnitChange = (value) => {
+      setGracePeriodDuration("0");
+      setRentinDurationUnit(value);
+    };
+
     const displayCollateral = () => {
         if (!rental) return '';
 
@@ -179,7 +185,7 @@ const UpdateRentalConfiguration = ({ rental, onClose }) => {
                     <Selector label={"Renting Unit"}
                               helperText={"Renting Unit"}
                               current={rentingDurationUnit}
-                              callback={setRentinDurationUnit}
+                              callback={handleRentalDurationUnitChange}
                               // fullWidth={true}
                               error={{ value: errors.rentingDurationUnit, text: ErrorMessages.STRING}}
                     >
@@ -190,9 +196,9 @@ const UpdateRentalConfiguration = ({ rental, onClose }) => {
                     </Selector>
 
 
-                    <TextInput onChange={setGracePeriodDuration}
-                               name={'Grace Period'}
-                               current={gracePeriodDuration}
+                    <TextInput onChange={value => setGracePeriodDuration(unitOfTimeToSec(rentingDurationUnit, value))}
+                               name={`Grace Period in ${rentingDurationUnit}s`}
+                               current={secToUnitOfTime(rentingDurationUnit, gracePeriodDuration)}
                                error={{value: errors.gracePeriodDuration, text: ErrorMessages.NUMERIC}}
                     />
                 </Box>

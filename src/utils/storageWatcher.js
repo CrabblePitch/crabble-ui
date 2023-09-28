@@ -24,7 +24,7 @@ const makeStorageWatcher = () => {
     const watchVBankPurses = async () => {
         for await (const purses of subscribeLatest(wallet.pursesNotifier)) {
             console.log('VBANK Purse Update', purses);
-            useStore.setState({ vbankPurses: purses });
+            updateVBank(purses);
         }
     };
 
@@ -60,31 +60,17 @@ const makeStorageWatcher = () => {
         );
     };
 
-    const watchVBankAssets = () => {
-        watcher.watchLatest(
-            [AgoricChainStoragePathKind.Data, 'published.agoricNames.vbankAsset'],
-            vbankAssets => {
-                console.log('VBankAsset Update', vbankAssets);
-                updateVBank(vbankAssets);
-            }
-        );
-    };
-
     const startWatching = () => {
-        if (!wallet || !watcher) {
-            console.log({
-                watcher,
-                wallet
-            });
-            return;
+        if (!watcher) return;
+
+        if (wallet) {
+            watchSmartWallet();
+            watchVBankPurses().catch(err => console.log('ERROR', err));
         }
 
-        watchSmartWallet();
-        watchVBankPurses().catch(err => console.log('ERROR', err));
         watchBrands();
         watchInstances();
         watchCatalog();
-        watchVBankAssets();
     };
 
     return { startWatching };
