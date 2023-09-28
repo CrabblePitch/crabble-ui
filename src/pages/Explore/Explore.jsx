@@ -1,18 +1,16 @@
 import './Explore.scss';
 
 import { useState } from 'react';
-import { Ticket } from '../../components/Ticket/Ticket.jsx';
 import { FilterBar } from '../../components/FilterBar/FilterBar.jsx';
-import { BorrowModal } from '../../components/BorrowModal/BorrowModal.jsx';
 import { Bag } from '../../components/Bag/Bag.jsx';
 import useStore from '../../store/store.js';
 import Typography from "@mui/material/Typography";
 import { Box, Paper } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { catalogData } from "../../utils/mockData.js";
-import TicketContainer from "../../components/TicketContainer.jsx";
 import UtilityCard from "../../components/UtilityCard.jsx";
 import BorrowRentalDialog from "../../components/BorrowRentalDialog.jsx";
+import NothingToShow from "../../components/NothingToShow.jsx";
+import { EmptyTexts } from "../../utils/constants.js";
 
 export const Explore = ({ bagOpen }) => {
     const catalog = useStore((state) => state.catalog) || [];
@@ -32,6 +30,23 @@ export const Explore = ({ bagOpen }) => {
         setActiveTicket(null);
         setBorrowOpen(false);
     };
+
+    const displayBody = () => {
+        if (displayData.length === 0) {
+            return (<NothingToShow message={EmptyTexts.CATALOG}/>)
+        }
+
+        return (
+            <Grid container spacing={4} className='GRID'>
+                {displayData.map((data, index) => (
+                    <Grid key={index * 10} item xs={4}
+                          sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <UtilityCard key={index} data={data} onCardClick={handleCardClick}/>
+                    </Grid>
+                ))}
+            </Grid>
+        )
+    }
 
     return (
         <Box className="catalog" sx={{
@@ -64,14 +79,7 @@ export const Explore = ({ bagOpen }) => {
                             <FilterBar/>
                         </Box>
 
-                        <Grid container spacing={4} className='GRID'>
-                            {displayData.map((data, index) => (
-                                <Grid key={index * 10} item xs={4}
-                                      sx={{ display: 'flex', justifyContent: 'center' }}>
-                                    <UtilityCard key={index} data={data} onCardClick={handleCardClick}/>
-                                </Grid>
-                            ))}
-                        </Grid>
+                        {displayBody()}
                     </>
                 )}
             </Paper>
