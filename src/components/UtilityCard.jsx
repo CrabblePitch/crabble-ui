@@ -19,6 +19,8 @@ const UtilityCard = ({
                          detailed = true,
                          cardStyles = {}
                      }) => {
+    const wallet = useStore(state => state.wallet);
+    const notifyUser = useStore(state => state.notifyUser);
     const getKeywordFromBrand = useStore(state => state.getKeywordFromBrand);
 
     const ticketData = data.configuration ? data.configuration : data;
@@ -26,12 +28,21 @@ const UtilityCard = ({
 
     console.log('Utility Card', { data });
 
+    const handleClick = () => {
+        if (!wallet) {
+            notifyUser('secondary', 'Please connect your wallet');
+            return;
+        }
+
+        onCardClick(data);
+    }
+
     return (
         <Card sx={{
             ...cardDefaults,
             ...cardStyles
         }}>
-            <CardActionArea onClick={() => onCardClick(data)}>
+            <CardActionArea onClick={handleClick}>
                 <CardMedia
                     component="img"
                     // height="140"
@@ -53,7 +64,7 @@ const UtilityCard = ({
                             <>
                                 <Typography variant="subtitle1">
                                     {Number(ticketData.minRentingDurationUnits)} to{' '}
-                                    {Number(ticketData.maxRentingDurationUnits)} {ticketData.rentingDurationUnit}(s),
+                                    {Number(ticketData.maxRentingDurationUnits)} {ticketData.rentingDurationUnit}s, to{' '}
                                     {displayAmount(ticketData.rentalFeePerUnitAmount)} {getKeywordFromBrand(ticketData.rentalFeePerUnitAmount.brand)} per {ticketData.rentingDurationUnit}
                                 </Typography>
                                 <Typography variant="subtitle1">

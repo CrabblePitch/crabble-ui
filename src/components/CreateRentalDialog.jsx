@@ -9,24 +9,21 @@ import {
 import ModalTitleBar from "./ModalTitleBar.jsx";
 import Typography from "@mui/material/Typography";
 import { Selector, TextInput } from "./CustomComponents.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ErrorMessages } from "../utils/constants.js";
 import {
     buildCreateRentalOfferSpec, displayAmount,
-    getBrand,
     getPurseFromSmartWallet, makeGenericOnStatusUpdate,
     makeRentalConfigValidator
 } from "../utils/helpers.js";
 import useStore from "../store/store.js";
-import { brandData } from "../utils/mockData.js";
-import { stringifyValue } from "@agoric/ui-components";
-import { AssetKind } from "@agoric/ertp";
+import { secToUnitOfTime, unitOfTimeToSec } from "../utils/time.js";
 
 const CreateRentalDialog = ({ open, onClose }) => {
     const wallet = useStore(state => state.wallet);
     const notifyUser = useStore(state => state.notifyUser);
     const getDisplayableUtilityBrands = useStore(state => state.getDisplayableUtilityBrands);
-    const vbankPurses = useStore(state => state.vbankPurses);
+    const getFungibleBrands = useStore(state => state.getFungibleBrands);
 
     const [utilityAmountIndex, setutilityAmountIndex] = useState('');
     const [rentingDurationUnit, setRentinDurationUnit] = useState('minute');
@@ -58,10 +55,13 @@ const CreateRentalDialog = ({ open, onClose }) => {
         rentalFeeBrand: false,
     });
 
+    useEffect(() => {
+        setGracePeriodDuration('0');
+    }, [rentingDurationUnit])
+
     const utilityBrands = getDisplayableUtilityBrands();
-    // const utilityBrand = getBrand('Utility');
     const utilityPurse = getPurseFromSmartWallet(utilityBrand) || { value: [] };
-    const vbankDisplayData = vbankPurses || [];
+    const fungibleDisplayData = getFungibleBrands();
 
     const validationConfig = {
         utilityAmountIndex,
@@ -160,7 +160,7 @@ const CreateRentalDialog = ({ open, onClose }) => {
                                     <em>None</em>
                                 </MenuItem>
                                 {[...utilityPurse.value].map((data, index) => (
-                                    <MenuItem key={`balance-${index}`} value={index}>{data.address}</MenuItem>
+                                    <MenuItem key={`balance-${index}`} value={index}>{data.name ? data.name : `${utilityBrand}-${index}`}</MenuItem>
                                 ))}
                             </Selector>
                             <Selector label={"NFT Brand"}
@@ -173,8 +173,8 @@ const CreateRentalDialog = ({ open, onClose }) => {
                                 <MenuItem key="balance-empty" value={''}>
                                     <em>None</em>
                                 </MenuItem>
-                                {[...utilityBrands].map(({keyword, brand}) => (
-                                    <MenuItem key={`brand-${keyword}`} value={brand}>{keyword}</MenuItem>
+                                {[...utilityBrands].map(({brandPetname, brand}) => (
+                                    <MenuItem key={`brand-${brandPetname}`} value={brand}>{brandPetname}</MenuItem>
                                 ))}
                             </Selector>
                         </Stack>
@@ -254,7 +254,7 @@ const CreateRentalDialog = ({ open, onClose }) => {
                                 <MenuItem key="balance-empty" value={''}>
                                     <em>None</em>
                                 </MenuItem>
-                                {[...vbankDisplayData].map(({brandPetname, brand}) => (
+                                {[...fungibleDisplayData].map(({brandPetname, brand}) => (
                                     <MenuItem key={`brand-${brandPetname}`} value={brand}>{brandPetname}</MenuItem>
                                 ))}
                             </Selector>
@@ -283,7 +283,7 @@ const CreateRentalDialog = ({ open, onClose }) => {
                                 <MenuItem key="balance-empty" value={''}>
                                     <em>None</em>
                                 </MenuItem>
-                                {[...vbankDisplayData].map(({brandPetname, brand}) => (
+                                {[...fungibleDisplayData].map(({brandPetname, brand}) => (
                                     <MenuItem key={`brand-${brandPetname}`} value={brand}>{brandPetname}</MenuItem>
                                 ))}
                             </Selector>
@@ -292,9 +292,9 @@ const CreateRentalDialog = ({ open, onClose }) => {
                     </Stack>
                     <Stack flex={1} alignItems="flex-start" sx={{ml: 8}}>
                         <Typography variant="h6">Enter Grace Period</Typography>
-                        <TextInput onChange={setGracePeriodDuration}
-                                   name={'Grace Period'}
-                                   current={gracePeriodDuration}
+                        <TextInput onChange={value => setGracePeriodDuration(unitOfTimeToSec(rentingDurationUnit, value))}
+                                   name={`Grace Period in ${rentingDurationUnit}s`}
+                                   current={secToUnitOfTime(rentingDurationUnit, gracePeriodDuration)}
                                    error={{value: errors.gracePeriodDuration, text: ErrorMessages.NUMERIC}}
                         />
                     </Stack>
