@@ -1,6 +1,7 @@
-import { Box } from "@mui/material";
-import Typography from "@mui/material/Typography";
-import { chainboardTicketData } from "../mockData.js";
+import { Box } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import { chainboardTicketData } from '../mockData.js';
+import { Explore } from './Explore.jsx';
 
 const ChainboardTicket = () => {
     // Use this data
@@ -8,9 +9,9 @@ const ChainboardTicket = () => {
 
     return (
         <Box>
-            <Typography>ChaiboardTicket</Typography>
+            <Explore displayData={displayData} />
         </Box>
-    )
+    );
 };
 
 export default ChainboardTicket;
