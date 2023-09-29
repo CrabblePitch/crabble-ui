@@ -1,6 +1,6 @@
 import './Explore.scss';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FilterBar } from '../../components/FilterBar/FilterBar.jsx';
 import { Bag } from '../../components/Bag/Bag.jsx';
 import useStore from '../../store/store.js';
@@ -12,18 +12,54 @@ import BorrowRentalDialog from '../../components/BorrowRentalDialog.jsx';
 import NothingToShow from '../../components/NothingToShow.jsx';
 import { EmptyTexts } from '../../utils/constants.js';
 import { catalogData } from '../../utils/mockData.js';
+import { tags } from '../../utils/crabble-config.js';
 
 export const Explore = ({ bagOpen }) => {
+    // const getKeywordFromBrand = useStore((state) => state.getKeywordFromBrand);
     const catalog = useStore((state) => state.catalog) || [];
     const [activeTicket, setActiveTicket] = useState(null);
     const [borrowOpen, setBorrowOpen] = useState(false);
-    console.log('activeTicket', activeTicket);
+    const [selectedTag, setSelectedTag] = useState('-');
+    const [displayList, setDisplayList] = useState([]);
 
     // const displayData = [...catalog].filter(({ phase }) => phase === 'available');
     const displayData = catalogData;
 
+    const getKeywordFromBrandMock = (brand) => {
+        // Mock implementation
+        // const keywords = ['AwesomeCollection', 'ChainboardTicket', 'GreatMonkeys'];
+        // return keywords[Math.floor(Math.random() * keywords.length)];
+        return brand[0] || 'Unknown';
+    };
+
+    // mocked function
+    const getKeywordFromBrand = getKeywordFromBrandMock;
+
+    useEffect(() => {
+        setDisplayList(filterTags());
+    }, [selectedTag]);
+
+    const handleFilterSelect = (filter) => {
+        console.log('Handling filter select:', filter);
+        setSelectedTag(filter.toLowerCase());
+    };
+    const filterTags = () => {
+        if (selectedTag === '-') {
+            return displayData;
+        }
+
+        return displayData.filter((item) => {
+            const keyword = getKeywordFromBrand(item.utilityAmount.brand);
+            if (keyword === 'Unknown') {
+                console.warn('Unknown brand:', item.utilityAmount.brand);
+                return false;
+            }
+            const tagSet = tags[keyword];
+            return tagSet && tagSet.has(selectedTag.toLowerCase());
+        });
+    };
+
     const handleCardClick = (rentalData) => {
-        console.log('clccccc ');
         setActiveTicket(rentalData);
         setBorrowOpen(true);
     };
@@ -34,13 +70,13 @@ export const Explore = ({ bagOpen }) => {
     };
 
     const displayBody = () => {
-        if (displayData.length === 0) {
+        if (displayList.length === 0) {
             return <NothingToShow message={EmptyTexts.CATALOG} />;
         }
 
         return (
             <Grid container spacing={4} className="GRID">
-                {displayData.map((data, index) => (
+                {displayList.map((data, index) => (
                     <Grid key={index * 10} item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                         <UtilityCard key={index} data={data} onCardClick={handleCardClick} />
                     </Grid>
@@ -85,7 +121,7 @@ export const Explore = ({ bagOpen }) => {
                 ) : (
                     <>
                         <Box sx={{ width: 1 }}>
-                            <FilterBar />
+                            <FilterBar onFilterSelect={handleFilterSelect} />
                         </Box>
 
                         {displayBody()}

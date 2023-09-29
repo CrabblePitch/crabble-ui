@@ -3,9 +3,6 @@ import { Card, CardActionArea, CardContent, CardMedia, Stack } from '@mui/materi
 import PhaseChip from './PhaseChip.jsx';
 import { displayAmount, getValueFromSet } from '../utils/helpers.js';
 import useStore from '../store/store.js';
-import { stringifyValue } from '@agoric/ui-components';
-import { AssetKind } from '@agoric/ertp';
-import { useEffect } from 'react';
 
 const cardDefaults = {
     bgcolor: 'surface.main',
@@ -21,8 +18,6 @@ const UtilityCard = ({ data, onCardClick, detailed = true, cardStyles = {} }) =>
 
     const ticketData = data.configuration ? data.configuration : data;
     const utilityValue = getValueFromSet(ticketData.utilityAmount);
-
-    console.log('Utility Card', { data });
 
     const handleClick = () => {
         if (!wallet) {
