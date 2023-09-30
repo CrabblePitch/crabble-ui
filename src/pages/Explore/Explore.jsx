@@ -1,5 +1,3 @@
-import './Explore.scss';
-
 import { useState } from 'react';
 import { FilterBar } from '../../components/FilterBar/FilterBar.jsx';
 import { Bag } from '../../components/Bag/Bag.jsx';
@@ -62,8 +60,6 @@ export const Explore = ({ bagOpen }) => {
 
             <Paper sx={{
                 width: '70%',
-                minWidth: 0,
-                minHeight: 0,
                 height: '100vh',
                 overflow: 'auto',
                 p: 2,
