@@ -66,6 +66,7 @@ export const NavPanel = ({ toggleModal, toggleBag, bagOpen }) => {
                                 How it works?
                             </Typography>
                         </NavLink>
+
                     </Button>
                     <Button variant='text'>
                         <NavLink to="/explore">

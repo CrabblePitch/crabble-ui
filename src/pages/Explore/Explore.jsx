@@ -15,7 +15,7 @@ import { catalogData } from '../../utils/mockData.js';
 import { tags } from '../../utils/crabble-config.js';
 
 export const Explore = ({ bagOpen }) => {
-    // const getKeywordFromBrand = useStore((state) => state.getKeywordFromBrand);
+    const getKeywordFromBrand = useStore((state) => state.getKeywordFromBrand);
     const catalog = useStore((state) => state.catalog) || [];
     const [activeTicket, setActiveTicket] = useState(null);
     const [borrowOpen, setBorrowOpen] = useState(false);
@@ -24,16 +24,6 @@ export const Explore = ({ bagOpen }) => {
 
     // const displayData = [...catalog].filter(({ phase }) => phase === 'available');
     const displayData = catalogData;
-
-    const getKeywordFromBrandMock = (brand) => {
-        // Mock implementation
-        // const keywords = ['AwesomeCollection', 'ChainboardTicket', 'GreatMonkeys'];
-        // return keywords[Math.floor(Math.random() * keywords.length)];
-        return brand[0] || 'Unknown';
-    };
-
-    // mocked function
-    const getKeywordFromBrand = getKeywordFromBrandMock;
 
     useEffect(() => {
         setDisplayList(filterTags());
@@ -101,21 +91,15 @@ export const Explore = ({ bagOpen }) => {
                 Rent whatever you want
             </Typography>
 
-            <Paper
-                sx={{
-                    width: '70%',
-                    minWidth: 0,
-                    minHeight: 0,
-                    height: '100vh',
-                    overflow: 'auto',
-                    p: 2,
-                    bgcolor: 'surface.main',
-                    borderRadius: (theme) => theme.spacing(2),
-                    boxShadow: '0px 0px 80px 0px rgba(0,0,0,0.75)',
-                }}
-                elevation={3}
-                className="Paper"
-            >
+            <Paper sx={{
+                width: '70%',
+                height: '100vh',
+                overflow: 'auto',
+                p: 2,
+                bgcolor: 'surface.main',
+                borderRadius: (theme) => theme.spacing(2),
+                boxShadow: '0px 0px 80px 0px rgba(0,0,0,0.75)'
+            }} elevation={3} className='Paper'>
                 {bagOpen ? (
                     <Bag />
                 ) : (
