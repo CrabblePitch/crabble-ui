@@ -8,7 +8,7 @@ export const ConnectWallet = () => {
 
     const connectWallet = async () => {
         // TODO: Comment for going next page
-        // await suggestChain('https://local.agoric.net/network-config');
+        await suggestChain('https://local.agoric.net/network-config');
         const wallet = await makeAgoricWalletConnection(watcher);
         useStore.setState({ wallet });
         console.log('Wallet fetched', {

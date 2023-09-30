@@ -1,39 +1,16 @@
 import { Button, Card, CardContent, CardMedia, Grid, Typography, Stack } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import { buildMintOfferSpec } from "../helpers.js";
+import { buildMintOfferSpec, makeOnStatusChange } from "../helpers.js";
 import useStore from "../store.js";
 
 export const UtilityCard = ({ data, keyword }) => {
     const wallet = useStore(state => state.wallet);
     const notifyUser = useStore(state => state.notifyUser);
 
-    const onStatusChange = args => {
-        console.log({ args });
-        const { status, data } = args;
-
-        if (status === 'error') {
-            notifyUser('error', 'Offer with error');
-            console.log('ERROR', data);
-        }
-        if (status === 'seated') {
-            notifyUser('secondary', 'Transaction submitted');
-            console.log('Transaction:', data.txn);
-            console.log('Offer id:', data.offerId);
-        }
-        if (status === 'refunded') {
-            notifyUser('warning', 'Transaction refunded');
-            console.log('Transaction:', data.txn);
-            console.log('Offer id:', data.offerId);
-        }
-        if (status === 'accepted') {
-            notifyUser('success', 'Offer accepted');
-            console.log('Transaction:', data.txn);
-            console.log('Offer id:', data.offerId);
-        }
-    };
+    const onStatusChange = makeOnStatusChange(notifyUser);
 
     const handleClick = () => {
-        const offerSpec = buildMintOfferSpec(data, keyword);
+        const offerSpec = buildMintOfferSpec(harden([data]), keyword);
         console.log({ offerSpec });
 
         void wallet.makeOffer(

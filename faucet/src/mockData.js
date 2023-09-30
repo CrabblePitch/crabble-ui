@@ -16,9 +16,10 @@ const awesomeCollectionData = [...new Array(30)].fill({
 harden(awesomeCollectionData);
 
 const chainboardTicketData = [...new Array(30)].fill({
+    name: 'Chainboard Academy',
     topic: 'Agoric',
     intakeClass: 'October 2024',
-    instructor: 'Anıl Helvacı',
+    instructor: 'Anil Helvaci',
     duration: '15 weeks',
     imagePath: 'https://coursereport-s3-production.global.ssl.fastly.net/uploads/school/logo/1643/original/1661176654081.jpeg',
 });
