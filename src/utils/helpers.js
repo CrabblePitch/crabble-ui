@@ -119,7 +119,7 @@ const getValueFromNat = natAmount => {
 };
 harden(getValueFromNat);
 
-const makeGenericOnStatusUpdate = (snackBarUpdater, modalUpdater) => {
+const makeGenericOnStatusUpdate = (snackBarUpdater) => {
     const onStatusChange = args => {
         console.log({ args });
         const { status, data } = args;
@@ -143,8 +143,6 @@ const makeGenericOnStatusUpdate = (snackBarUpdater, modalUpdater) => {
             console.log('Transaction:', data.txn);
             console.log('Offer id:', data.offerId);
         }
-
-        modalUpdater();
     };
 
     return harden({

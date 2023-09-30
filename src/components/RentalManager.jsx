@@ -13,7 +13,6 @@ const RentalManager = ({ rental, onClose }) => {
     const { phase } = rental;
     const withdrawCollateralVisible = phase === RentalPhase.LIQUIDATED;
     const withdrawUtilityVisible = phase === RentalPhase.AVAILABLE;
-    const withdrawRentalFeeVisible = phase !== RentalPhase.REMOVED;
 
     return (
         <>
@@ -52,10 +51,8 @@ const RentalManager = ({ rental, onClose }) => {
             <Stack direction="row">
                 {withdrawCollateralVisible && <WithdrawCollateralButton rental={rental} onClose={onClose}/>}
                 {withdrawUtilityVisible && <WithdrawUtility rental={rental} onClose={onClose}/>}
-                {withdrawRentalFeeVisible && <WithdrawRentalFeeButton rental={rental} onClose={onClose}/>}
+                <WithdrawRentalFeeButton rental={rental} onClose={onClose}/>
             </Stack>
-
-
         </>
     )
 };

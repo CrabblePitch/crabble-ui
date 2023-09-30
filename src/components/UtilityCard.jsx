@@ -9,6 +9,7 @@ const cardDefaults = {
     border: 1,
     color: 'onSurface.main',
     boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.75)',
+    width: '100%'
 };
 
 const UtilityCard = ({ data, onCardClick, detailed = true, cardStyles = {} }) => {
@@ -46,6 +47,7 @@ const UtilityCard = ({ data, onCardClick, detailed = true, cardStyles = {} }) =>
                         pr: 4,
                         pt: 2,
                         borderColor: 'onSurface.main',
+                        height: 280
                     }}
                 />
                 <CardContent>
@@ -59,7 +61,7 @@ const UtilityCard = ({ data, onCardClick, detailed = true, cardStyles = {} }) =>
                         <>
                             <Typography variant="subtitle1">
                                 {Number(ticketData.minRentingDurationUnits)} to{' '}
-                                {Number(ticketData.maxRentingDurationUnits)} {ticketData.rentingDurationUnit}s, to{' '}
+                                {Number(ticketData.maxRentingDurationUnits)} {ticketData.rentingDurationUnit}s, {' '}
                                 {displayAmount(ticketData.rentalFeePerUnitAmount)}{' '}
                                 {getKeywordFromBrand(ticketData.rentalFeePerUnitAmount.brand)} per{' '}
                                 {ticketData.rentingDurationUnit}

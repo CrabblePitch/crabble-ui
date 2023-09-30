@@ -46,7 +46,7 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
         console.log('Offer Spec', { offerSpec });
 
         console.log({ offerSpec });
-        const offerPromise = void wallet.makeOffer(
+        void wallet.makeOffer(
             offerSpec.invitationSpec,
             offerSpec.proposal,
             offerSpec.offerArgs,
@@ -54,14 +54,7 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
             offerSpec.id,
         );
 
-        if (offerPromise && typeof offerPromise.then === 'function') {
-            offerPromise.then(() => {
-                onClose();
-            });
-        } else {
-            // close the modal immediately
-            onClose();
-        }
+        handleClose();
     };
 
     const handleClose = () => {
@@ -76,7 +69,7 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
     };
 
     const { validate } = makeRentalConfigValidator(errors, setErrors, configuration);
-    const { onStatusChange } = makeGenericOnStatusUpdate(notifyUser, handleClose);
+    const { onStatusChange } = makeGenericOnStatusUpdate(notifyUser);
 
     return (
         <Dialog
