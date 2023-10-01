@@ -4,7 +4,7 @@ import { isBorrowOffer, isCreateOffer } from "../utils/helpers.js";
 import { RentalPhase } from "../utils/constants.js";
 
 const useStore = create((set, get) => ({
-    watcher: makeAgoricChainStorageWatcher('http://localhost:26657', 'agoriclocal'),
+    watcher: makeAgoricChainStorageWatcher('https://devnet.rpc.agoric.net:443', 'agoricdev-21'),
     brands: [],
     brandToKeyword: {},
     keywordToBrand: {},
