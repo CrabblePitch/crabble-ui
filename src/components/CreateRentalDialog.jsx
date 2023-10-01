@@ -97,6 +97,8 @@ const CreateRentalDialog = ({ open, onClose }) => {
             onStatusChange,
             offerSpec.id,
         );
+
+        handleClose();
     };
 
     const handleClose = () => {
@@ -136,7 +138,7 @@ const CreateRentalDialog = ({ open, onClose }) => {
     };
 
     const { validate } = makeRentalConfigValidator(errors, setErrors, validationConfig);
-    const { onStatusChange } = makeGenericOnStatusUpdate(notifyUser, handleClose);
+    const { onStatusChange } = makeGenericOnStatusUpdate(notifyUser);
 
     return (
         <Dialog open={open} onClose={resetState} sx={{
@@ -333,8 +335,6 @@ const CreateRentalDialog = ({ open, onClose }) => {
                             <Typography variant="body1" sx={{ml: 1, mr: 1}}>{rentingDurationUnit}(s)</Typography>
                         </Stack>
                     </Stack>
-
-
                 </Stack>
             </DialogContent>
             <DialogActions sx={{bgcolor: 'surface.main', pb: 2, pr: 2}}>

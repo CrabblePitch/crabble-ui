@@ -1,0 +1,29 @@
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-y: hidden;
+}
+
+.how-it-works {
+  width: 100vw;
+  min-height: 100vh;
+
+  .title {
+    align-self: center;
+    margin: 20px 0;
+  }
+
+  .content-paper {
+    width: 70%;
+    max-height: 60vh;
+    overflow: auto;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.4);
+
+    .content {
+      padding: 2rem;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import './main.scss';
-import '../installSesLockdown';
+import '../installSesLockdown.js';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';

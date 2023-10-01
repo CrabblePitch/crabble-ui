@@ -7,7 +7,7 @@ const AwsomeCollection = () => {
     const displayData = awesomeCollectionData;
 
     return (
-        <Box>
+        <Box sx={{height: '100%'}}>
             <Explore displayData={displayData} assetKeyword={"AwesomeCollection"}/>
         </Box>
     );
