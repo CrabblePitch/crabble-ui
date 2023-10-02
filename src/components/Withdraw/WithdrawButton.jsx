@@ -6,7 +6,7 @@ export const WithdrawButton = ({ offerSpec, message, color, onClose }) => {
     const wallet = useStore((state) => state.wallet);
     const notifyUser = useStore((state) => state.notifyUser);
 
-    const { onStatusChange } = makeGenericOnStatusUpdate(notifyUser, onClose);
+    const { onStatusChange } = makeGenericOnStatusUpdate(notifyUser);
 
     const handleClick = () => {
         assert(wallet, `Wallet not defined: ${wallet}`);
@@ -19,6 +19,8 @@ export const WithdrawButton = ({ offerSpec, message, color, onClose }) => {
             onStatusChange,
             offerSpec.id,
         );
+
+        onClose()
     };
 
     return (

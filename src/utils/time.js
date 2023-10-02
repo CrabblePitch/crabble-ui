@@ -89,6 +89,20 @@ const makeDisplayTimeHelper = rental => {
 
 harden(makeDisplayTimeHelper);
 
+const unitOfTimeToSec = (unit, duration) => {
+    if (isNaN(duration)) return '0';
+    return `${rentingUnit[unit] * Number(duration)}`;
+};
+harden(unitOfTimeToSec);
+
+const secToUnitOfTime = (unit, duration) => {
+    if (isNaN(duration)) return;
+    return `${Number(duration) / rentingUnit[unit]}`;
+};
+harden(secToUnitOfTime);
+
 export {
-    makeDisplayTimeHelper
+    makeDisplayTimeHelper,
+    unitOfTimeToSec,
+    secToUnitOfTime,
 };

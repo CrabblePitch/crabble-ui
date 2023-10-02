@@ -7,12 +7,12 @@ import {
 import { RentalPhase } from "../utils/constants.js";
 import WithdrawUtility from "./Withdraw/WithdrawUtility.jsx";
 import PhaseChip from "./PhaseChip.jsx";
+import { displayAmount } from "../utils/helpers.js";
 
 const RentalManager = ({ rental, onClose }) => {
     const { phase } = rental;
     const withdrawCollateralVisible = phase === RentalPhase.LIQUIDATED;
     const withdrawUtilityVisible = phase === RentalPhase.AVAILABLE;
-    const withdrawRentalFeeVisible = phase !== RentalPhase.REMOVED;
 
     return (
         <>
@@ -21,21 +21,28 @@ const RentalManager = ({ rental, onClose }) => {
                 <Stack direction="row">
                     <Stack>
                         <Typography variant='subtitle1' ml={1} sx={{ color: 'altText.main', ml: 2 }}>
-                            Rental Fee Balance
+                            Rental Balance
                         </Typography>
-                        <Typography align="center" variant='subtitle2' ml={1}
-                                    sx={{ color: 'onSurfaceTextDark.main', ml: 2 }}>
-                            100
-                        </Typography>
+                        {[...Object.entries(rental.rentalBalance)]
+                            .filter(([keyword]) => keyword !== 'Utility')
+                            .map(([keyword, amount]) => (
+                            <Typography align="center" variant='subtitle2' ml={1}
+                                        sx={{ color: 'onSurfaceTextDark.main', ml: 2 }}>
+                                {displayAmount(amount)} {keyword}
+                            </Typography>
+                        ))}
                     </Stack>
                     <Stack>
                         <Typography variant='subtitle1' ml={1} sx={{ color: 'altText.main', ml: 2 }}>
-                            Rental Fee Balance
+                            Collateral Balance
                         </Typography>
-                        <Typography align="center" variant='subtitle2' ml={1}
-                                    sx={{ color: 'onSurfaceTextDark.main', ml: 2 }}>
-                            100
-                        </Typography>
+                        {[...Object.entries(rental.collateralBalance)].map(([keyword, amount]) => (
+                            <Typography align="center" variant='subtitle2' ml={1}
+                                        sx={{ color: 'onSurfaceTextDark.main', ml: 2 }}>
+                                {displayAmount(amount)} {keyword}
+                            </Typography>
+                        ))}
+
                     </Stack>
                 </Stack>
 
@@ -44,10 +51,8 @@ const RentalManager = ({ rental, onClose }) => {
             <Stack direction="row">
                 {withdrawCollateralVisible && <WithdrawCollateralButton rental={rental} onClose={onClose}/>}
                 {withdrawUtilityVisible && <WithdrawUtility rental={rental} onClose={onClose}/>}
-                {withdrawRentalFeeVisible && <WithdrawRentalFeeButton rental={rental} onClose={onClose}/>}
+                <WithdrawRentalFeeButton rental={rental} onClose={onClose}/>
             </Stack>
-
-
         </>
     )
 };

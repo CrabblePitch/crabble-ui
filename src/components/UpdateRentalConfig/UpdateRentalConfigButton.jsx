@@ -13,9 +13,8 @@ export const UpdateRentalConfigButton = ({ rental, controllers, onClose }) => {
             checkForChange
         }
     } = controllers;
-    // TODO: to be uncommented
-    const { onStatusChange } = makeGenericOnStatusUpdate(notifyUser, onClose);
 
+    const { onStatusChange } = makeGenericOnStatusUpdate(notifyUser);
 
     const handleClick = () => {
         const overrides = buildOverrides();
@@ -43,6 +42,8 @@ export const UpdateRentalConfigButton = ({ rental, controllers, onClose }) => {
             onStatusChange,
             offerSpec.id,
         );
+
+        onClose();
     };
 
     return (

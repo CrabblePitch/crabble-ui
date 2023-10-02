@@ -1,16 +1,16 @@
 import { create } from 'zustand';
 import { AgoricChainStoragePathKind, makeAgoricChainStorageWatcher } from '@agoric/rpc';
 import { isBorrowOffer, isCreateOffer } from "../utils/helpers.js";
-import { AmountMath } from "@agoric/ertp";
 import { RentalPhase } from "../utils/constants.js";
 
 const useStore = create((set, get) => ({
-    watcher: makeAgoricChainStorageWatcher('http://localhost:26657', 'agoriclocal'),
+    watcher: makeAgoricChainStorageWatcher('https://devnet.rpc.agoric.net:443', 'agoricdev-21'),
     brands: [],
     brandToKeyword: {},
     keywordToBrand: {},
     brandToDisplayInfo: {},
     smartWalletPurses: [],
+    vbankPurses: [],
     wallet: null,
     crabbleInstance: null,
     watchedRentals: {},
@@ -28,12 +28,12 @@ const useStore = create((set, get) => ({
 
       set(() => ({ brandToKeyword, keywordToBrand, brands: brandArray}));
     },
-    updateVBank: vbankAssets => {
+    updateVBank: vbankPurses => {
+        if (!vbankPurses) return;
         const brandToDisplayInfo = {};
-        [...Object.values(vbankAssets)].
-        forEach(([_, { brand, displayInfo }]) => brandToDisplayInfo[brand] = displayInfo);
+        [...vbankPurses].forEach(({brand, displayInfo}) => brandToDisplayInfo[brand] = displayInfo);
 
-        set(() => ({ brandToDisplayInfo }));
+        set(() => ({ brandToDisplayInfo, vbankPurses }));
     },
     registerRentals: subscriberPaths => {
         const produceWatchedRentals = state => {
@@ -109,11 +109,10 @@ const useStore = create((set, get) => ({
         });
     },
     getDisplayableUtilityBrands: () => {
-        const { getUtilityBrands, brandToKeyword } = get();
-        const utilityBrands = getUtilityBrands();
+        const { vbankPurses } = get();
 
-        return [...utilityBrands]
-            .map(({ brand }) =>( { keyword: brandToKeyword[brand], brand}));
+        return [...vbankPurses]
+            .filter(({ displayInfo, brandPetname }) => displayInfo.assetKind === 'set' && brandPetname !== 'Invitation');
     },
     getKeywordFromBrand: brand => {
         const { brandToKeyword } = get();
@@ -130,6 +129,11 @@ const useStore = create((set, get) => ({
     getDisplayInfo: brand => {
         const { brandToDisplayInfo } = get();
         return brandToDisplayInfo[brand];
+    },
+    getFungibleBrands: () => {
+        const { vbankPurses } = get();
+        if (!vbankPurses) return [];
+        return vbankPurses.filter(({ displayInfo }) => displayInfo.assetKind === 'nat');
     }
 }));
 

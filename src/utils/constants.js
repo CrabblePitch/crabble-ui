@@ -35,9 +35,16 @@ const ErrorMessages = harden({
     BRAND: 'You must specify a brand!'
 });
 
+const EmptyTexts = harden({
+   CATALOG: 'Oops... Looks like noone wants to rent their NFTs at the moment',
+   OWNED_RENTALS: 'Oops... You haven\'t rented anything yet',
+   BORROWED_RENTALS: 'Oops... You haven\'t borrowed anything yet',
+});
+
 export {
     Rental_Keywords,
     RentalPhase,
     RentalConfigKeywords,
     ErrorMessages,
+    EmptyTexts,
 }

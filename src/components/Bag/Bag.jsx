@@ -2,25 +2,24 @@ import { useState } from 'react';
 import { Tabs, Box } from '@mui/material';
 import RentalModal from '../RentalModal/RentalModal.jsx';
 
-// TODO: to be removed
-import { mockUtilityData } from '../../pages/Explore/_mockUtility.js';
 import{ BagStyledTab } from "../BagTab.jsx";
 import BagInfo from "../BagInfo.jsx";
 import Grid from "@mui/material/Grid";
 import useStore from "../../store/store.js";
 import UtilityCard from "../UtilityCard.jsx";
 import ReturnUtilityCard from "../ReturnUtilityCard.jsx";
+import NothingToShow from "../NothingToShow.jsx";
+import { EmptyTexts } from "../../utils/constants.js";
 
 export const Bag = () => {
     const getOwnedRentals = useStore((state) => state.getOwnedRentals);
-    const getBorrowedRentals = useStore((state) => state.getBorrowedRentals);
     const getActiveBorrows = useStore((state) => state.getAtiveBorrows);
 
     const ownedRentals = getOwnedRentals();
-    // const borrowedRentals = getActiveBorrows();
+    const borrowedRentals = getActiveBorrows();
     //
     // const ownedRentals = mockUtilityData;
-    const borrowedRentals = mockUtilityData;
+    // const borrowedRentals = mockUtilityData;
 
     const [tabValue, setTabValue] = useState(1);
     const [activeRental, setActiveRental] = useState(false);
@@ -38,6 +37,38 @@ export const Bag = () => {
     const handleTicketClick = activeTicket => {
       setRentalDialogOpen(true);
       setActiveRental(activeTicket);
+    };
+
+    const displayOwnedRentals = () => {
+        if (ownedRentals.length === 0) {
+            return (<NothingToShow message={EmptyTexts.OWNED_RENTALS}/>)
+        }
+
+        return (
+            <Grid container spacing={2} >
+                {ownedRentals.map((data, index) => (
+                    <Grid key={`owned-${index}`} item xs={4}>
+                        <UtilityCard data={data} onCardClick={handleTicketClick} detailed={false}/>
+                    </Grid>
+                ))}
+            </Grid>
+        );
+    };
+
+    const displayBorrowedRentals = () => {
+        if (borrowedRentals.length === 0) {
+            return (<NothingToShow message={EmptyTexts.BORROWED_RENTALS}/>)
+        }
+
+        return (
+            <Grid container spacing={2}>
+                {borrowedRentals.map((data, index) => (
+                    <Grid key={`borrowed-${index}`} item xs={4}>
+                        <ReturnUtilityCard rental={data}/>
+                    </Grid>
+                ))}
+            </Grid>
+        )
     };
 
     return (
@@ -58,24 +89,8 @@ export const Bag = () => {
                         <BagStyledTab label="Borrowed" />
                     </Tabs>
                     <Box sx={{ mt: 2}}>
-                        {tabValue === 0 && (
-                            <Grid container spacing={2}>
-                                {ownedRentals.map((data, index) => (
-                                    <Grid key={`owned-${index}`} item xs={4}>
-                                        <UtilityCard data={data} onCardClick={handleTicketClick} detailed={false}/>
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        )}
-                        {tabValue === 1 && (
-                            <Grid container spacing={2}>
-                                {borrowedRentals.map((data, index) => (
-                                    <Grid key={`borrowed-${index}`} item xs={4}>
-                                        <ReturnUtilityCard rental={data}/>
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        )}
+                        {tabValue === 0 && displayOwnedRentals()}
+                        {tabValue === 1 && displayBorrowedRentals()}
                     </Box>
                 </main>
             </div>
