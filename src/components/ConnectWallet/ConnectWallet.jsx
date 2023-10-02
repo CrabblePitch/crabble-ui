@@ -22,8 +22,9 @@ export const ConnectWallet = () => {
             startIcon={<WalletOutlinedIcon />}
             onClick={connectWallet}
             color={"secondary"}
+            sx={{ textTransform: 'none'}}
         >
-            Connect Wallet
+            connect wallet
         </Button>
     );
 };

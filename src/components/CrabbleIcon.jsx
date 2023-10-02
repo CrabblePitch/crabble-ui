@@ -10,9 +10,9 @@ const CrabbleIcon = () => {
             alignItems: 'center',
             mr: 2,
         }}>
-            <SvgIcon sx={{ width: '56', height: '56', mr: 1}} component={Crabble} inheritViewBox />
+            <SvgIcon sx={{ width: '56', height: '56', mr: 2}} component={Crabble} inheritViewBox />
             <Typography variant='h6' color='primary.contrastText' sx={{ textTransform: 'none'}}>
-                CRABBLE
+                <b>crabble</b>
             </Typography>
         </Box>
     )

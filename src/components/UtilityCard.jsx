@@ -6,9 +6,9 @@ import useStore from '../store/store.js';
 
 const cardDefaults = {
     bgcolor: 'surface.main',
-    border: 1,
+    // border: 1,
     color: 'onSurface.main',
-    boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.75)',
+    // boxShadow: '0px 0px 20px 0px rgba(0,0,0,0.75)',
     width: '100%'
 };
 
