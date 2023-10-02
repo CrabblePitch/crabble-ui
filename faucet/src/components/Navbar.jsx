@@ -23,29 +23,22 @@ const Navbar = (props) => {
                   </Button>
 
                   <Button variant={'text'} >
-                      <NavLink to="/greatMonkeys">
-                          <Typography variant={'subtitle1'} color='primary.contrastText' sx={{ textTransform: 'none', fontWeight: 'bold' }}>
-                              Great Monkeys
+                      <NavLink to="/crabbleCollection">
+                          <Typography variant={'subtitle1'} color='primary.contrastText' sx={{ textTransform: 'none' }}>
+                              Crabble Collection
                           </Typography>
                       </NavLink>
                   </Button>
                   <Button variant='text'>
-                      <NavLink to="/awesomeCollection">
-                          <Typography color='primary.contrastText' sx={{ textTransform: 'none', fontWeight: 'bold'}}>
-                              Awesome Collection
-                          </Typography>
-                      </NavLink>
-                  </Button>
-                  <Button variant='text'>
-                      <NavLink to="/chainboardTicket">
-                          <Typography color='primary.contrastText' sx={{ textTransform: 'none', fontWeight: 'bold'}}>
-                              Chainboard Ticket
+                      <NavLink to="/chainboardCollection">
+                          <Typography color='primary.contrastText' sx={{ textTransform: 'none'}}>
+                              Chainboard Collection
                           </Typography>
                       </NavLink>
                   </Button>
                   <Button variant='text'>
                       <NavLink to="/crabbleIst">
-                          <Typography color='primary.contrastText' sx={{ textTransform: 'none', fontWeight: 'bold'}}>
+                          <Typography color='primary.contrastText' sx={{ textTransform: 'none'}}>
                               CrabbleIST
                           </Typography>
                       </NavLink>

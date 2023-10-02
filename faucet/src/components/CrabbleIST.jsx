@@ -19,7 +19,7 @@ const CrabbleIST = () => {
     }
 
     const handleClick = () => {
-        const offerSpec = buildMintOfferSpec(istValue, 'CrabbleIst');
+        const offerSpec = buildMintOfferSpec(istValue, 'CrabbleIST');
         console.log({ offerSpec });
 
         void wallet.makeOffer(

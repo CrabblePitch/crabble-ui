@@ -1,5 +1,4 @@
 export const tags = {
-    AwesomeCollection: new Set(['art', 'gaming']),
-    ChainboardTicket: new Set(['education', 'ticket']),
-    GreatMonkeys: new Set(['gaming', 'education', 'discount']),
+    CrabbleCollection: new Set(['art', 'gaming', 'discount']),
+    ChainboardCollection: new Set(['education', 'ticket']),
 };
