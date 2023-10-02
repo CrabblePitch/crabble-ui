@@ -18,13 +18,13 @@ export const FilterBar = ({ onFilterSelect }) => {
     return (
         <div className="filter-bar">
             <div className="filter-options">
-                {['Ticket', 'Education', 'Art', 'Gaming', 'Discount'].map((filterName) => (
+                {['tickets', 'education', 'art', 'gaming', 'discounts'].map((filterName) => (
                     <Chip
                         key={filterName}
                         label={filterName}
                         onClick={() => handleClick(filterName)}
                         color={selectedFilter === filterName ? 'secondary' : 'primary'}
-                        sx={{ p: 2, mr: 1 }}
+                        sx={{ p: 3, mr: 5, fontFamily: '"Roboto","Helvetica","Arial",sans-serif', fontSize: 26}}
                         clickable
                     />
                 ))}

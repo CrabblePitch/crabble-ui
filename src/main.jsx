@@ -27,7 +27,7 @@ const theme = createTheme({
             contrastText: '#ffdad9'
         },
         surface: {
-            main: '#2c2c44',
+            main: '#2d2842',
             contrastText: '#e5e1e6'
         },
         surfaceDark: {

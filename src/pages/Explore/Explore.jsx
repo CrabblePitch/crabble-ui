@@ -77,18 +77,15 @@ export const Explore = ({ bagOpen }) => {
                 pb: 2,
             }}
         >
-            <Typography variant="h3" align="center" m={2} color={'surface.contrastText'}>
-                Rent whatever you want
-            </Typography>
-
+        
             <Paper sx={{
                 width: '70%',
                 height: '100vh',
                 overflow: 'auto',
                 p: 2,
                 bgcolor: 'surface.main',
-                borderRadius: (theme) => theme.spacing(2),
-                boxShadow: '0px 0px 80px 0px rgba(0,0,0,0.75)'
+                // borderRadius: (theme) => theme.spacing(2),
+                // boxShadow: '0px 0px 80px 0px rgba(0,0,0,0.75)'
             }} elevation={3} className='Paper'>
                 {bagOpen ? (
                     <Bag />

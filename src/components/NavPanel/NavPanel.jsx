@@ -1,6 +1,6 @@
 import './NavPanel.scss';
 
-import { AccountCircle as AccountCircleIcon, ArrowBackIos as BackIcon } from '@mui/icons-material';
+import { AccountBoxOutlined as AccountBoxOutlined, ArrowBackIos as BackIcon } from '@mui/icons-material';
 import { NavLink } from 'react-router-dom';
 import { AppBar, Box, Button, IconButton, SvgIcon, Toolbar } from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -19,7 +19,7 @@ export const NavPanel = ({ toggleModal, toggleBag, bagOpen }) => {
                       <Button variant='contained' color={'secondary'} onClick={toggleBag}>
                           <BackIcon />
                           <Typography color='primary.contrastText' sx={{ textTransform: 'none'}}>
-                              Catalog
+                              <b>catalog</b>
                           </Typography>
                       </Button>
                   </>
@@ -29,13 +29,13 @@ export const NavPanel = ({ toggleModal, toggleBag, bagOpen }) => {
                           flexGrox: 1, mr: 2
                       }} color={'secondary'} onClick={toggleModal}>
                           <Typography color='primary.contrastText' sx={{ textTransform: 'none'}}>
-                              Rent Your NFT
+                              <b>rent yours</b>
                           </Typography>
                       </Button>
                       <Button variant='contained' color={'secondary'} onClick={toggleBag} sx={{ flexGrox: 1, backgroundColor: 'primary' }}>
-                          <AccountCircleIcon />
+                          <AccountBoxOutlined />
                           <Typography color='primary.contrastText' sx={{ textTransform: 'none', ml: 1}}>
-                              My Bag
+                              <b>on rent</b>
                           </Typography>
                       </Button>
                   </>
@@ -54,31 +54,31 @@ export const NavPanel = ({ toggleModal, toggleBag, bagOpen }) => {
                     alignItems: 'center',
                     display:'inline-flex'
                 }}>
-                    <Button variant={'text'} sx={{p: 0, m: 0}}>
+                    <Button variant={'text'} sx={{p: 0, m: 0, ml: 2}}>
                         <NavLink to="/explore">
                             <CrabbleIcon/>
                         </NavLink>
                     </Button>
 
+                    <Button variant='text'>
+                        <NavLink to="/explore">
+                            <Typography color='primary.contrastText' variant='h6' sx={{ textTransform: 'none', ml:1}}>
+                                inventory
+                            </Typography>
+                        </NavLink>
+                    </Button>
                     <Button variant={'text'} >
                         <NavLink to="/about">
-                            <Typography color='primary.contrastText' sx={{ textTransform: 'none'}}>
-                                How it works?
+                            <Typography color='primary.contrastText' variant='h6' sx={{ textTransform: 'none', ml:1}}>
+                                concept
                             </Typography>
                         </NavLink>
 
                     </Button>
                     <Button variant='text'>
-                        <NavLink to="/explore">
-                            <Typography color='primary.contrastText' sx={{ textTransform: 'none'}}>
-                                Explore
-                            </Typography>
-                        </NavLink>
-                    </Button>
-                    <Button variant='text'>
                         <NavLink to="/contact">
-                            <Typography color='primary.contrastText' sx={{ textTransform: 'none'}}>
-                                Contact Us
+                            <Typography color='primary.contrastText' variant='h6' sx={{ textTransform: 'none', ml:1}}>
+                                contacts
                             </Typography>
                         </NavLink>
                     </Button>
