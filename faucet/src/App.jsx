@@ -18,7 +18,7 @@ function App() {
     }, [watcher])
 
     return (
-        <Box sx={{ height: '100vh', bgcolor: 'surface.main', color: 'onSurfaceText.main' }}>
+        <Box sx={{ height: '100%', bgcolor: 'surface.main', color: 'onSurfaceText.main' }}>
             <BrowserRouter>
                 <Navbar />
                 <Routes>

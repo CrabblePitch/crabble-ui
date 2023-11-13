@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { makeAgoricChainStorageWatcher } from '@agoric/rpc';
 
 const useStore = create((set, get) => ({
-    watcher: makeAgoricChainStorageWatcher('https://devnet.rpc.agoric.net:443', 'agoricdev-21'),
+    watcher: makeAgoricChainStorageWatcher('http://0.0.0.0:26657', 'agoriclocal'),
     keywordToBrand: {},
     updateBrands: (brands) => {
         const keywordToBrand = {};

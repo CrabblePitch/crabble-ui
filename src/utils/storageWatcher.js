@@ -56,6 +56,9 @@ const makeStorageWatcher = () => {
             catalog => {
                 console.log('Catalog Update', catalog);
                 useStore.setState({ catalog });
+            },
+            err => {
+                console.log('Catalog Error', err)
             }
         );
     };
