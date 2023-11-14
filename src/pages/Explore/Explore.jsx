@@ -1,6 +1,6 @@
 import './Explore.scss';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FilterBar } from '../../components/FilterBar/FilterBar.jsx';
 import { Bag } from '../../components/Bag/Bag.jsx';
 import useStore from '../../store/store.js';
@@ -15,11 +15,14 @@ import { EmptyTexts } from '../../utils/constants.js';
 import { tags } from '../../utils/crabble-config.js';
 
 export const Explore = ({ bagOpen }) => {
+    useStore((state) => state.catalog);
+    // useStore((state) => state.brandToDisplayInfo);
     const getKeywordFromBrand = useStore((state) => state.getKeywordFromBrand);
-    const catalog = useStore((state) => state.catalog) || [];
+    const getCatalog = useStore((state) => state.getCatalog);
     const [activeTicket, setActiveTicket] = useState(null);
     const [borrowOpen, setBorrowOpen] = useState(false);
     const [selectedTag, setSelectedTag] = useState('-');
+    const catalog = getCatalog();
 
     const handleFilterSelect = (filter) => {
         console.log('Handling filter select:', filter);
@@ -62,7 +65,7 @@ export const Explore = ({ bagOpen }) => {
         );
     };
 
-    const availableCatalog = [...catalog].filter(({ phase }) => phase === 'available');
+    const availableCatalog = catalog ? [...catalog].filter(({ phase }) => phase === 'available') : [];
     const displayList = selectedTag === '-' ? availableCatalog : [...availableCatalog].filter(filterCallback);
 
     return (

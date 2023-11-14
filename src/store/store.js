@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { create } from 'zustand';
 import { AgoricChainStoragePathKind, makeAgoricChainStorageWatcher } from '@agoric/rpc';
 import { isBorrowOffer, isCreateOffer } from "../utils/helpers.js";
@@ -6,6 +7,7 @@ import { RentalPhase } from "../utils/constants.js";
 const useStore = create((set, get) => ({
     watcher: makeAgoricChainStorageWatcher('http://0.0.0.0:26657', 'agoriclocal'),
     brands: [],
+    catalog: {},
     brandToKeyword: {},
     keywordToBrand: {},
     brandToDisplayInfo: {},
@@ -16,27 +18,64 @@ const useStore = create((set, get) => ({
     watchedRentals: {},
     ownedRentals: {},
     borrowedRentals: {},
-    notifierState: { open: false, severity: '', message: ''},
+    notifierState: { open: false, severity: '', message: '' },
     updateBrands: (brandArray) => {
-      const brandToKeyword = {};
-      const keywordToBrand = {};
+        const brandToKeyword = {};
+        const keywordToBrand = {};
 
-      [...brandArray].forEach(([keyword, brand]) => {
-          brandToKeyword[brand] = keyword;
-          keywordToBrand[keyword] = brand;
-      });
+        [...brandArray].forEach(([keyword, brand]) => {
+            brandToKeyword[brand] = keyword;
+            keywordToBrand[keyword] = brand;
+        });
 
-      set(() => ({ brandToKeyword, keywordToBrand, brands: brandArray}));
+        set(() => ({ brandToKeyword, keywordToBrand, brands: brandArray }));
     },
     updateVBank: vbankPurses => {
         if (!vbankPurses) return;
         const brandToDisplayInfo = {};
-        [...vbankPurses].forEach(({brand, displayInfo}) => brandToDisplayInfo[brand] = displayInfo);
+        [...vbankPurses].forEach(({ brand, displayInfo }) => brandToDisplayInfo[brand] = displayInfo);
 
         set(() => ({ brandToDisplayInfo, vbankPurses }));
     },
-    registerRentals: subscriberPaths => {
+    registerRentals: paths => {
         const produceWatchedRentals = state => {
+            const newWatchedRentals = {};
+            // We filter out the paths we already registered along with the special 'governance' path
+            [...paths].filter(path => path !== 'governance' && !state.watchedRentals.hasOwnProperty(path))
+                .forEach(path => {
+                    const stopWatching = state.watcher.watchLatest(
+                        [AgoricChainStoragePathKind.Data, `published.crabble.${path}`],
+                        rental => state.updateRental(rental, path),
+                        error => {
+                            console.error(`Error when fetching ${path}: `, error);
+                        }
+                    );
+                    newWatchedRentals[path] = stopWatching;
+                    console.log('PATHS', path);
+                    console.log('Stop', stopWatching);
+                });
+            console.log('NEW_WATCHED_RENTALS', { newWatchedRentals })
+            return newWatchedRentals;
+        };
+
+        set(state => ({ watchedRentals: { ...state.watchedRentals, ...produceWatchedRentals(state) } }));
+        /**
+         * Stop watching if removed
+         * Update catalog for other cases
+         * Update owned rentals if rental is owned
+         * Update borrowed rentals if rental is borrowed
+         */
+
+
+    },
+    updateRental: (rental, path) => {
+        const { watchedRentals } = get();
+        stopIfPhaseMatches(watchedRentals[path], () => rental.phase === 'removed');
+        console.log('Watched Rentals', watchedRentals);
+        set(state => ({ catalog: { ...state.catalog, [path]: rental } }));
+    },
+    registerRentalsLeg: subscriberPaths => {
+        const produceWatchedRentalsLeg = state => {
             let newWatchedRentals = {};
             [...subscriberPaths].filter(
                 ([id]) => !state.watchedRentals.hasOwnProperty(id)
@@ -58,7 +97,7 @@ const useStore = create((set, get) => ({
         }
 
         set(state => ({
-            watchedRentals: { ...state.watchedRentals, ...produceWatchedRentals(state) }
+            watchedRentals: { ...state.watchedRentals, ...produceWatchedRentalsLeg(state) }
         }));
     },
     updateOwnedRentals: (id, rental) => {
@@ -75,6 +114,10 @@ const useStore = create((set, get) => ({
             borrowedRentals: { ...state.borrowedRentals, [id]: rental }
         }));
     },
+    getCatalog: () => {
+        const { catalog } = get();
+        return [...Object.entries(catalog)].map(([_, rental]) => rental);
+    },
     getOwnedRentals: () => {
         return [...Object.entries(get().ownedRentals)]
             .map(([id, rental]) => ({ id, ...rental }));
@@ -89,13 +132,13 @@ const useStore = create((set, get) => ({
             .map(([id, rental]) => ({ id, ...rental }));
     },
     notifyUser: (severity, message) => {
-        set( () => ({
+        set(() => ({
             notifierState: { open: true, severity, message }
         }));
     },
     closeNotifier: () => {
-        set( () => ({
-            notifierState: { open: false, severity: '', message: ''}
+        set(() => ({
+            notifierState: { open: false, severity: '', message: '' }
         }));
     },
     getUtilityBrands: () => {
@@ -104,15 +147,18 @@ const useStore = create((set, get) => ({
             if (balance.value.length <= 0) {
                 return false;
             }
-           const value = balance.value[0];
-           return value && typeof value !== 'bigint';
+            const value = balance.value[0];
+            return value && typeof value !== 'bigint';
         });
     },
     getDisplayableUtilityBrands: () => {
         const { vbankPurses } = get();
 
         return [...vbankPurses]
-            .filter(({ displayInfo, brandPetname }) => displayInfo.assetKind === 'set' && brandPetname !== 'Invitation');
+            .filter(({
+                         displayInfo,
+                         brandPetname
+                     }) => displayInfo.assetKind === 'set' && brandPetname !== 'Invitation');
     },
     getKeywordFromBrand: brand => {
         const { brandToKeyword } = get();

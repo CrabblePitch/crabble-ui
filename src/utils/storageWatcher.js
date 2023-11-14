@@ -10,7 +10,7 @@ const makeStorageWatcher = () => {
             [AgoricChainStoragePathKind.Data, `published.wallet.${wallet.address}.current`],
             smartWalletData => {
                 console.log('SmartWallet Update', smartWalletData);
-                registerRentals(smartWalletData.offerToPublicSubscriberPaths);
+                // registerRentals(smartWalletData.offerToPublicSubscriberPaths);
                 useStore.setState({
                     smartWalletPurses: smartWalletData.purses
                 });
@@ -63,6 +63,20 @@ const makeStorageWatcher = () => {
         );
     };
 
+    const watchCrabbleChildren = () => {
+        watcher.watchLatest(
+            [AgoricChainStoragePathKind.Children, 'published.crabble'],
+            children => {
+                console.log('Children Update', children);
+                registerRentals(children);
+            },
+            err => {
+                console.log('Children Error', err)
+            }
+        );
+    };
+
+
     const startWatching = () => {
         if (!watcher) return;
 
@@ -73,7 +87,7 @@ const makeStorageWatcher = () => {
 
         watchBrands();
         watchInstances();
-        watchCatalog();
+        watchCrabbleChildren();
     };
 
     return { startWatching };
