@@ -24,7 +24,7 @@ export const FilterBar = ({ onFilterSelect }) => {
                         label={filterName}
                         onClick={() => handleClick(filterName)}
                         color={selectedFilter === filterName ? 'secondary' : 'primary'}
-                        sx={{ p: 3, mr: 5, fontFamily: '"Roboto","Helvetica","Arial",sans-serif', fontSize: 26}}
+                        sx={{ p: 2, mr: 5, fontFamily: '"Roboto","Helvetica","Arial",sans-serif', fontSize: 24}}
                         clickable
                     />
                 ))}

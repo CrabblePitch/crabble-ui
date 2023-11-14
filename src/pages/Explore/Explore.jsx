@@ -83,13 +83,12 @@ export const Explore = ({ bagOpen }) => {
         
             <Paper sx={{
                 width: '70%',
-                height: '100vh',
-                overflow: 'auto',
                 p: 2,
                 bgcolor: 'surface.main',
+                mt: 4,
                 // borderRadius: (theme) => theme.spacing(2),
                 // boxShadow: '0px 0px 80px 0px rgba(0,0,0,0.75)'
-            }} elevation={3} className='Paper'>
+            }} elevation={6} className='Paper'>
                 {bagOpen ? (
                     <Bag />
                 ) : (

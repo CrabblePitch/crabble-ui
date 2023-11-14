@@ -72,7 +72,7 @@ export const Bag = () => {
     };
 
     return (
-        <Box sx={{ height: '100vh', overflow: 'auto', p: 2}}>
+        <Box sx={{ p: 2}}>
             <div>
                 <BagInfo></BagInfo>
                 <main>

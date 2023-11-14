@@ -19,7 +19,7 @@ export const App = () => {
 
     return (
         <>
-            <Box sx={{ height: '100%', bgcolor: 'surface.main' }} className='APP'>
+            <Box sx={{ height: '100%', bgcolor: 'surface.main', overflow: 'auto' }} className='APP'>
                 {/*{!wallet && <ConnectWallet/>}*/}
                 {/*{wallet && <Home/>}*/}
                 <Home/>
