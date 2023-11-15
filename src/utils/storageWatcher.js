@@ -3,17 +3,23 @@ import { AgoricChainStoragePathKind } from "@agoric/rpc";
 import { subscribeLatest } from "@agoric/notifier";
 
 const makeStorageWatcher = () => {
-    const { watcher, wallet, registerRentals, updateBrands, updateVBank } = useStore.getState();
+    const {
+        watcher,
+        wallet,
+        crabbleInstance,
+        registerRentals,
+        updateBrands,
+        updateVBank,
+        updateBrandToDisplayInfo,
+        updateSmartWallet,
+    } = useStore.getState();
 
     const watchSmartWallet = () => {
         watcher.watchLatest(
             [AgoricChainStoragePathKind.Data, `published.wallet.${wallet.address}.current`],
             smartWalletData => {
                 console.log('SmartWallet Update', smartWalletData);
-                // registerRentals(smartWalletData.offerToPublicSubscriberPaths);
-                useStore.setState({
-                    smartWalletPurses: smartWalletData.purses
-                });
+                updateSmartWallet(smartWalletData);
             },
             log => {
                 console.log('ERROR: Watching smart wallet purses', log);
@@ -31,9 +37,9 @@ const makeStorageWatcher = () => {
     const watchBrands = () => {
         watcher.watchLatest(
             [AgoricChainStoragePathKind.Data, 'published.agoricNames.brand'],
-            brands => {
+            async brands => {
                 console.log('Brand Update', brands);
-                updateBrands(brands);
+                await updateBrands(brands);
             }
         );
     };
@@ -46,19 +52,6 @@ const makeStorageWatcher = () => {
                 useStore.setState({
                     crabbleInstance: instances.find(([name]) => name === 'Crabble')?.at(1),
                 })
-            }
-        );
-    };
-
-    const watchCatalog = () => {
-        watcher.watchLatest(
-            [AgoricChainStoragePathKind.Data, 'published.crabble.Catalog'],
-            catalog => {
-                console.log('Catalog Update', catalog);
-                useStore.setState({ catalog });
-            },
-            err => {
-                console.log('Catalog Error', err)
             }
         );
     };
@@ -76,6 +69,29 @@ const makeStorageWatcher = () => {
         );
     };
 
+    const watchBoardAux = () => {
+        watcher.watchLatest(
+            [AgoricChainStoragePathKind.Children, 'published.boardAux'],
+            children => {
+                console.log('Children Update', children);
+                updateBrandToDisplayInfo(children);
+            },
+            err => {
+                console.log('Children Error', err)
+            }
+        );
+    };
+
+    const queryCrabbleInstance = async () => {
+        const instances = await watcher.queryOnce([
+            AgoricChainStoragePathKind.Data,
+            `published.agoricNames.instance`]);
+        const [, crabbleInstance] = [...instances].find(([name]) => name === 'Crabble');
+        console.log('Crabble Instance: ', crabbleInstance);
+        useStore.setState({
+            crabbleInstance
+        });
+    };
 
     const startWatching = () => {
         if (!watcher) return;
@@ -85,9 +101,16 @@ const makeStorageWatcher = () => {
             watchVBankPurses().catch(err => console.log('ERROR', err));
         }
 
+        if (!crabbleInstance) {
+            queryCrabbleInstance()
+                .then(() => console.log('Done fetching crabbleInstance'))
+                .catch(e => console.error('Done fetching crabbleInstance: ', e));
+        }
+
         watchBrands();
         watchInstances();
         watchCrabbleChildren();
+        watchBoardAux();
     };
 
     return { startWatching };

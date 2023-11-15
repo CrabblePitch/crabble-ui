@@ -16,7 +16,7 @@ import { tags } from '../../utils/crabble-config.js';
 
 export const Explore = ({ bagOpen }) => {
     useStore((state) => state.catalog);
-    // useStore((state) => state.brandToDisplayInfo);
+    useStore((state) => state.brandToDisplayInfo);
     const getKeywordFromBrand = useStore((state) => state.getKeywordFromBrand);
     const getCatalog = useStore((state) => state.getCatalog);
     const [activeTicket, setActiveTicket] = useState(null);

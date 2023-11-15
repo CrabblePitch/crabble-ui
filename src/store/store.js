@@ -7,6 +7,8 @@ import { RentalPhase } from "../utils/constants.js";
 const useStore = create((set, get) => ({
     watcher: makeAgoricChainStorageWatcher('http://0.0.0.0:26657', 'agoriclocal'),
     brands: [],
+    boardAuxChildren: [],
+    crabbleOffers: [],
     catalog: {},
     brandToKeyword: {},
     keywordToBrand: {},
@@ -35,7 +37,26 @@ const useStore = create((set, get) => ({
         const brandToDisplayInfo = {};
         [...vbankPurses].forEach(({ brand, displayInfo }) => brandToDisplayInfo[brand] = displayInfo);
 
-        set(() => ({ brandToDisplayInfo, vbankPurses }));
+        set(() => ({ vbankPurses }));
+    },
+    updateBrandToDisplayInfo: async boardAuxChildren => {
+        const { watcher, keywordToBrand } = get();
+        const brandToDisplayInfo = {};
+        try {
+            const queries = [...boardAuxChildren].map(id => watcher.queryOnce([
+                AgoricChainStoragePathKind.Data,
+                `published.boardAux.${id}`,
+            ]));
+            const results = await Promise.all(queries);
+            [...results].forEach(({ allegedName, displayInfo }) => {
+                const brand = keywordToBrand[allegedName];
+                brandToDisplayInfo[brand] = displayInfo;
+            });
+            console.log('Results', { results });
+            set(() => ({ brandToDisplayInfo }))
+        } catch (e) {
+            console.log('Error fetching boardAux', e);
+        }
     },
     registerRentals: paths => {
         const produceWatchedRentals = state => {
@@ -59,15 +80,13 @@ const useStore = create((set, get) => ({
         };
 
         set(state => ({ watchedRentals: { ...state.watchedRentals, ...produceWatchedRentals(state) } }));
-        /**
-         * Stop watching if removed
-         * Update catalog for other cases
-         * Update owned rentals if rental is owned
-         * Update borrowed rentals if rental is borrowed
-         */
-
-
     },
+    /**
+     * Stop watching if removed
+     * Update catalog for other cases
+     * Update owned rentals if rental is owned
+     * Update borrowed rentals if rental is borrowed
+     */
     updateRental: (rental, path) => {
         const { watchedRentals } = get();
         stopIfPhaseMatches(watchedRentals[path], () => rental.phase === 'removed');
@@ -114,22 +133,40 @@ const useStore = create((set, get) => ({
             borrowedRentals: { ...state.borrowedRentals, [id]: rental }
         }));
     },
+    updateSmartWallet: smartWalletData => {
+        const { crabbleInstance } = get();
+        console.log('Crabble Instance', crabbleInstance);
+        const { purses, offerToUsedInvitation, offerToPublicSubscriberPaths } = smartWalletData;
+        const pathEntries = Object.fromEntries(offerToPublicSubscriberPaths);
+
+        const crabbleOffers = [...offerToUsedInvitation].filter(([,invitation]) => {
+           const { value: [{
+               instance
+           }]} = invitation;
+
+           return instance === crabbleInstance;
+        }).map(([id]) => {
+            return [pathEntries[id].rental, { id, type: isCreateOffer(id) ? 'owned' : (isBorrowOffer(id) ? 'borrowed' : 'error') }]
+        });
+
+        console.log('Crabble Offers', { crabbleOffers });
+        set(() => ({ crabbleOffers, purses }));
+    },
     getCatalog: () => {
         const { catalog } = get();
         return [...Object.entries(catalog)].map(([_, rental]) => rental);
     },
     getOwnedRentals: () => {
-        return [...Object.entries(get().ownedRentals)]
-            .map(([id, rental]) => ({ id, ...rental }));
+        const { crabbleOffers, catalog } = get();
+        return getUserRentalByType(crabbleOffers, catalog, 'owned');
     },
     getBorrowedRentals: () => {
-        return [...Object.entries(get().borrowedRentals)]
-            .map(([id, rental]) => ({ id, ...rental }));
+        const { crabbleOffers, catalog } = get();
+        return getUserRentalByType(crabbleOffers, catalog, 'borrowed');
     },
-    getAtiveBorrows: () => {
-        return [...Object.entries(get().borrowedRentals)]
-            .filter(([_, rental]) => rental.phase === RentalPhase.RENTED || rental.phase === RentalPhase.GRACE_PERIOD)
-            .map(([id, rental]) => ({ id, ...rental }));
+    getActiveBorrows: () => {
+        const { crabbleOffers, catalog } = get();
+        return getUserRentalByType(crabbleOffers, catalog, 'borrowed').filter(({ configuration: rental }) => rental.phase === RentalPhase.RENTED || rental.phase === RentalPhase.GRACE_PERIOD);
     },
     notifyUser: (severity, message) => {
         set(() => ({
@@ -165,11 +202,13 @@ const useStore = create((set, get) => ({
         return brandToKeyword[brand];
     },
     getRentalBalances: () => {
-        const { ownedRentals } = get();
+        const { getOwnedRentals } = get();
+        const ownedRentals = getOwnedRentals();
         return [...Object.values(ownedRentals)].map(value => [...Object.entries(value.rentalBalance)]).flat()
     },
     getCollateralBalances: () => {
-        const { ownedRentals } = get();
+        const { getOwnedRentals } = get();
+        const ownedRentals = getOwnedRentals();
         return [...Object.values(ownedRentals)].map(value => [...Object.entries(value.collateralBalance)]).flat()
     },
     getDisplayInfo: brand => {
@@ -188,6 +227,12 @@ const stopIfPhaseMatches = (stopWatching, phaseChecker) => {
         console.log('stopping')
         stopWatching()
     }
+};
+
+const getUserRentalByType = (crabbleOffers, catalog, wantedType) => {
+    return [...crabbleOffers]
+        .filter(([path, { type }]) => type === wantedType && catalog[path.split('.').pop()])
+        .map(([path, { id }]) => ({ id, ...catalog[path.split('.').pop()] }));
 };
 
 export default useStore;

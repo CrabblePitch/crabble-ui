@@ -12,8 +12,9 @@ import NothingToShow from "../NothingToShow.jsx";
 import { EmptyTexts } from "../../utils/constants.js";
 
 export const Bag = () => {
+    useStore(state => state.crabbleOffers);
     const getOwnedRentals = useStore((state) => state.getOwnedRentals);
-    const getActiveBorrows = useStore((state) => state.getAtiveBorrows);
+    const getActiveBorrows = useStore((state) => state.getActiveBorrows);
 
     const ownedRentals = getOwnedRentals();
     const borrowedRentals = getActiveBorrows();

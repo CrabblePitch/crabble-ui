@@ -29,12 +29,13 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
 
     useEffect(() => {
         if (!rentalData) return;
-        setRentinDuration(String(rentalData.minRentingDurationUnits));
+        setRentinDuration(String(rentalData.configuration.minRentingDurationUnits));
     }, [rentalData]);
 
     if (!rentalData) return;
+    const { configuration: rentalConfig } = rentalData;
 
-    const timeHelper = makeDisplayTimeHelper(rentalData);
+    const timeHelper = makeDisplayTimeHelper(rentalConfig);
 
     const handleBorrowClick = () => {
         if (!validate()) {
@@ -42,7 +43,11 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
             return;
         }
 
-        const offerSpec = buildBorrowAdHocOfferSpec({ ...rentalData, rentingDuration });
+        const offerSpec = buildBorrowAdHocOfferSpec({
+            ...rentalConfig,
+            rentingDuration,
+            rentalHandle: rentalData.rentalHandle
+        });
         console.log('Offer Spec', { offerSpec });
 
         console.log({ offerSpec });
@@ -58,14 +63,23 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
     };
 
     const handleClose = () => {
-        setRentinDuration(String(rentalData.minRentingDurationUnits));
+        setRentinDuration(String(rentalConfig.minRentingDurationUnits));
         onClose();
+    };
+
+    const handleRentingDurationInput = str => {
+        if (!str) {
+            setRentinDuration('0');
+            return;
+        }
+
+        setRentinDuration(`${parseInt(str)}`);
     };
 
     const calculateRentinFee = () => {
         if (!isNumeric(rentingDuration)) return '';
-        const total = BigInt(Number(rentingDuration) * getValueFromNat(rentalData.rentalFeePerUnitAmount));
-        return AmountMath.make(rentalData.rentalFeePerUnitAmount.brand, total);
+        const total = BigInt(Number(rentingDuration) * getValueFromNat(rentalConfig.rentalFeePerUnitAmount));
+        return AmountMath.make(rentalConfig.rentalFeePerUnitAmount.brand, total);
     };
 
     const { validate } = makeRentalConfigValidator(errors, setErrors, configuration);
@@ -85,7 +99,7 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
             maxWidth="md"
             fullWidth
         >
-            <ModalTitleBar text={`Borrow ${rentalData.utilityTitle}`} />
+            <ModalTitleBar text={`Borrow ${rentalConfig.utilityTitle}`} />
             <DialogContent
                 sx={{
                     color: 'onSurfaceText.main',
@@ -95,7 +109,7 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
                 }}
             >
                 <Stack flex={2}>
-                    <DisplayUtility rental={{ configuration: rentalData }} />
+                    <DisplayUtility rental={{ configuration: rentalConfig }} />
                 </Stack>
 
                 <Stack flex={3} justifyContent={'space-between'}>
@@ -105,8 +119,8 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
                                 How long you'll be renting?
                             </Typography>
                             <TextInput
-                                onChange={setRentinDuration}
-                                name={`Renting Duration in ${rentalData.rentingDurationUnit}s`}
+                                onChange={handleRentingDurationInput}
+                                name={`Renting Duration in ${rentalConfig.rentingDurationUnit}s`}
                                 current={rentingDuration}
                                 error={{ value: errors.rentingDuration, text: ErrorMessages.NUMERIC }}
                             />
@@ -121,14 +135,14 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
                             <Stack direction="row" justifyContent={'space-between'} sx={{ mt: 1 }}>
                                 <Typography variant="subtitle1">Collateral</Typography>
                                 <Typography variant="subtitle2">{`${displayAmount(
-                                    rentalData.collateralAmount,
-                                )} ${getKeywordFromBrand(rentalData.collateralAmount.brand)}`}</Typography>
+                                    rentalConfig.collateralAmount,
+                                )} ${getKeywordFromBrand(rentalConfig.collateralAmount.brand)}`}</Typography>
                             </Stack>
                             <Stack direction="row" justifyContent={'space-between'}>
                                 <Typography variant="subtitle1">Rental Fee</Typography>
                                 <Typography variant="subtitle2">{`${displayAmount(
                                     calculateRentinFee(),
-                                )} ${getKeywordFromBrand(rentalData.rentalFeePerUnitAmount.brand)}`}</Typography>
+                                )} ${getKeywordFromBrand(rentalConfig.rentalFeePerUnitAmount.brand)}`}</Typography>
                             </Stack>
                         </Stack>
 
@@ -141,7 +155,7 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
                             <Stack direction="row" justifyContent={'flex-start'} sx={{ mt: 2 }}>
                                 <InfoOutlinedIcon sx={{ mr: 1 }} />
                                 <Typography variant="subtitle2">
-                                    You will rent {rentalData.utilityTitle} until{' '}
+                                    You will rent {rentalConfig.utilityTitle} until{' '}
                                     {timeHelper.getRentingEnd(rentingDuration)} for{' '}
                                     {timeHelper.rentingDurationToHumanReadable(rentingDuration)}
                                 </Typography>
@@ -149,7 +163,7 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
                             <Stack direction="row" justifyContent={'flex-start'} sx={{ mt: 1 }}>
                                 <InfoOutlinedIcon sx={{ mr: 1 }} />
                                 <Typography variant="subtitle2">
-                                    You must return {rentalData.utilityTitle} between{' '}
+                                    You must return {rentalConfig.utilityTitle} between{' '}
                                     {timeHelper.getRentingEnd(rentingDuration)} and{' '}
                                     {timeHelper.getLiquidateAt(rentingDuration)}
                                 </Typography>
@@ -157,7 +171,7 @@ const BorrowRentalDialog = ({ open, rentalData, onClose }) => {
                             <Stack direction="row" justifyContent={'flex-start'} sx={{ mt: 1 }}>
                                 <InfoOutlinedIcon sx={{ mr: 1 }} />
                                 <Typography variant="subtitle2">
-                                    You will lose you collateral if you don't return {rentalData.utilityTitle} before{' '}
+                                    You will lose you collateral if you don't return {rentalConfig.utilityTitle} before{' '}
                                     {timeHelper.getLiquidateAt(rentingDuration)}
                                 </Typography>
                             </Stack>

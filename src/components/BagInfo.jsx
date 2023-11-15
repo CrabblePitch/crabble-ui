@@ -29,7 +29,7 @@ const mergeRentalBalances = (rentalBalances, policy = AssetKind.NAT) => {
 const BagInfo = () => {
     const wallet = useStore(state => state.wallet);
     const getOwnedRentals = useStore(state => state.getOwnedRentals);
-    const getActibeBorrows = useStore(state => state.getAtiveBorrows);
+    const getActibeBorrows = useStore(state => state.getActiveBorrows);
     const getRentalBalances = useStore(state => state.getRentalBalances);
     const getCollateralBalances = useStore(state => state.getCollateralBalances);
 
@@ -78,8 +78,8 @@ const BagInfo = () => {
                     </Typography>
                     <Divider sx={{ color: 'line' }}/>
                     <Box sx={{ maxHeight: 100, overflow: 'auto' }}>
-                        {[...mergedRentalBalances].map(([keyword, amount]) => (
-                            <Box sx={{
+                        {[...mergedRentalBalances].map(([keyword, amount], index) => (
+                            <Box key={`rental-balance-${index}`} sx={{
                                 display: 'flex',
                                 flexDirection: 'row',
                                 alignItems: 'center',
@@ -103,8 +103,8 @@ const BagInfo = () => {
                     </Typography>
                     <Divider sx={{ color: 'line' }}/>
                     <Box sx={{ maxHeight: 100, overflow: 'auto' }}>
-                        {[...mergedCollateralBalances].map(([keyword, amount]) => (
-                            <Box sx={{
+                        {[...mergedCollateralBalances].map(([keyword, amount], index) => (
+                            <Box key={`collateral-balance-${index}`} sx={{
                                 display: 'flex',
                                 flexDirection: 'row',
                                 alignItems: 'center',
