@@ -150,7 +150,7 @@ const useStore = create((set, get) => ({
         });
 
         console.log('Crabble Offers', { crabbleOffers });
-        set(() => ({ crabbleOffers, purses }));
+        set(() => ({ crabbleOffers, smartWalletPurses: purses }));
     },
     getCatalog: () => {
         const { catalog } = get();
@@ -166,7 +166,8 @@ const useStore = create((set, get) => ({
     },
     getActiveBorrows: () => {
         const { crabbleOffers, catalog } = get();
-        return getUserRentalByType(crabbleOffers, catalog, 'borrowed').filter(({ configuration: rental }) => rental.phase === RentalPhase.RENTED || rental.phase === RentalPhase.GRACE_PERIOD);
+        return getUserRentalByType(crabbleOffers, catalog, 'borrowed')
+            .filter(({ phase }) => phase === RentalPhase.RENTED || phase === RentalPhase.GRACE_PERIOD);
     },
     notifyUser: (severity, message) => {
         set(() => ({

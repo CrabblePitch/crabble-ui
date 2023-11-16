@@ -30,9 +30,9 @@ export const Explore = ({ bagOpen }) => {
     };
 
     const filterCallback = item => {
-        const keyword = getKeywordFromBrand(item.utilityAmount.brand);
+        const keyword = getKeywordFromBrand(item.configuration.utilityAmount.brand);
         if (!keyword) {
-            console.warn('Unknown brand:', item.utilityAmount.brand);
+            console.warn('Unknown brand:', item.configuration.utilityAmount.brand);
             return false;
         }
         const tagSet = tags[keyword];

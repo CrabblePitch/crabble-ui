@@ -4,7 +4,7 @@ import Grid from "@mui/material/Grid";
 import { AccountCircle } from "@mui/icons-material";
 import useStore from "../store/store.js";
 import { AmountMath, AssetKind } from "@agoric/ertp";
-import { displayAmount, isSet } from "../utils/helpers.js";
+import { displayAmount, filterActiveRentals, isSet } from "../utils/helpers.js";
 
 const mergeRentalBalances = (rentalBalances, policy = AssetKind.NAT) => {
     const mergedBalances = new Map();
@@ -28,15 +28,16 @@ const mergeRentalBalances = (rentalBalances, policy = AssetKind.NAT) => {
 
 const BagInfo = () => {
     const wallet = useStore(state => state.wallet);
+    useStore(state => state.catalog);
     const getOwnedRentals = useStore(state => state.getOwnedRentals);
-    const getActibeBorrows = useStore(state => state.getActiveBorrows);
+    const getActiveBorrows = useStore(state => state.getActiveBorrows);
     const getRentalBalances = useStore(state => state.getRentalBalances);
     const getCollateralBalances = useStore(state => state.getCollateralBalances);
 
-    if(!wallet || !getActibeBorrows) return;
+    if(!wallet || !getActiveBorrows) return;
 
     const ownedRentals = getOwnedRentals() || [];
-    const borrowedRentals = getActibeBorrows() || [];
+    const borrowedRentals = getActiveBorrows() || [];
 
     const rentalBalances = getRentalBalances();
     const collateralBalances = getCollateralBalances();
@@ -60,7 +61,7 @@ const BagInfo = () => {
                     </Typography>
                     <Divider sx={{ color: 'line' }}/>
                     <Typography variant='subtitle2' ml={1} sx={{ color: (theme) => theme.palette.line.main, ml: 2 }}>
-                        {ownedRentals.length}
+                        {filterActiveRentals(ownedRentals).length}
                     </Typography>
                 </Grid>
                 <Grid item xs={2} mt={2}>

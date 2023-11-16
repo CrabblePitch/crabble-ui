@@ -1,6 +1,6 @@
 import useStore from '../store/store.js';
 import { AmountMath } from "@agoric/ertp";
-import { Rental_Keywords, RentalConfigKeywords } from "./constants.js";
+import { Rental_Keywords, RentalConfigKeywords, RentalPhase } from "./constants.js";
 import { stringifyValue } from "@agoric/ui-components";
 
 const getBrand = (brandPetname) => {
@@ -397,6 +397,10 @@ const displayAmount = amount => {
     return stringifyValue(value, assetKind, decimalPlaces);
 };
 
+const filterActiveRentals = rentals => {
+    return [...rentals].filter(({ phase }) => phase !== RentalPhase.REMOVED);
+};
+
 export {
     getBrand,
     getPurseFromSmartWallet,
@@ -418,4 +422,5 @@ export {
     isNumeric,
     isSet,
     displayAmount,
+    filterActiveRentals,
 };
