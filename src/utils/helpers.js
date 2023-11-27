@@ -2,6 +2,7 @@ import useStore from '../store/store.js';
 import { AmountMath } from "@agoric/ertp";
 import { Rental_Keywords, RentalConfigKeywords, RentalPhase } from "./constants.js";
 import { stringifyValue } from "@agoric/ui-components";
+import { networkConfigs } from "../../config.js";
 
 const getBrand = (brandPetname) => {
     const { brands } = useStore.getState();
@@ -401,6 +402,12 @@ const filterActiveRentals = rentals => {
     return [...rentals].filter(({ phase }) => phase !== RentalPhase.REMOVED);
 };
 
+const getNetworkHref = () => {
+    // eslint-disable-next-line no-undef
+    const network = import.meta.env.VITE_CRABBLE_NETWORK || 'localhost';
+    return networkConfigs[network].url;
+};
+
 export {
     getBrand,
     getPurseFromSmartWallet,
@@ -423,4 +430,5 @@ export {
     isSet,
     displayAmount,
     filterActiveRentals,
+    getNetworkHref,
 };

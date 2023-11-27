@@ -5,7 +5,7 @@ import { isBorrowOffer, isCreateOffer } from "../utils/helpers.js";
 import { RentalPhase } from "../utils/constants.js";
 
 const useStore = create((set, get) => ({
-    watcher: makeAgoricChainStorageWatcher('http://0.0.0.0:26657', 'agoriclocal'),
+    watcher: null,
     brands: [],
     boardAuxChildren: [],
     crabbleOffers: [],
@@ -21,6 +21,10 @@ const useStore = create((set, get) => ({
     ownedRentals: {},
     borrowedRentals: {},
     notifierState: { open: false, severity: '', message: '' },
+    setWatcher: (rpcAddr, chainId) => {
+        const watcher = makeAgoricChainStorageWatcher(rpcAddr, chainId);
+        set(() => ({ watcher }));
+    },
     updateBrands: (brandArray) => {
         const brandToKeyword = {};
         const keywordToBrand = {};

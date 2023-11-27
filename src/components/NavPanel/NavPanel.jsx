@@ -2,7 +2,7 @@ import './NavPanel.scss';
 
 import { AccountBoxOutlined as AccountBoxOutlined, ArrowBackIos as BackIcon } from '@mui/icons-material';
 import { NavLink } from 'react-router-dom';
-import { AppBar, Box, Button, IconButton, SvgIcon, Toolbar } from "@mui/material";
+import { AppBar, Box, Button, Toolbar } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import CrabbleIcon from "../CrabbleIcon.jsx";
 import useStore from "../../store/store.js";
