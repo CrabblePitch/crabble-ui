@@ -36,7 +36,7 @@ const CrabbleIST = () => {
         <Box sx={{width: 1, height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}} >
             <Stack sx={{mb: 32}} alignItems={"center"}>
                 <Typography variant={"h5"} color={"onSurfaceText"}>
-                    Mint some CrabbleIst to spend on Crabble!
+                    Mint some CrabbleIST to spend on Crabble!
                 </Typography>
                 <Input
                     value={stringifyValue(istValue, AssetKind.NAT, 6)}

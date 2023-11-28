@@ -10,7 +10,7 @@ export const UtilityCard = ({ data, keyword }) => {
     const onStatusChange = makeOnStatusChange(notifyUser);
 
     const handleClick = () => {
-        const offerSpec = buildMintOfferSpec(harden([data]), keyword);
+        const offerSpec = buildMintOfferSpec(harden([{ ...data, timestamp: Date.now() }]), keyword);
         console.log({ offerSpec });
 
         void wallet.makeOffer(

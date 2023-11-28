@@ -2,8 +2,12 @@ import { create } from 'zustand';
 import { makeAgoricChainStorageWatcher } from '@agoric/rpc';
 
 const useStore = create((set, get) => ({
-    watcher: makeAgoricChainStorageWatcher('http://0.0.0.0:26657', 'agoriclocal'),
+    watcher: null,
     keywordToBrand: {},
+    setWatcher: (rpcAddr, chainId) => {
+        const watcher = makeAgoricChainStorageWatcher(rpcAddr, chainId);
+        set(() => ({ watcher }));
+    },
     updateBrands: (brands) => {
         const keywordToBrand = {};
         [...brands].forEach(([keyword, brand]) => keywordToBrand[keyword] = brand);

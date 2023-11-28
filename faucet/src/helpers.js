@@ -1,6 +1,7 @@
 import { AmountMath } from "@agoric/ertp";
 import useStore from "./store.js";
 import { AgoricChainStoragePathKind } from "@agoric/rpc";
+import { networkConfigs } from "../../config.js";
 
 const buildMintOfferSpec = (value, keyword) => {
     const { wallet, getBrand } = useStore.getState();
@@ -86,8 +87,20 @@ const makeOnStatusChange = notifyUser => {
 };
 harden(makeOnStatusChange);
 
+const getNetworkHref = () => {
+    // eslint-disable-next-line no-undef
+    const network = import.meta.env.VITE_CRABBLE_NETWORK || 'localhost';
+    return networkConfigs[network].url;
+};
+
+const shuffle = array => {
+    return array.sort(() => Math.random() - 0.5);
+};
+
 export {
     buildMintOfferSpec,
     makeStorageWatcher,
     makeOnStatusChange,
+    getNetworkHref,
+    shuffle,
 }
