@@ -197,10 +197,13 @@ const buildWithdrawCollateralOfferSpec = rental => {
 harden(buildWithdrawUtilityOfferSpec);
 
 const buildWithdrawRentalFeeOfferSpec = rental => {
-    const { wallet } = useStore.getState();
+    const { wallet, getKeywordFromBrand } = useStore.getState();
 
     assert(wallet && wallet.address, `Wallet must be defined: ${wallet}`);
     assert(rental, `Rental must be defined: ${rental}`);
+
+    const { configuration: { rentalFeePerUnitAmount }, rentalBalance } = rental;
+    const rentalFeeKeyword = getKeywordFromBrand(rentalFeePerUnitAmount.brand);
 
     return harden({
         id: `withdraw-rental-fee-${wallet.address}-${Date.now()}`,
@@ -211,7 +214,7 @@ const buildWithdrawRentalFeeOfferSpec = rental => {
         },
         proposal: {
             want: {
-                RentalFee: rental.configuration.rentalFeePerUnitAmount,
+                RentalFee: rentalBalance[rentalFeeKeyword],
             },
         }
     });
