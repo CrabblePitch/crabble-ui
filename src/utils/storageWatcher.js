@@ -58,7 +58,7 @@ const makeStorageWatcher = () => {
 
     const watchCrabbleChildren = () => {
         watcher.watchLatest(
-            [AgoricChainStoragePathKind.Children, 'published.crabble'],
+            [AgoricChainStoragePathKind.Children, 'published.crabble.rentals'],
             children => {
                 console.log('Children Update', children);
                 registerRentals(children);

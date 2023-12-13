@@ -69,7 +69,7 @@ const useStore = create((set, get) => ({
             [...paths].filter(path => path !== 'governance' && !state.watchedRentals.hasOwnProperty(path))
                 .forEach(path => {
                     const stopWatching = state.watcher.watchLatest(
-                        [AgoricChainStoragePathKind.Data, `published.crabble.${path}`],
+                        [AgoricChainStoragePathKind.Data, `published.crabble.rentals.${path}`],
                         rental => state.updateRental(rental, path),
                         error => {
                             console.error(`Error when fetching ${path}: `, error);
