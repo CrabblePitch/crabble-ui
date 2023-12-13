@@ -37,7 +37,7 @@ const DisplayUtility = ({ rental }) => {
 
             <Box sx={{flex: 2}}>
                 {[...Object.entries(utilityValue)]
-                    .filter(([key]) => key !== 'imagePath')
+                    .filter(([key]) => (key !== 'imagePath' && key !== 'timestamp'))
                     .map(([key, value]) => (
                         <Stack key={`display-${key}`} sx={{flex: 1}}>
                             <Typography variant='subtitle1' align='left'

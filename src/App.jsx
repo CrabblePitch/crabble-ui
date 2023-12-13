@@ -12,6 +12,7 @@ export const App = () => {
     console.log('App!!!');
     const wallet = useStore((state) => state.wallet);
     const watcher = useStore((state) => state.watcher);
+    const crabbleInstance = useStore((state) => state.crabbleInstance);
     const setWatcher = useStore((state) => state.setWatcher);
 
     useEffect(() => {
@@ -33,7 +34,7 @@ export const App = () => {
 
         const storageWatcher = makeStorageWatcher();
         storageWatcher.startWatching();
-    }, [wallet]);
+    }, [wallet, crabbleInstance]);
 
     return (
         <>
